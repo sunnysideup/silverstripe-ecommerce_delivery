@@ -86,7 +86,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		Requirements::themedCSS("PickUpOrDeliveryModifier");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
-		Requirements::javascript("ecommerce_modifiers/javascript/PickUpOrDeliveryModifier.js");
+		Requirements::javascript("ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js");
 		$array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
 		if($array && is_array($array) && count($array)) {
 			$js = '';
