@@ -3,7 +3,7 @@
 /**
  * @author Nicolaas [at] sunnysideup.co.nz
  * @package: ecommerce
- * @sub-package: ecommerce_modifiers
+ * @sub-package: ecommerce_delivery
  * @description: Shipping calculation scheme based on SimpleShippingModifier.
  * It lets you set fixed shipping costs, or a fixed
  * cost for each region you're delivering to.
