@@ -27,7 +27,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $many_many = array(
-		"AvailableInCountries" => "PickUpOrDeliveryModifierOptionsCountry"
+		"AvailableInCountries" => "EcommerceCountry"
 	);
 
 	public static $indexes = array(
@@ -125,7 +125,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		$title = '';
 		$field = null;
 		if(class_exists("MultiSelectField")) {
-			$dos = DataObject::get("PickUpOrDeliveryModifierOptionsCountry");
+			$dos = DataObject::get("EcommerceCountry");
 			if($dos) {
 				$array = $dos->toDropdownMap('ID','Title');
 				//$name, $title = "", $source = array(), $value = "", $form = null
@@ -141,7 +141,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$field = new ManyManyComplexTableField(
 				$this,
 				'AvailableInCountries',
-				'PickUpOrDeliveryModifierOptionsCountry',
+				'EcommerceCountry',
 				array('Name' => 'Name'),
 				null,
 				null,
