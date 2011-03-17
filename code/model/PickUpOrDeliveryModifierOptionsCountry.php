@@ -9,8 +9,8 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataObjectDecorator {
 
 	public function extraStatics() {
 		return array (
-			'belongs_many_many' = array(
-				"AvailableInCountries" => "EcommerceCountry"
+			'belongs_many_many' => array(
+				"AvailableInCountries" => "PickUpOrDeliveryModifierOptions"
 			)
 		);
 	}
