@@ -15,5 +15,5 @@ Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountr
 //===================---------------- START ecommerce_delivery MODULE ----------------===================
 //NOTE: add http://svn.gpmd.net/svn/open/multiselectfield/tags/0.2/ for nicer interface
 //PickUpOrDeliveryModifier::set_form_header("Delivery Option (REQUIRED)");
-//ProductsAndGroupsModelAdmin::add_managed_model("PickUpOrDeliveryModifierOptions");
+//StoreAdmin::add_managed_model("PickUpOrDeliveryModifierOptions");
 //===================---------------- END ecommerce_delivery  MODULE ----------------===================
