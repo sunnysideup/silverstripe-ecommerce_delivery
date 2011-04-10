@@ -63,9 +63,9 @@ var PickUpOrDeliveryModifier = {
 
 	updateCountryList: function() {
 		var currentIndex = jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).val();
-		var oldValue = currentCountryValue;
 		var currentCountryValue = jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val();
 		var acceptableOptions = PickUpOrDeliveryModifier.availableCountries[currentIndex];
+		var hasValidValue = false;
 		if(acceptableOptions ==undefined || typeof(acceptableOptions) == 'undefined' ) {
 			acceptableOptions = new Array();
 		}
@@ -75,8 +75,6 @@ var PickUpOrDeliveryModifier = {
 		else {
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option").hide();
 		}
-		var hasValidValue = false;
-
 		for(i=0;i<acceptableOptions.length;i++) {
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option[value='" + acceptableOptions[i] + "']").show();
 			if(currentCountryValue == acceptableOptions[i]) {
@@ -91,21 +89,19 @@ var PickUpOrDeliveryModifier = {
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").hide();
 		}
 		else {
-			if(acceptableOptions.length > 1) {
-				if(jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").length < 1) {
-					jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).prepend('<option class="nothingSelected" value="-">'+PickUpOrDeliveryModifier.notSelectedText+'</option>');
-				}
-				else {
-					jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").show();
-				}
-				jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
-			}
-		}
-		if(!hasValidValue) {
-			alert("country is not right");
-			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
+			PickUpOrDeliveryModifier.nothingSelected();
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change();
 		}
+	},
+
+	nothingSelected: function() {
+		if(jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").length < 1) {
+			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).prepend('<option class="nothingSelected" value="-">'+PickUpOrDeliveryModifier.notSelectedText+'</option>');
+		}
+		else {
+			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").show();
+		}
+		jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
 	}
 
 
