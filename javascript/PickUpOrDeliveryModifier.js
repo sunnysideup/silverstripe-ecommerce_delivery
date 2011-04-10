@@ -6,8 +6,9 @@
 	);
 })(jQuery);
 
+// TO DO: country list NEEDS REDOING!
 
-var	PickUpOrDeliveryModifier = {
+var PickUpOrDeliveryModifier = {
 
 	formID: "PickUpOrDeliveryModifier_Form_ModifierForm",
 
@@ -20,6 +21,8 @@ var	PickUpOrDeliveryModifier = {
 	countryDropdownSelector: "select.ajaxCountryField",
 
 	notSelectedText: "-- not selected --",
+
+	cartMessageClass: ".cartMessage",
 
 	availableCountries: new Array(),
 
@@ -60,9 +63,10 @@ var	PickUpOrDeliveryModifier = {
 
 	updateCountryList: function() {
 		var currentIndex = jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).val();
+		var oldValue = currentCountryValue;
 		var currentCountryValue = jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val();
 		var acceptableOptions = PickUpOrDeliveryModifier.availableCountries[currentIndex];
-		if(acceptableOptions ==undefined) {
+		if(acceptableOptions ==undefined || typeof(acceptableOptions) == 'undefined' ) {
 			acceptableOptions = new Array();
 		}
 		if(acceptableOptions.length < 1) {
@@ -97,7 +101,11 @@ var	PickUpOrDeliveryModifier = {
 				jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
 			}
 		}
-		jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change();
+		if(!hasValidValue) {
+			alert("country is not right");
+			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
+			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change();
+		}
 	}
 
 
