@@ -34,8 +34,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 	public static $singular_name = "Pickup / Delivery Charge";
+		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
 
 	public static $plural_name = "Pickup / Delivery Charges";
+		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
 
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
 
@@ -82,7 +84,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return $this->Order()->Items();
 	}
 
-	function getForm($controller) {
+	function getModifierForm($controller) {
 		Requirements::themedCSS("PickUpOrDeliveryModifier");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
@@ -132,7 +134,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public function ShowInTable() {
 		return true;
 	}
-	public function CanRemove() {
+	public function CanBeRemoved() {
 		return false;
 	}
 	public function TableValue() {
@@ -195,7 +197,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	*@return currency
 	**/
 
-	protected function LiveAmount() {
+	protected function LiveCalculationValue() {
 		$amount = 0;
 		$obj = $this->LiveOptionObject();
 		self::$actual_charges = 0;
@@ -350,25 +352,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
 
-	public function processOrderModifier($data, $form) {
-		$order = ShoppingCart::current_order();
-		$modifiers = $order->Modifiers();
-		foreach($modifiers as $modifier) {
-			if (get_class($modifier) == 'PickUpOrDeliveryModifier') {
-				if(isset($data['PickupOrDeliveryType'])) {
-					$modifier->setOption($data['PickupOrDeliveryType']);
-				}
-			}
-		}
-		Order::save_current_order();
-		if(Director::is_ajax()) {
-			return ShoppingCart_Controller::json_code();
-		}
-		else {
-			Director::redirect(CheckoutPage::find_link());
-		}
-		return;
-	}
+
 }
 
 class PickUpOrDeliveryModifier_AjaxController extends Controller {

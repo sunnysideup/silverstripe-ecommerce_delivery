@@ -74,8 +74,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $singular_name = "Delivery / Pick-up Option";
+		function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Option");}
 
 	public static $plural_name = "Delivery / Pick-up Options";
+		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Options");}
 
 	public static $default_sort = "IsDefault DESC, Sort ASC, Name ASC";
 
