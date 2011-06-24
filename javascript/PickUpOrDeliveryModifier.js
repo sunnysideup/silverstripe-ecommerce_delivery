@@ -54,7 +54,7 @@ var PickUpOrDeliveryModifier = {
 		//redo quantity boxes
 		//jQuery("#" + PickUpOrDeliveryModifier.updatedDivID).css("height", "auto");
 		jQuery("#" + PickUpOrDeliveryModifier.formID).removeClass(PickUpOrDeliveryModifier.loadingClass);
-		Cart.setChanges(responseText);
+		EcomCart.setChanges(responseText);
 	},
 
 	addAvailableCountriesItem: function(index, countriesArray) {

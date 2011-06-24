@@ -68,11 +68,11 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 	public function runUpdate() {
-		$this->checkField("TotalWeight");
-		$this->checkField("DebugString");
-		$this->checkField("SubTotalAmount");
 		$this->checkField("OptionID");
-		parent::runUpdate();
+		$this->checkField("TotalWeight");
+		$this->checkField("SubTotalAmount");
+		$this->checkField("DebugString");
+		parent::runUpdate();		
 	}
 
 
@@ -137,11 +137,14 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public function CanBeRemoved() {
 		return false;
 	}
-	public function TableValue() {
-		return $this->Amount;
-	}
-	public function TableTitle() {
-		return $this->Name;
+
+	/**
+	 * NOTE: the function below is  HACK and needs fixing proper.
+	 *
+	 */ 
+
+	public function CartValue() {
+		return $this->LiveCalculationValue();
 	}
 
 // ######################################## ***  inner calculations.... USES CALCULATED VALUES
@@ -171,6 +174,9 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	*@return string
 	**/
 
+	protected function LiveTableValue() {
+		return $this->LiveCalculationValue();
+	}
 
 	protected function LiveName() {
 		$start =  microtime();
@@ -196,6 +202,8 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	/**
 	*@return currency
 	**/
+
+
 
 	protected function LiveCalculationValue() {
 		$amount = 0;
