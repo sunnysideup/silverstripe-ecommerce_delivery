@@ -179,7 +179,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 	protected function LiveName() {
-		$start =  microtime();
 		$obj = $this->LiveOptionObject();
 		if(is_object($obj)) {
 			$v = $obj->Name;
@@ -246,13 +245,13 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 							$this->debugMessage .= "<hr />fixed charge: ". $obj->FixedCost;
 						}
 						//is it enough?
-						if(self::$actual_charges < $obj->MinimumDeliveryCharge) {
+						if(self::$actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
 							$oldActualCharge = self::$actual_charges;
 							self::$actual_charges = $obj->MinimumDeliveryCharge;
 							$this->debugMessage .= "<hr />too little: actual charge: ".$oldActualCharge.", minimum delivery charge: ".$obj->MinimumDeliveryCharge;
 						}
 						// is it too much
-						if(self::$actual_charges > $obj->MaximumDeliveryCharge) {
+						if(self::$actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
 							self::$actual_charges = $obj->MaximumDeliveryCharge;
 							$this->debugMessage .= "<hr />too much".self::$actual_charges;
 						}
@@ -365,9 +364,9 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
 
 class PickUpOrDeliveryModifier_AjaxController extends Controller {
 
-	function ModifierForm($request) {
-		if(isset($request['PickupOrDeliveryType'])) {
-			$newOption = intval($request['PickupOrDeliveryType']);
+	function ModifierForm($data, $form = null) {
+		if(isset($data['PickupOrDeliveryType'])) {
+			$newOption = intval($data['PickupOrDeliveryType']);
 			if(DataObject::get_by_id("PickUpOrDeliveryModifierOptions", $newOption)) {
 				$order = ShoppingCart::current_order();
 				$modifiers = $order->Modifiers();
@@ -375,12 +374,12 @@ class PickUpOrDeliveryModifier_AjaxController extends Controller {
 					if ($modifier InstanceOf PickUpOrDeliveryModifier) {
 						$modifier->setOption($newOption);
 						$modifier->runUpdate();
-						return ShoppingCart::return_message("success", _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option updated"));
+						return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option updated"), "good");
 					}
 				}
 			}
 		}
-		return ShoppingCart::return_message("failure", _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"));
+		return ShoppingCart::singleton()->setMessageAndReturn( _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
 	}
 
 	function Link() {
