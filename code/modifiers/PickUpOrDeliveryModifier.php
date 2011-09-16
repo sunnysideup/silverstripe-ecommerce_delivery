@@ -72,7 +72,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("DebugString");
-		parent::runUpdate();		
+		parent::runUpdate();
 	}
 
 
@@ -103,7 +103,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		}
 		$fields = new FieldSet();
 		$options = $this->getOptionListForDropDown();
-		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', self::$form_header));
+		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', self::$form_header, 4));
 		$defaultOptionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType','Preference',$options, $defaultOptionID));
 		$validator = null;
@@ -141,7 +141,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	/**
 	 * NOTE: the function below is  HACK and needs fixing proper.
 	 *
-	 */ 
+	 */
 
 	public function CartValue() {
 		return $this->LiveCalculationValue();
