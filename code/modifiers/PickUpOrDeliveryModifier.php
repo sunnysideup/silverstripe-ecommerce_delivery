@@ -143,7 +143,8 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 *
 	 */
 
-	public function CartValue() {
+	public function CartValue() {return $this->getCartValue();}
+	public function getCartValue() {
 		return $this->LiveCalculationValue();
 	}
 
