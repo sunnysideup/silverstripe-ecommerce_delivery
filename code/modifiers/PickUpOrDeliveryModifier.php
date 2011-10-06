@@ -30,8 +30,18 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("CountryCode", new DropDownField("CountryCode", self::$field_labels["CountryCode"], Geoip::getCountryDropDown()));
+		//debug fields
+		$fields->removeByName("TotalWeight");
+		$fields->addFieldToTab("Root.Debug", new ReadonlyField("TotalWeightShown", "total weight used for calculation", $this->TotalWeight));
+		$fields->removeByName("SubTotalAmount");
+		$fields->addFieldToTab("Root.Debug", new ReadonlyField("SubTotalAmountShown", "sub-total amount used for calculation", $this->SubTotalAmount));
+		$fields->removeByName("SerializedCalculationObject");
+		$fields->addFieldToTab("Root.Debug", new ReadonlyField("SerializedCalculationObjectShown", "debug data", unserialize($this->SerializedCalculationObject)));
+		$fields->removeByName("DebugString");
+		$fields->addFieldToTab("Root.Debug", new ReadonlyField("DebugStringShown", "steps taken", $this->DebugString));
 		return $fields;
 	}
+
 
 	public static $singular_name = "Pickup / Delivery Charge";
 		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
@@ -57,6 +67,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected $debugMessage = "";
 
 // ######################################## *** CRUD functions (e.g. canEdit)
+
+	function canEdit() {
+		return true;
+	}
 // ######################################## *** init and update functions
 
 
