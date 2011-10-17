@@ -88,7 +88,7 @@ var PickUpOrDeliveryModifier = {
 		if(hasValidValue) {
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector + " option.nothingSelected").hide();
 		}
-		else {
+		else if(acceptableOptions.length > 0) {
 			PickUpOrDeliveryModifier.nothingSelected();
 			jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change();
 		}
