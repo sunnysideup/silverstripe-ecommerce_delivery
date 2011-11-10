@@ -80,13 +80,17 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$this->OptionID = $optionID;
 		$this->write();
 	}
-
-	public function runUpdate() {
+	/**
+	 * updates database fields
+	 * @param Bool $force - run it, even if it has run already
+	 * @return void
+	 */
+	public function runUpdate($force = true) {
 		$this->checkField("OptionID");
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("DebugString");
-		parent::runUpdate();
+		parent::runUpdate($force);
 	}
 
 
@@ -159,7 +163,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 	public function CartValue() {return $this->getCartValue();}
 	public function getCartValue() {
-		return $this->LiveCalculationValue();
+		return $this->LiveCalculatedTotal();
 	}
 
 // ######################################## ***  inner calculations.... USES CALCULATED VALUES
@@ -190,7 +194,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	**/
 
 	protected function LiveTableValue() {
-		return $this->LiveCalculationValue();
+		return $this->LiveCalculatedTotal();
 	}
 
 	protected function LiveName() {
@@ -219,7 +223,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 
 
-	protected function LiveCalculationValue() {
+	protected function LiveCalculatedTotal() {
 		$amount = 0;
 		$obj = $this->LiveOptionObject();
 		self::$actual_charges = 0;
