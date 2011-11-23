@@ -23,8 +23,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		"Option" => "PickUpOrDeliveryModifierOptions"
 	);
 
-	public static $defaults = array("Type" => "Chargeable");
-
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 	function getCMSFields() {
