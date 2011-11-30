@@ -211,6 +211,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 	protected function LiveOptionID() {
 		$optionID = $this->OptionID;
+		$defaultOption = null;
 		if(!$optionID) {
 			$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
 			$optionID = $defaultOption->ID;
