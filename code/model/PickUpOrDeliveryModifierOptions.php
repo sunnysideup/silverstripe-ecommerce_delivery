@@ -27,7 +27,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $many_many = array(
-		"AvailableInCountries" => "EcommerceCountry"
+		"AvailableInCountries" => "EcommerceCountry",
+		"AvailableInRegions" => "EcommerceRegion"
 	);
 
 	public static $indexes = array(
@@ -111,9 +112,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$field = $this->createManyManyComplexTableField();
+		$field = $this->createManyManyComplexTableField("EcommerceCountry", "AvailableInCountries");
 		if($field) {
 			$fields->replaceField("AvailableInCountries", $field);
+		}
+		$field = $this->createManyManyComplexTableField("EcommerceRegion", "AvailableInRegions");
+		if($field) {
+			$fields->replaceField("AvailableInRegions", $field);
 		}
 		if(class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
@@ -122,39 +127,42 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $fields;
 	}
 
-	private function createManyManyComplexTableField() {
+	private function createManyManyComplexTableField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries") {
 		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		$title = '';
 		$field = null;
-		if(class_exists("MultiSelectField")) {
-			$dos = DataObject::get("EcommerceCountry");
-			if($dos) {
+		$dos = DataObject::get($dataObjectName);
+		if($dos) {
+			if(class_exists("MultiSelectField")) {
 				$array = $dos->toDropdownMap('ID','Title');
 				//$name, $title = "", $source = array(), $value = "", $form = null
 				$field = new MultiSelectField(
-					'AvailableInCountries',
+					$fieldName,
 					'This option is available in...',
 					$array
 				);
 			}
-		}
-		else {
-			// $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
-			$field = new ManyManyComplexTableField(
-				$this,
-				'AvailableInCountries',
-				'EcommerceCountry',
-				array('Name' => 'Name'),
-				null,
-				null,
-				"{$bt}Checked{$bt} DESC, {$bt}Name{$bt} ASC"
-			);
-			$field->setAddTitle("Select Countries for which this delivery / pick-up option is available");
-			$field->setPermissions(array("export"));
-			$field->setPageSize(250);
+			else {
+				// $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
+				$field = new ManyManyComplexTableField(
+					$this,
+					$fieldName,
+					$dataObjectName,
+					array('Name' => 'Name'),
+					null,
+					null,
+					"{$bt}Checked{$bt} DESC, {$bt}Name{$bt} ASC"
+				);
+				$field->setAddTitle("Select locations for which this delivery / pick-up option is available");
+				$field->setPermissions(array("export"));
+				$field->setPageSize(250);
+			}
 		}
 		if($field) {
 			return $field;
+		}
+		else {
+			return new HiddenField($fieldName);
 		}
 	}
 
@@ -174,7 +182,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 				UPDATE {$bt}PickUpOrDeliveryModifierOptions{$bt}
 				SET {$bt}IsDefault{$bt} = 0
 				WHERE {$bt}ID{$bt} <> ".intval($this->ID).";");
-		}		
+		}
 	}
 
 	function onBeforeWrite() {
@@ -191,7 +199,48 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
 		}
-		
+	}
+
+	/**
+	 * returns an array of country IDs that apply to this option (if any)
+	 * @return array
+	 */
+	public function getCountryIDArray(){
+		$components = $this->getManyManyComponents('AvailableInCountries');
+		if($components && $components->count()) {
+			return $components->column("ID");
+		}
+		else {
+			return array();
+		}
+	}
+
+	/**
+	 * returns an array of country Codes that apply to this option (if any)
+	 * @return array
+	 */
+	public function getCountryCodeArray(){
+		$components = $this->getManyManyComponents('AvailableInCountries');
+		if($components && $components->count()) {
+			return $components->column("Code");
+		}
+		else {
+			return array();
+		}
+	}
+
+	/**
+	 * returns an array of country Codes that apply to this option (if any)
+	 * @return array
+	 */
+	public function getRegionIDArray(){
+		$components = $this->getManyManyComponents('AvailableInRegions');
+		if($components && $components->count()) {
+			return $components->column("ID");
+		}
+		else {
+			return array();
+		}
 	}
 }
 

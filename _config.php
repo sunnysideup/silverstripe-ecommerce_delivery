@@ -10,6 +10,7 @@ Director::addRules(50, array(
 ));
 
 Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountry');
+Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
 
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START ecommerce_delivery MODULE ----------------===================

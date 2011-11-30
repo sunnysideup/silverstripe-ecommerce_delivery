@@ -15,8 +15,8 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public static $db = array(
 		"TotalWeight" => "Double",
 		"SerializedCalculationObject" => "Text",
-		'DebugString' => 'HTMLText',
-		'SubTotalAmount' => 'Currency'
+		"DebugString" => "HTMLText",
+		"SubTotalAmount" => "Currency"
 	);
 
 	public static $has_one = array(
@@ -47,6 +47,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public static $plural_name = "Pickup / Delivery Charges";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
 
+	protected static $form_header = 'Pick-up / Deliver';
+		static function set_form_header($v) {self::$form_header = $v;}
+
+
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
 
 	protected static $weight_field = "";
@@ -58,9 +62,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected static $actual_charges = 0;
 
 	protected static $calculations_done = false;
-
-	protected static $form_header = 'Pick-up / Deliver';
-		static function set_form_header($v) {self::$form_header = $v;}
 
 	protected $debugMessage = "";
 
@@ -119,7 +120,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		}
 		$fields = new FieldSet();
 		$options = $this->getOptionListForDropDown();
-		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', self::$form_header, 4));
+		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', $this->i18n_singular_name(), 4));
 		$defaultOptionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType','Preference',$options, $defaultOptionID));
 		$validator = null;
@@ -133,10 +134,39 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 	protected function getOptionListForDropDown() {
 		$array = array();
+		//if(Object::has_extension('PickUpOrDeliveryModifierOptions', 'PickUpOrDeliveryModifierOptionsCountry'))
+		$currentCountryID = EcommerceCountry::get_country_id();
+		$currentRegionID = EcommerceRegion::get_region();
+
 		$options = DataObject::get("PickUpOrDeliveryModifierOptions");
 		if($options) {
 			foreach($options as $option) {
-				$array[$option->ID] = $option->Name;
+				$keep = true;
+				//if it is for certain countries, check if there is a matching country
+				if($currentCountryID) {
+					$countryArray = $option->getCountryIDArray();
+					if(is_array($countryArray)) {
+						if(count($countryArray)) {
+							if(!in_array($currentCountryID, $countryArray)) {
+								$keep = false;
+							}
+						}
+					}
+				}
+				//if it is for certain regions, check if there is a matching region
+				if($keep && $currentRegionID) {
+					$regionArray = $option->getRegionIDArray();
+					if(is_array($regionArray)) {
+						if(count($regionArray)) {
+							if(!in_array($currentRegionID, $regionArray)) {
+								$keep = false;
+							}
+						}
+					}
+				}
+				if($keep) {
+					$array[$option->ID] = $option->Name;
+				}
 			}
 		}
 		else {
@@ -144,6 +174,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		}
 		return $array;
 	}
+
 
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
@@ -370,6 +401,26 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 // ######################################## *** AJAX related functions
+	/**
+	 *
+	 * @param Array $js javascript array
+	 * @return Array for AJAX JSON
+	 **/
+	function updateForAjax(array &$js) {
+		parent::updateForAjax($js);
+		$array = $this->getOptionListForDropDown();
+		if($array && count($array)) {
+			$jsonArray = array();
+			foreach($array as $key => $value) {
+				$jsonArray[] = array("id" => $key, "name" => $value);
+			}
+			$js[] = array(
+				'dropdownArray' => "PickupOrDeliveryType",
+				'parameter' => $this->LiveOptionID(),
+				'value' => $jsonArray
+			);
+		}
+	}
 // ######################################## *** debug functions
 
 }
