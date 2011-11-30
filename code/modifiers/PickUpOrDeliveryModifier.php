@@ -212,8 +212,29 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected function LiveOptionID() {
 		$optionID = $this->OptionID;
 		if(!$optionID) {
-			$option = PickUpOrDeliveryModifierOptions::default_object();
-			$optionID = $option->ID;
+			$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
+			$optionID = $defaultOption->ID;
+		}
+		if($optionID) {
+			$optionArray = $this->getOptionListForDropDown();
+			if(is_array($optionArray)) {
+				if(!in_array($optionID, $optionArray)){
+					if(!$defaultOption) {
+						$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
+					}
+					if($defaultOption) {
+						if(in_array($defaultOption->ID, $optionArray)) {
+							return $defaultOption->ID;
+						}
+					}
+					if(count($optionArray)) {
+						foreach($optionArray as $id => $title) {
+							return $id;
+						}
+					}
+					$optionID = 0;
+				}
+			}
 		}
 		return $optionID;
 	}
