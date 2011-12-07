@@ -84,7 +84,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	static function default_object() {
 		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
-		if($obj = DataObject::get_one("PickUpOrDeliveryModifierOptions", $filter = "{$bt}IsDefault{$bt} = 1")) {
+		if($obj = DataObject::get_one("PickUpOrDeliveryModifierOptions", $filter = "\"IsDefault\" = 1")) {
 			return $obj;
 		}
 		else {
@@ -112,13 +112,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$field = $this->createManyManyComplexTableField("EcommerceCountry", "AvailableInCountries");
-		if($field) {
-			$fields->replaceField("AvailableInCountries", $field);
+		$countryField = $this->createManyManyComplexTableField("EcommerceCountry", "AvailableInCountries");
+		if($countryField) {
+			$fields->replaceField("AvailableInCountries", $countryField);
 		}
-		$field = $this->createManyManyComplexTableField("EcommerceRegion", "AvailableInRegions");
-		if($field) {
-			$fields->replaceField("AvailableInRegions", $field);
+		$regionField = $this->createManyManyComplexTableField("EcommerceRegion", "AvailableInRegions");
+		if($regionField) {
+			$fields->replaceField("AvailableInRegions", $regionField);
 		}
 		if(class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
@@ -128,7 +128,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	}
 
 	private function createManyManyComplexTableField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries") {
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		$title = '';
 		$field = null;
 		$dos = DataObject::get($dataObjectName);
@@ -138,7 +137,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 				//$name, $title = "", $source = array(), $value = "", $form = null
 				$field = new MultiSelectField(
 					$fieldName,
-					'This option is available in...',
+					'This option is available in... ',
 					$array
 				);
 			}
@@ -151,7 +150,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 					array('Name' => 'Name'),
 					null,
 					null,
-					"{$bt}Checked{$bt} DESC, {$bt}Name{$bt} ASC"
+					"\"Checked\" DESC, \"Name\" ASC"
 				);
 				$field->setAddTitle("Select locations for which this delivery / pick-up option is available");
 				$field->setPermissions(array("export"));
@@ -168,20 +167,19 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	function onAfterWrite() {
 		parent::onAfterWrite();
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		// no other record but current one is not default
-		if(!$this->IsDefault && !DataObject::get_one("PickUpOrDeliveryModifierOptions", "{$bt}ID{$bt} <> ".intval($this->ID))) {
+		if(!$this->IsDefault && !DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"ID\" <> ".intval($this->ID))) {
 			DB::query("
-				UPDATE {$bt}PickUpOrDeliveryModifierOptions{$bt}
-				SET {$bt}IsDefault{$bt} = 1
-				WHERE {$bt}ID{$bt} <> ".$this->ID.";");
+				UPDATE \"PickUpOrDeliveryModifierOptions\"
+				SET \"IsDefault\" = 1
+				WHERE \"ID\" <> ".$this->ID.";");
 		}
 		//current default -> reset others
 		elseif($this->IsDefault) {
 			DB::query("
-				UPDATE {$bt}PickUpOrDeliveryModifierOptions{$bt}
-				SET {$bt}IsDefault{$bt} = 0
-				WHERE {$bt}ID{$bt} <> ".intval($this->ID).";");
+				UPDATE \"PickUpOrDeliveryModifierOptions\"
+				SET \"IsDefault\" = 0
+				WHERE \"ID\" <> ".intval($this->ID).";");
 		}
 	}
 
@@ -195,7 +193,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$this->Code = self::$defaults["Code"];
 		}
 		$baseCode = $this->Code;
-		while($other = DataObject::get_one("PickUpOrDeliveryModifierOptions", "{$bt}Code{$bt} = '".$this->Code."' AND {$bt}ID{$bt} <> ".$this->ID) && $i < 10){
+		while($other = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"Code\" = '".$this->Code."' AND \"ID\" <> ".$this->ID) && $i < 10){
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
 		}
