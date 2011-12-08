@@ -21,7 +21,6 @@ Director::addRules(50, array(
 
 //MAY SET
 //PickUpOrDeliveryModifier::set_form_header("Delivery Option (REQUIRED)");
-//StoreAdmin::add_managed_model("PickUpOrDeliveryModifierOptions");
 
 //NOTE: add http://svn.gpmd.net/svn/open/multiselectfield/tags/0.2/ for nicer interface
 //===================---------------- END ecommerce_delivery  MODULE ----------------===================

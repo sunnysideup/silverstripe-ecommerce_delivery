@@ -18,8 +18,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"WeightUnit" => "Double",
 		"Percentage" => "Double",
 		"FixedCost" => "Currency",
-		"Sort" => "Int",
-		"AcceptablePaymentMethods" => "Varchar(255)"
+		"Sort" => "Int"
 	);
 
 	public static $has_one = array(
@@ -48,7 +47,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"MinimumDeliveryCharge" => "Minimum - enter zero (0) to ignore",
 		"MaximumDeliveryCharge" => "Maximum  - enter zero (0) to ignore",
 		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if the total order is over ... then there is no fee for this option)  - enter zero (0) to ignore",
-		"WeightMultiplier" => "WeightMultiplier per Weight Unit. (works out weight of total order (make sure products have weight) and multiplies with this number to work out charge for delivery)  - enter zero (0) to ignore",
+		"WeightMultiplier" => "Cost per kilo? This is the weight multiplier per Weight Unit. It multiplies the weight of the total order and multiplies it with this number to work out charge for delivery. Enter zero (0) to ignore.",
 		"WeightUnit" => "Weight unit in kilograms.  Sometimes price is per kilo, sometimes per hundred grams. The cut-off is one of these units in weight-based delivery (e.g. if you enter 0.1 here, the price will go up with every 100 grams of weight in total order weight).  Enter zero (0) to ignore",
 		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).  Enter zero (0) to ignore",
 		"FixedCost" =>  "This option has a fixed cost (e.g. always 10 dollars).  Enter zero (0) to ignore",
