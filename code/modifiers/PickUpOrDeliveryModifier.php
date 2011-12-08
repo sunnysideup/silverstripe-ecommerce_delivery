@@ -219,7 +219,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		if($optionID) {
 			$optionArray = $this->getOptionListForDropDown();
 			if(is_array($optionArray)) {
-				if(!in_array($optionID, $optionArray)){
+				if(!isset($optionArray[$optionID])){
 					if(!$defaultOption) {
 						$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
 					}
@@ -387,10 +387,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
-
-	function onBeforeWrite() {
-		parent::onBeforeWrite();
-	}
 
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
