@@ -53,10 +53,20 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
 
+	/**
+	 *@var String $weight_field - the field used in the Buyable to work out the weight.
+	 *
+	 */
 	protected static $weight_field = "";
 		static function set_weight_field($s) {self::$weight_field = $s;}
 		static function get_weight_field() {return self::$weight_field;}
 
+	/**
+	 * @var Float $total_weight
+	 * the total amount of weight for the order
+	 * this variable is used for internal purposes only.
+	 *
+	 */
 	protected static $total_weight = null;
 
 	protected static $actual_charges = 0;
