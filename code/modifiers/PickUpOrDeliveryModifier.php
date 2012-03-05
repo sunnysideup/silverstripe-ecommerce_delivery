@@ -23,6 +23,12 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		"Option" => "PickUpOrDeliveryModifierOptions"
 	);
 
+	public static $singular_name = "Pickup / Delivery Charge";
+		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
+
+	public static $plural_name = "Pickup / Delivery Charges";
+		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
+
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 	function getCMSFields() {
@@ -41,11 +47,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 
-	public static $singular_name = "Pickup / Delivery Charge";
-		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
-
-	public static $plural_name = "Pickup / Delivery Charges";
-		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
 
 	protected static $form_header = 'Pick-up / Deliver';
 		static function set_form_header($v) {self::$form_header = $v;}
@@ -111,7 +112,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return $this->Order()->Items();
 	}
 
-	function getModifierForm($controller) {
+	function getModifierForm($optionalController = null, $optionalValidator = null) {
 		Requirements::themedCSS("PickUpOrDeliveryModifier");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
@@ -129,16 +130,17 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			}
 		}
 		$fields = new FieldSet();
+		$fields->push($this->headingField());
+		$fields->push($this->descriptionField());
 		$options = $this->getOptionListForDropDown();
 		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', $this->i18n_singular_name(), 4));
 		$defaultOptionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType','Preference',$options, $defaultOptionID));
-		$validator = null;
 		$actions = new FieldSet(
 			new FormAction_WithoutLabel('processOrderModifier', 'Update Pickup / Delivery Option')
 		);
 		$controller = new PickUpOrDeliveryModifier_AjaxController();
-		return new PickUpOrDeliveryModifier_Form($controller, 'ModifierForm', $fields, $actions, $validator);
+		return new PickUpOrDeliveryModifier_Form($optionalController, 'ModifierForm', $fields, $actions, $optionalValidator);
 	}
 
 
