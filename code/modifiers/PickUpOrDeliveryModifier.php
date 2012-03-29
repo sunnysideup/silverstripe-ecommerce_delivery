@@ -47,11 +47,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 
-
-	protected static $form_header = 'Pick-up / Deliver';
-		static function set_form_header($v) {self::$form_header = $v;}
-
-
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
 
 	/**
@@ -133,7 +128,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
 		$options = $this->getOptionListForDropDown();
-		$fields->push(new HeaderField('PickupOrDeliveryTypeHeader', $this->i18n_singular_name(), 4));
 		$defaultOptionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType','Preference',$options, $defaultOptionID));
 		$actions = new FieldSet(
