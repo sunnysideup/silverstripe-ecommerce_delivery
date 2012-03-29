@@ -133,8 +133,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$actions = new FieldSet(
 			new FormAction_WithoutLabel('processOrderModifier', 'Update Pickup / Delivery Option')
 		);
-		$controller = new PickUpOrDeliveryModifier_AjaxController();
-		return new PickUpOrDeliveryModifier_Form($optionalController, 'ModifierForm', $fields, $actions, $optionalValidator);
+		return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
 	}
 
 
@@ -451,12 +450,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
 
-
-}
-
-class PickUpOrDeliveryModifier_AjaxController extends Controller {
-
-	function ModifierForm($data, $form = null) {
+	function processOrderModifier($data, $form = null) {
 		if(isset($data['PickupOrDeliveryType'])) {
 			$newOption = intval($data['PickupOrDeliveryType']);
 			if(DataObject::get_by_id("PickUpOrDeliveryModifierOptions", $newOption)) {
@@ -473,10 +467,5 @@ class PickUpOrDeliveryModifier_AjaxController extends Controller {
 		}
 		return ShoppingCart::singleton()->setMessageAndReturn( _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
 	}
-
-	function Link() {
-		return "pickupordeliverymodifier";
-	}
-
 
 }

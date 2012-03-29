@@ -10,7 +10,7 @@
 
 var PickUpOrDeliveryModifier = {
 
-	formID: "PickUpOrDeliveryModifier_Form_ModifierForm",
+	formID: "PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier",
 
 	DropdownIDappendix: "_PickupOrDeliveryType",
 
