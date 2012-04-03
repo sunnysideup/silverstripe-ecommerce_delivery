@@ -438,7 +438,8 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				$jsonArray[] = array("id" => $key, "name" => $value);
 			}
 			$js[] = array(
-				'dropdownArray' => "PickupOrDeliveryType",
+				'type' => "dropdown",
+				'selector' => "PickupOrDeliveryType",
 				'parameter' => $this->LiveOptionID(),
 				'value' => $jsonArray
 			);
