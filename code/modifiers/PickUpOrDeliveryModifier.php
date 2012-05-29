@@ -410,7 +410,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
  			if($modifiers = DataObject::get('PickUpOrDeliveryModifier')) {
 				$defaultOption = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"IsDefault\" = 1");
 				foreach($modifiers as $modifier) {
-					if(!$modifier->OptionID) {
+					if(!isset($modifier->OptionID) || !$modifier->OptionID) {
 						$option = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"Code\" = '".$modifier->Code."'");
 						if(!$option) {
 							$option = $defaultOption;
@@ -458,11 +458,12 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
 			$newOption = intval($data['PickupOrDeliveryType']);
 			if(DataObject::get_by_id("PickUpOrDeliveryModifierOptions", $newOption)) {
 				$order = ShoppingCart::current_order();
-				$modifiers = $order->Modifiers();
-				foreach($modifiers as $modifier) {
-					if ($modifier InstanceOf PickUpOrDeliveryModifier) {
-						$modifier->setOption($newOption);
-						$modifier->runUpdate();
+				if($order) {
+					if($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
+						foreach($modifiers as $modifier) {
+							$modifier->setOption($newOption);
+							$modifier->runUpdate();
+						}
 						return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option updated"), "good");
 					}
 				}
