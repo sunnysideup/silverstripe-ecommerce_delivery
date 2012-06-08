@@ -41,16 +41,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $field_labels = array(
-		"IsDefault" => "Default",
+		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
 		"Name" => "Long Name",
-		"MinimumDeliveryCharge" => "Minimum - enter zero (0) to ignore",
-		"MaximumDeliveryCharge" => "Maximum  - enter zero (0) to ignore",
-		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if the total order is over ... then there is no fee for this option)  - enter zero (0) to ignore",
-		"WeightMultiplier" => "Cost per kilo? This is the weight multiplier per Weight Unit. It multiplies the weight of the total order and multiplies it with this number to work out charge for delivery. Enter zero (0) to ignore.",
-		"WeightUnit" => "Weight unit in kilograms.  Sometimes price is per kilo, sometimes per hundred grams. The cut-off is one of these units in weight-based delivery (e.g. if you enter 0.1 here, the price will go up with every 100 grams of weight in total order weight).  Enter zero (0) to ignore",
-		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).  Enter zero (0) to ignore",
-		"FixedCost" =>  "This option has a fixed cost (e.g. always 10 dollars).  Enter zero (0) to ignore",
+		"MinimumDeliveryCharge" => "Minimum delivery charge. Enter zero (0) to ignore.",
+		"MaximumDeliveryCharge" => "Maximum delivery charge. Enter zero (0) to ignore.",
+		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if the total order is over ... then there is no fee for this option). Enter zero (0) to ignore.",
+		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. Enter zero (0) to ignore.",
+		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.  Enter zero (0) to ignore.",
+		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).  Enter zero (0) to ignore.",
+		"FixedCost" =>  "This option has a fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).  Enter zero (0) to ignore.",
 		"Sort" =>  "Sort Index - lower numbers show first."
 	);
 
@@ -68,9 +68,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $summary_fields = array(
-		"IsDefault",
+		"IsDefaultNice",
 		"Code",
 		"Name"
+	);
+
+	public static $casting = array(
+		"IsDefaultNice"
 	);
 
 	public static $singular_name = "Delivery / Pick-up Option";
@@ -107,6 +111,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			}
 		}
 		return $array;
+	}
+
+	function IsDefaultNice(){
+		return $this->IsDefault ? "yes"  : "no";
 	}
 
 	function getCMSFields() {
