@@ -68,7 +68,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $summary_fields = array(
-		"IsDefaultNice",
+		"IsDefaultNice" => "Default Option",
 		"Code",
 		"Name"
 	);
@@ -83,7 +83,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	public static $plural_name = "Delivery / Pick-up Options";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Options");}
 
-	public static $default_sort = "IsDefault DESC, Sort ASC, Name ASC";
+	public static $default_sort = "\"IsDefault\" DESC, \"Sort\" ASC, \"Name\" ASC";
 
 	static function default_object() {
 		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
