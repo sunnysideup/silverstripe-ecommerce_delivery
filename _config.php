@@ -10,8 +10,20 @@
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START ecommerce_delivery MODULE ----------------===================
 //MUST SET
-//Order::add_modifier("PickUpOrDeliveryModifier"); // OR //Order::set_modifiers(array("PickUpOrDeliveryModifier"));
-//StoreAdmin::add_managed_model("PickUpOrDeliveryModifierOptions");
+/**
+ * ADD TO ECOMMERCE.YAML:
+Order:
+	modifiers: [
+		...
+		PickUpOrDeliveryModifier
+	]
+StoreAdmin:
+	managed_models: [
+		...
+		PickUpOrDeliveryModifierOptions
+	]
+
+*/
 //Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountry');
 //Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
 
