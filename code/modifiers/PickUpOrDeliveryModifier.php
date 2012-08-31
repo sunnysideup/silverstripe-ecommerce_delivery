@@ -29,6 +29,11 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public static $plural_name = "Pickup / Delivery Charges";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
 
+	protected static $include_form_in_order_table = true;
+		static function set_include_form_in_order_table($b) {self::$include_form_in_order_table = $b;}
+		static function get_include_form_in_order_table() {return self::$include_form_in_order_table;}
+
+
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 	function getCMSFields() {
@@ -103,8 +108,28 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 // ######################################## *** form functions (e. g. showform and getform)
 
 
-	public function showForm() {
-		return $this->Order()->Items();
+
+	/**
+	 * @return Boolean
+	 */
+	public function ShowForm() {
+		return $this->Order()->Items() ? true : false;
+	}
+
+	/**
+	 * Should the form be included in the editable form
+	 * on the checkout page?
+	 * @return Boolean
+	 */
+	public function ShowFormInEditableOrderTable() {
+		return ($this->ShowForm() && self::$include_form_in_order_table) ? true : false;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function ShowFormOutsideEditableOrderTable() {
+		return $this->ShowFormInEditableOrderTable() ? 0 : 1;
 	}
 
 	function getModifierForm($optionalController = null, $optionalValidator = null) {
@@ -191,7 +216,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public function CanBeRemoved() {
 		return false;
 	}
-
 	/**
 	 * NOTE: the function below is  HACK and needs fixing proper.
 	 *
