@@ -28,7 +28,7 @@ StoreAdmin:
 //Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
 
 //MAY SET
-//PickUpOrDeliveryModifier::set_form_header("Delivery Option (REQUIRED)");
+//PickUpOrDeliveryModifier::set_include_form_in_order_table(true);
 
 //NOTE: add http://svn.gpmd.net/svn/open/multiselectfield/tags/0.2/ for nicer interface
 //===================---------------- END ecommerce_delivery  MODULE ----------------===================
