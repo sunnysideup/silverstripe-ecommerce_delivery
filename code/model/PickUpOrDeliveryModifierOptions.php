@@ -74,7 +74,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $casting = array(
-		"IsDefaultNice"
+		"IsDefaultNice" => "Varchar"
 	);
 
 	public static $singular_name = "Delivery / Pick-up Option";
@@ -113,6 +113,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $array;
 	}
 
+	function getIsDefaultNice(){return $this->IsDefaultNice();}
 	function IsDefaultNice(){
 		return $this->IsDefault ? "yes"  : "no";
 	}
