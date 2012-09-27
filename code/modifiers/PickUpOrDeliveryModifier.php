@@ -193,60 +193,13 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			}
 		}
 
-		if(isset($result)) {
-			$result = new DataObjectSet($result);
-		}
-		else {
-			PickUpOrDeliveryModifierOptions::default_object(); // Just to be sure there is always at least 1 default option
-			$result = DataObject::get('PickUpOrDeliveryModifierOptions', 'IsDefault = 1');
+		if(! isset($result)) {
+			$result[] = PickUpOrDeliveryModifierOptions::default_object();
 		}
 
-		return $result;
+		return new DataObjectSet($result);
 	}
-
-	/*protected function getOptionListForDropDown() {
-		$array = array();
-		//if(Object::has_extension('PickUpOrDeliveryModifierOptions', 'PickUpOrDeliveryModifierOptionsCountry'))
-		$currentCountryID = EcommerceCountry::get_country_id();
-		$currentRegionID = EcommerceRegion::get_region();
-
-		$options = DataObject::get("PickUpOrDeliveryModifierOptions");
-		if($options) {
-			foreach($options as $option) {
-				$keep = true;
-				//if it is for certain countries, check if there is a matching country
-				if($currentCountryID) {
-					$countryArray = $option->getCountryIDArray();
-					if(is_array($countryArray)) {
-						if(count($countryArray)) {
-							if(!in_array($currentCountryID, $countryArray)) {
-								$keep = false;
-							}
-						}
-					}
-				}
-				//if it is for certain regions, check if there is a matching region
-				if($keep && $currentRegionID) {
-					$regionArray = $option->getRegionIDArray();
-					if(is_array($regionArray)) {
-						if(count($regionArray)) {
-							if(!in_array($currentRegionID, $regionArray)) {
-								$keep = false;
-							}
-						}
-					}
-				}
-				if($keep) {
-					$array[$option->ID] = $option->Name;
-				}
-			}
-		}
-		else {
-			$array[0] = _t("PickUpOrDeliveryModifier.NOOPTIONSAVAILABLE", "No pick-up or delivery options available");
-		}
-		return $array;
-	}*/
-
+	
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
 	public function ShowInTable() {

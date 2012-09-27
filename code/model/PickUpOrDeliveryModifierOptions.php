@@ -1,10 +1,9 @@
 <?php
 
 /**
- *@author nicolaas [at] sunnysideup.co.nz
- *
- **/
-
+ * @author nicolaas [at] sunnysideup.co.nz
+ * Precondition : There can only be 1 default option
+ */
 class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	static $db = array(
@@ -204,48 +203,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		while($other = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"Code\" = '".$this->Code."' AND \"ID\" <> ".$this->ID) && $i < 10){
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
-		}
-	}
-
-	/**
-	 * returns an array of country IDs that apply to this option (if any)
-	 * @return array
-	 */
-	public function getCountryIDArray(){
-		$components = $this->getManyManyComponents('AvailableInCountries');
-		if($components && $components->count()) {
-			return $components->column("ID");
-		}
-		else {
-			return array();
-		}
-	}
-
-	/**
-	 * returns an array of country Codes that apply to this option (if any)
-	 * @return array
-	 */
-	public function getCountryCodeArray(){
-		$components = $this->getManyManyComponents('AvailableInCountries');
-		if($components && $components->count()) {
-			return $components->column("Code");
-		}
-		else {
-			return array();
-		}
-	}
-
-	/**
-	 * returns an array of country Codes that apply to this option (if any)
-	 * @return array
-	 */
-	public function getRegionIDArray(){
-		$components = $this->getManyManyComponents('AvailableInRegions');
-		if($components && $components->count()) {
-			return $components->column("ID");
-		}
-		else {
-			return array();
 		}
 	}
 }

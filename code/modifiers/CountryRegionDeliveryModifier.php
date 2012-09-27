@@ -5,7 +5,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 	public function ShowForm() {
 		$show = parent::ShowForm();
 		$options = $this->LiveOptions();
-		return $show && $options;
+		return $show && $options->Count() > 1;
 	}
 
 	/**
@@ -38,14 +38,10 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 			}
 		}
 
-		if(isset($result)) {
-			$result = new DataObjectSet($result);
-		}
-		else {
-			PickUpOrDeliveryModifierOptions::default_object(); // Just to be sure there is always at least 1 default option
-			$result = DataObject::get('PickUpOrDeliveryModifierOptions', 'IsDefault = 1');
+		if(! isset($result)) {
+			$result[] = PickUpOrDeliveryModifierOptions::default_object();
 		}
 
-		return $result;
+		return new DataObjectSet($result);
 	}
 }
