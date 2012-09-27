@@ -154,17 +154,57 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$fields = new FieldSet();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$options = $this->getOptionListForDropDown();
-		$defaultOptionID = $this->LiveOptionID();
-		$fields->push(new DropdownField('PickupOrDeliveryType','Preference',$options, $defaultOptionID));
+		$options = $this->LiveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
+		$optionID = $this->LiveOptionID();
+		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
 		$actions = new FieldSet(
 			new FormAction_WithoutLabel('processOrderModifier', 'Update Pickup / Delivery Option')
 		);
 		return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
 	}
 
+	/**
+	 * Returns the available delivery options based on the current order country and region settings.
+	 * @return DataObjectSet
+	 */
+	protected function LiveOptions() {
+		$countryID = EcommerceCountry::get_country_id();
+		$regionID = EcommerceRegion::get_region();
 
-	protected function getOptionListForDropDown() {
+		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
+		if($options) {
+			foreach($options as $option) {
+				
+				if($countryID) {
+					$optionCountries = $option->AvailableInCountries();
+					if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) { // Invalid
+						continue;
+					}
+				}
+
+				if($regionID) {
+					$optionRegions = $option->AvailableInRegions();
+					if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) { // Invalid
+						continue;
+					}
+				}
+
+				$result[] = $option;
+			}
+		}
+
+		if(isset($result)) {
+			$result = new DataObjectSet($result);
+		}
+		else {
+			PickUpOrDeliveryModifierOptions::default_object(); // Just to be sure there is always at least 1 default option
+			$result = DataObject::get('PickUpOrDeliveryModifierOptions', 'IsDefault = 1');
+		}
+
+		return $result;
+	}
+
+	/*protected function getOptionListForDropDown() {
 		$array = array();
 		//if(Object::has_extension('PickUpOrDeliveryModifierOptions', 'PickUpOrDeliveryModifierOptionsCountry'))
 		$currentCountryID = EcommerceCountry::get_country_id();
@@ -205,8 +245,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			$array[0] = _t("PickUpOrDeliveryModifier.NOOPTIONSAVAILABLE", "No pick-up or delivery options available");
 		}
 		return $array;
-	}
-
+	}*/
 
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
@@ -230,17 +269,30 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 
 	protected function LiveOptionObject() {
-		return DataObject::get_by_id("PickUpOrDeliveryModifierOptions", $this->LiveOptionID());
+		return DataObject::get_by_id('PickUpOrDeliveryModifierOptions', $this->LiveOptionID());
 	}
 
 // ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
 
-
 	/**
-	*@return int
-	**/
-
+	 * Precondition : There are always options available.
+	 */
 	protected function LiveOptionID() {
+		$options = $this->LiveOptions();
+		
+		if($options->find('ID', $this->OptionID)) {
+			return $this->OptionID;
+		}
+
+		$option = $options->find('IsDefault', 1);
+		if(! $option) {
+			$option = $options->First();
+		}
+
+		return $option->ID;
+	}
+
+	/*protected function LiveOptionID() {
 		$optionID = $this->OptionID;
 		$defaultOption = null;
 		if(!$optionID) {
@@ -269,7 +321,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			}
 		}
 		return $optionID;
-	}
+	}*/
 
 	/**
 	*@return string
@@ -457,6 +509,19 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 **/
 	function updateForAjax(array &$js) {
 		parent::updateForAjax($js);
+		$options = $this->LiveOptions()->map('ID', 'Name');
+		foreach($options as $id => $name) {
+			$jsonOptions[] = array('id' => $id, 'name' => $name);
+		}
+		$js[] = array(
+			't' => 'dropdown',
+			's' => 'PickupOrDeliveryType',
+			'p' => $this->LiveOptionID(),
+			'v' => $jsonOptions
+		);
+	}
+	/*function updateForAjax(array &$js) {
+		parent::updateForAjax($js);
 		$array = $this->getOptionListForDropDown();
 		if($array && count($array)) {
 			$jsonArray = array();
@@ -470,7 +535,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				'v' => $jsonArray
 			);
 		}
-	}
+	}*/
 // ######################################## *** debug functions
 
 }
