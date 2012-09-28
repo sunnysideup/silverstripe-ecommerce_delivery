@@ -477,7 +477,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	static $table_sub_title;
 
 	function getTableSubTitle() {
-		return _t('PickUpOrDeliveryModifier.TABLE_SUB_TITLE', $this->stat('table_sub_title'));
+		return _t('PickUpOrDeliveryModifier.TABLESUBTITLE', $this->stat('table_sub_title'));
 	}
 
 // ######################################## *** debug functions
