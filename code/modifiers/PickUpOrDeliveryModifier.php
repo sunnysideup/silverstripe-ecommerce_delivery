@@ -473,22 +473,13 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			'v' => $jsonOptions
 		);
 	}
-	/*function updateForAjax(array &$js) {
-		parent::updateForAjax($js);
-		$array = $this->getOptionListForDropDown();
-		if($array && count($array)) {
-			$jsonArray = array();
-			foreach($array as $key => $value) {
-				$jsonArray[] = array("id" => $key, "name" => $value);
-			}
-			$js[] = array(
-				't' => "dropdown",
-				's' => "PickupOrDeliveryType",
-				'p' => $this->LiveOptionID(),
-				'v' => $jsonArray
-			);
-		}
-	}*/
+	
+	static $table_sub_title;
+	
+	function getTableSubTitle() {
+		return _t('PickUpOrDeliveryModifier.TABLE_SUB_TITLE', $this->stat('table_sub_title'));
+	}
+
 // ######################################## *** debug functions
 
 }
