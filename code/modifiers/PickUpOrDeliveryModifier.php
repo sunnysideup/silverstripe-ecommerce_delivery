@@ -125,13 +125,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return ($this->ShowForm() && self::$include_form_in_order_table) ? true : false;
 	}
 
-	/**
-	 * @return Boolean
-	 */
-	public function ShowFormOutsideEditableOrderTable() {
-		return $this->ShowFormInEditableOrderTable() ? 0 : 1;
-	}
-
 	function getModifierForm($optionalController = null, $optionalValidator = null) {
 		Requirements::themedCSS("PickUpOrDeliveryModifier");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
