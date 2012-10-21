@@ -112,8 +112,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $array;
 	}
 
-	function getIsDefaultNice(){return $this->IsDefaultNice();}
-	function IsDefaultNice(){
+	function IsDefaultNice(){return $this->getIsDefaultNice();}
+	function getIsDefaultNice(){
 		return $this->IsDefault ? "yes"  : "no";
 	}
 
