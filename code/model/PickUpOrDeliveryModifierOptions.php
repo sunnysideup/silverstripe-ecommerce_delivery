@@ -67,7 +67,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $summary_fields = array(
-		"IsDefaultNice" => "Default Option",
+		"IsDefaultNice",
 		"Code",
 		"Name"
 	);
