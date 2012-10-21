@@ -40,6 +40,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $field_labels = array(
+		"IsDefaultNice" => "Default option",
 		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
 		"Name" => "Long Name",
