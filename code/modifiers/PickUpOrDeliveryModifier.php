@@ -502,8 +502,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		);
 	}
 
-	static $table_sub_title;
-
+	function TableSubTitle() {return $this->getTableSubTitle();}
 	function getTableSubTitle() {
 		return $this->RegionAndCountry;
 	}
