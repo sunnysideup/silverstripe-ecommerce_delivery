@@ -14,6 +14,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 	public static $db = array(
 		"TotalWeight" => "Double",
+		"RegionAndCountry" => "Varchar",
 		"SerializedCalculationObject" => "Text",
 		"DebugString" => "HTMLText",
 		"SubTotalAmount" => "Currency"
@@ -99,6 +100,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$this->checkField("OptionID");
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
+		$this->checkField("RegionAndCountry");
 		$this->checkField("DebugString");
 		parent::runUpdate($force);
 	}
@@ -167,7 +169,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
 		if($options) {
 			foreach($options as $option) {
-				
+
 				if($countryID) {
 					$optionCountries = $option->AvailableInCountries();
 					if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) { // Invalid
@@ -192,7 +194,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 		return new DataObjectSet($result);
 	}
-	
+
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
 	public function ShowInTable() {
@@ -225,7 +227,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 */
 	protected function LiveOptionID() {
 		$options = $this->LiveOptions();
-		
+
 		if($options->find('ID', $this->OptionID)) {
 			return $this->OptionID;
 		}
@@ -295,6 +297,39 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected function LiveSubTotalAmount() {
 		$order = $this->Order();
 		return $order->SubTotal();
+	}
+
+	protected function LiveRegionAndCountry() {
+		$details = array();
+		$option = $this->Option();
+		if($option) {
+			$optionRegions = $option->AvailableInRegions();
+			if($optionRegions && $optionRegions->count()) {
+				$regionID = EcommerceRegion::get_region();
+				if($regionID) {
+					$region = DataObject::get_one("EcommerceRegion", $regionID);
+					if($region) {
+						$details[] = $region->Name;
+					}
+				}
+			}
+			$optionCountries = $option->AvailableInCountries();
+			if($optionCountries && $optionCountries->count()) {
+				$countryID = EcommerceCountry::get_country_id();
+				if($countryID) {
+					$country = DataObject::get_by_id("EcommerceCountry", $countryID);
+					if($country) {
+						$details[] = $country->Name;
+					}
+				}
+			}
+		}
+		else {
+			return _t("PickUpOrDeliveryModifier.NOTSELECTED", "No delivery option has been selected");
+		}
+		if(count($details)) {
+			return "(".implode(", ", $details).")";
+		}
 	}
 
 	/**
@@ -466,13 +501,12 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			'v' => $jsonOptions
 		);
 	}
-	
+
 	static $table_sub_title;
 
 	function getTableSubTitle() {
-		return _t('PickUpOrDeliveryModifier.TABLESUBTITLE', $this->stat('table_sub_title'));
+		return $this->RegionAndCountry;
 	}
-
 // ######################################## *** debug functions
 
 }
