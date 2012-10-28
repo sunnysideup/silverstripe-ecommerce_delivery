@@ -303,24 +303,18 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$details = array();
 		$option = $this->Option();
 		if($option) {
-			$optionRegions = $option->AvailableInRegions();
-			if($optionRegions && $optionRegions->count()) {
-				$regionID = EcommerceRegion::get_region();
-				if($regionID) {
-					$region = DataObject::get_one("EcommerceRegion", $regionID);
-					if($region) {
-						$details[] = $region->Name;
-					}
+			$regionID = EcommerceRegion::get_region();
+			if($regionID) {
+				$region = DataObject::get_one("EcommerceRegion", $regionID);
+				if($region) {
+					$details[] = $region->Name;
 				}
 			}
-			$optionCountries = $option->AvailableInCountries();
-			if($optionCountries && $optionCountries->count()) {
-				$countryID = EcommerceCountry::get_country_id();
-				if($countryID) {
-					$country = DataObject::get_by_id("EcommerceCountry", $countryID);
-					if($country) {
-						$details[] = $country->Name;
-					}
+			$countryID = EcommerceCountry::get_country_id();
+			if($countryID) {
+				$country = DataObject::get_by_id("EcommerceCountry", $countryID);
+				if($country) {
+					$details[] = $country->Name;
 				}
 			}
 		}
@@ -502,10 +496,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		);
 	}
 
-	function TableSubTitle() {return $this->getTableSubTitle();}
-	function getTableSubTitle() {
-		return $this->RegionAndCountry;
-	}
 // ######################################## *** debug functions
 
 }

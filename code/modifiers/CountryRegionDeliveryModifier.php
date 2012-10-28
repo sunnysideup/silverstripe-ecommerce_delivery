@@ -1,7 +1,7 @@
-<?
+<?php
 
 class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
-	
+
 	public function ShowForm() {
 		$show = parent::ShowForm();
 		$options = $this->LiveOptions();
@@ -19,7 +19,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
 		if($options) {
 			foreach($options as $option) {
-				
+
 				if($countryID) {
 					$optionCountries = $option->AvailableInCountries();
 					if(! $optionCountries->find('ID', $countryID)) { // Invalid
@@ -41,7 +41,13 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 		if(! isset($result)) {
 			$result[] = PickUpOrDeliveryModifierOptions::default_object();
 		}
-
 		return new DataObjectSet($result);
 	}
+
+
+	function TableSubTitle() {return $this->getTableSubTitle();}
+	function getTableSubTitle() {
+		return $this->RegionAndCountry;
+	}
+
 }
