@@ -322,7 +322,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			return _t("PickUpOrDeliveryModifier.NOTSELECTED", "No delivery option has been selected");
 		}
 		if(count($details)) {
-			return "(".implode(", ", $details).")";
+			return implode(", ", $details);
 		}
 	}
 
