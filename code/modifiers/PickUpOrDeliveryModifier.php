@@ -97,11 +97,13 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return void
 	 */
 	public function runUpdate($force = true) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('PickupOrDeliveryModifier::runUpdate');
 		$this->checkField("OptionID");
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("RegionAndCountry");
 		$this->checkField("DebugString");
+		if (isset($_GET['debug_profile'])) Profiler::unmark('PickupOrDeliveryModifier::runUpdate');
 		parent::runUpdate($force);
 	}
 
