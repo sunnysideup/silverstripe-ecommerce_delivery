@@ -24,6 +24,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"ExplanationPage" => "SiteTree"
 	);
 
+	public static $has_many = array(
+		"PickUpOrDeliveryModifierOptions_WeightBracket" => "PickUpOrDeliveryModifierOptions_WeightBracket"
+	);
+
 	public static $many_many = array(
 		"AvailableInCountries" => "EcommerceCountry",
 		"AvailableInRegions" => "EcommerceRegion"
@@ -47,7 +51,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"MinimumDeliveryCharge" => "Minimum delivery charge. Enter zero (0) to ignore.",
 		"MaximumDeliveryCharge" => "Maximum delivery charge. Enter zero (0) to ignore.",
 		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if the total order is over ... then there is no fee for this option). Enter zero (0) to ignore.",
-		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. Enter zero (0) to ignore.",
+		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. Enter zero (0) to ignore. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
 		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.  Enter zero (0) to ignore.",
 		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).  Enter zero (0) to ignore.",
 		"FixedCost" =>  "This option has a fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).  Enter zero (0) to ignore.",
@@ -132,6 +136,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Link to page explaining postage / delivery (if any)", "SiteTree" ));
+		$pickUpOrDeliveryModifierOptions_WeightBrackets = $this->PickUpOrDeliveryModifierOptions_WeightBracket();
+		if($pickUpOrDeliveryModifierOptions_WeightBrackets && $pickUpOrDeliveryModifierOptions_WeightBrackets->count()) {
+			$fields->replaceField("WeightMultiplier", new LiteralField("WeightMultiplier", "<p>This option uses weight brackets to calculate weight cost.</p>"));
+		}
 		return $fields;
 	}
 
@@ -214,9 +222,13 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
 	static $db = array(
 		"Name" => "Varchar",
-		"MinimumWeight" => "Int",
-		"MaximumWeight" => "Int",
+		"MinimumWeight" => "Double",
+		"MaximumWeight" => "Double",
 		"FixedCost" => "Currency"
+	);
+
+	static $has_one = array(
+		"PickUpOrDeliveryModifierOptions" => "PickUpOrDeliveryModifierOptions",
 	);
 
 	public static $indexes = array(
@@ -229,9 +241,9 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 	);
 
 	public static $field_labels = array(
-		"Name" => "Varchar",
-		"MinimumWeight" => "Int",
-		"MaximumWeight" => "Int",
+		"Name" => "Description (e.g. small parcel)",
+		"MinimumWeight" => "The minimum weight in kilograms",
+		"MaximumWeight" => "The maximum weight in kilograms",
 		"FixedCost" => "Currency"
 	);
 
