@@ -208,3 +208,45 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	}
 }
 
+
+
+class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
+
+	static $db = array(
+		"Name" => "Varchar",
+		"MinimumWeight" => "Int",
+		"MaximumWeight" => "Int",
+		"FixedCost" => "Currency"
+	);
+
+	public static $indexes = array(
+		"MinimumWeight" => true,
+		"MaximumWeight" => true
+	);
+
+	public static $searchable_fields = array(
+		"Name" => "PartialMatchFilter"
+	);
+
+	public static $field_labels = array(
+		"Name" => "Varchar",
+		"MinimumWeight" => "Int",
+		"MaximumWeight" => "Int",
+		"FixedCost" => "Currency"
+	);
+
+	public static $summary_fields = array(
+		"Name",
+		"MinimumWeight",
+		"MaximumWeight"
+	);
+
+	public static $singular_name = "Weight Bracket";
+		function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
+
+	public static $plural_name = "Weight Brackets";
+		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
+
+	public static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
+
+}
