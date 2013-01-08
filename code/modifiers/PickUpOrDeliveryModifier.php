@@ -70,6 +70,17 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected static $total_weight = null;
 
 	/**
+	 * @var DataObjectSet
+	 */
+	protected static $available_options = null;
+
+	/**
+	 * @var PickUpOrDeliveryModifierOptions
+	 * The most applicable option
+	 */
+	protected static $selected_option = null;
+
+	/**
 	 * @var Double
 	 * the total amount charged in the end.
 	 * saved here for speed's sake
@@ -111,7 +122,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	public function runUpdate($force = true) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('PickupOrDeliveryModifier::runUpdate');
 		self::$calculations_done = false;
+		self::$selected_option = null;
+		self::$available_options = null;
 		$this->checkField("OptionID");
+		$this->checkField("SerializedCalculationObject");
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("RegionAndCountry");
@@ -226,35 +240,38 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return DataObjectSet
 	 */
 	protected function liveOptions() {
-		$countryID = EcommerceCountry::get_country_id();
-		$regionID = EcommerceRegion::get_region_id();
-		$weight = $this->LiveTotalWeight();
-		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
-		if($options) {
-			foreach($options as $option) {
-				//check countries
-				if($countryID) {
-					$optionCountries = $option->AvailableInCountries();
-					//exclude if not found in country list
-					if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) {
-						continue;
+		if(!self::$available_options) {
+			$countryID = EcommerceCountry::get_country_id();
+			$regionID = EcommerceRegion::get_region_id();
+			$weight = $this->LiveTotalWeight();
+			$options = DataObject::get('PickUpOrDeliveryModifierOptions');
+			if($options) {
+				foreach($options as $option) {
+					//check countries
+					if($countryID) {
+						$optionCountries = $option->AvailableInCountries();
+						//exclude if not found in country list
+						if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) {
+							continue;
+						}
 					}
-				}
-				//check regions
-				if($regionID) {
-					$optionRegions = $option->AvailableInRegions();
-					//exclude if not found in region list
-					if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
-						continue;
+					//check regions
+					if($regionID) {
+						$optionRegions = $option->AvailableInRegions();
+						//exclude if not found in region list
+						if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
+							continue;
+						}
 					}
+					$result[] = $option;
 				}
-				$result[] = $option;
 			}
+			if(! isset($result)) {
+				$result[] = PickUpOrDeliveryModifierOptions::default_object();
+			}
+			self::$available_options = new DataObjectSet($result);
 		}
-		if(! isset($result)) {
-			$result[] = PickUpOrDeliveryModifierOptions::default_object();
-		}
-		return new DataObjectSet($result);
+		return self::$available_options;
 	}
 
 
@@ -265,15 +282,19 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Int
 	 */
 	protected function LiveOptionID() {
-		$options = $this->liveOptions();
-		if($options->find('ID', $this->OptionID)) {
-			return $this->OptionID;
+		if(!self::$selected_option) {
+			$options = $this->liveOptions();
+			if(self::$selected_option = $options->find('ID', $this->OptionID)) {
+				//do nothing;
+			}
+			else {
+				self::$selected_option = $options->find('IsDefault', 1);
+				if(! self::$selected_option) {
+					self::$selected_option = $options->First();
+				}
+			}
 		}
-		$option = $options->find('IsDefault', 1);
-		if(! $option) {
-			$option = $options->First();
-		}
-		return $option->ID;
+		return self::$selected_option->ID;
 	}
 
 	/**
@@ -301,6 +322,17 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected function LiveSubTotalAmount() {
 		$order = $this->Order();
 		return $order->SubTotal();
+	}
+
+	/**
+	 * description of region and country being shipped to.
+	 * @return PickUpOrDeliveryModifierOptions | NULL
+	 */
+	protected function LiveSerializedCalculationObject() {
+		$obj = $this->liveOptionObject();
+		if($obj) {
+			return serialize($obj);
+		}
 	}
 
 	/**
