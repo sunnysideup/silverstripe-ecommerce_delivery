@@ -167,6 +167,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected function LiveOptions() {
 		$countryID = EcommerceCountry::get_country_id();
 		$regionID = EcommerceRegion::get_region();
+		$weight = $this->LiveTotalWeight();
 
 		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
 		if($options) {
@@ -182,6 +183,20 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				if($regionID) {
 					$optionRegions = $option->AvailableInRegions();
 					if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) { // Invalid
+						continue;
+					}
+				}
+
+				$weightBrackets = $option->WeightBrackets();
+				if($weightBrackets->Count()) {
+					$found = false;
+					foreach($weightBrackets as $weightBracket) {
+						if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
+							$found = true;
+							break;
+						}
+					}
+					if(! $found) {
 						continue;
 					}
 				}

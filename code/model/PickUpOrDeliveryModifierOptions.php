@@ -25,7 +25,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	public static $has_many = array(
-		"PickUpOrDeliveryModifierOptions_WeightBracket" => "PickUpOrDeliveryModifierOptions_WeightBracket"
+		"WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket"
 	);
 
 	public static $many_many = array(
@@ -136,8 +136,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Link to page explaining postage / delivery (if any)", "SiteTree" ));
-		$pickUpOrDeliveryModifierOptions_WeightBrackets = $this->PickUpOrDeliveryModifierOptions_WeightBracket();
-		if($pickUpOrDeliveryModifierOptions_WeightBrackets && $pickUpOrDeliveryModifierOptions_WeightBrackets->count()) {
+		$weightBrackets = $this->WeightBrackets();
+		if($weightBrackets && $weightBrackets->count()) {
 			$fields->replaceField("WeightMultiplier", new LiteralField("WeightMultiplier", "<p>This option uses weight brackets to calculate weight cost.</p>"));
 		}
 		return $fields;
@@ -228,7 +228,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 	);
 
 	static $has_one = array(
-		"PickUpOrDeliveryModifierOptions" => "PickUpOrDeliveryModifierOptions",
+		"Option" => "PickUpOrDeliveryModifierOptions",
 	);
 
 	public static $indexes = array(
