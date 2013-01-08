@@ -7,6 +7,10 @@
 **/
 
 
+Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountry');
+Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
+
+
 //copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings
 //===================---------------- START ecommerce_delivery MODULE ----------------===================
 //MUST SET
@@ -24,8 +28,6 @@ StoreAdmin:
 	]
 
 */
-//Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountry');
-//Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
 
 //MAY SET
 //PickUpOrDeliveryModifier::set_include_form_in_order_table(true);
