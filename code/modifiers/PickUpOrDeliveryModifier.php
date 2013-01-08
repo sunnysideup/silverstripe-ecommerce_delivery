@@ -418,29 +418,28 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		}
 		return self::$actual_charges;
 	}
-
-
+	
 	protected function LiveTotalWeight() {
 		if(self::get_weight_field()) {
 			if(self::$total_weight === null) {
-				$items = ShoppingCart::get_items();
+				self::$total_weight = 0;
+				$items = $this->Order()->Items();
+				$fieldName = self::get_weight_field();
 				//get index numbers for bonus products - this can only be done now once they have actually been added
-				if($items) {
-					foreach($items as $itemIndex => $item) {
-						if($product = $item->Buyable()) {
-							$fieldName = self::get_weight_field();
+				foreach($items as $itemIndex => $item) {
+					$buyable = $item->Buyable()
+					if($buyable) {
 						// Calculate the total weight of the order
-							if(!empty($product->$fieldName) && $item->Quantity) {
-								self::$total_weight += intva($product->$fieldName) * $item->Quantity;
-							}
-							elseif(!$product->Weight)  {
-								$this->debugMessage .= "<hr />product without weight: ".$product->Weight;
-							}
-							elseif(!$item->Quantity) {
-								$this->debugMessage .= "<hr />item without uc quanty: ".$item->Quantity;
-								if($this->quanty) {
-									$this->debugMessage .= "<hr />item does have lc quanty: ".$item->quanty;
-								}
+						if(! empty($buyable->$fieldName) && $item->Quantity) {
+							self::$total_weight += intva($buyable->$fieldName) * $item->Quantity;
+						}
+						elseif(! $buyable->Weight)  {
+							$this->debugMessage .= "<hr/>buyable without weight: #{$buyable->ID}";
+						}
+						elseif(! $item->Quantity) {
+							$this->debugMessage .= "<hr/>item without uc quanty: #{$item->ID}";
+							if($this->quanty) {
+								$this->debugMessage .= "<hr/>item does have lc quanty: #{$item->ID}";
 							}
 						}
 					}
