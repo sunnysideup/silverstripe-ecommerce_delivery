@@ -355,7 +355,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		self::$actual_charges = 0;
 		if($items = $this->Order()->Items()) {
 			$amount = $this->LiveSubTotalAmount();
-			$weightBrackets = $option->WeightBrackets();
+			$weightBrackets = $obj->WeightBrackets();
 			$foundWeightBracket = null;
 			if($weightBrackets->Count()) {
 				foreach($weightBrackets as $weightBracket) {
