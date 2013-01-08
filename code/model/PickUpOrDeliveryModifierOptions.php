@@ -228,7 +228,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 	);
 
 	static $has_one = array(
-		"Option" => "PickUpOrDeliveryModifierOptions",
+		"Option" => "PickUpOrDeliveryModifierOptions"
 	);
 
 	public static $indexes = array(
@@ -250,7 +250,8 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 	public static $summary_fields = array(
 		"Name",
 		"MinimumWeight",
-		"MaximumWeight"
+		"MaximumWeight",
+		"FixedCost"
 	);
 
 	public static $singular_name = "Weight Bracket";
