@@ -39,7 +39,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->replaceField("CountryCode", new DropDownField("CountryCode", self::$field_labels["CountryCode"], Geoip::getCountryDropDown()));
 		//debug fields
 		$fields->removeByName("TotalWeight");
 		$fields->addFieldToTab("Root.Debug", new ReadonlyField("TotalWeightShown", "total weight used for calculation", $this->TotalWeight));
@@ -66,31 +65,44 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	/**
 	 * @var Float $total_weight
 	 * the total amount of weight for the order
-	 * this variable is used for internal purposes only.
-	 *
+	 * saved here for speed's sake
 	 */
 	protected static $total_weight = null;
 
+	/**
+	 * @var Double
+	 * the total amount charged in the end.
+	 * saved here for speed's sake
+	 */
 	protected static $actual_charges = 0;
 
+	/**
+	 * @var Boolean
+	 * the total amount charged in the end
+	 * saved here for speed's sake
+	 */
 	protected static $calculations_done = false;
 
+	/**
+	 * @var String
+	 * Debugging tool
+	 */
 	protected $debugMessage = "";
 
 // ######################################## *** CRUD functions (e.g. canEdit)
 
-	function canEdit() {
-		return true;
-	}
 // ######################################## *** init and update functions
 
-
-
+	/**
+	 * set the selected option (selected by user using form)
+	 * @param Int $optionID
+	 */
 	public  function setOption($optionID) {
 		$optionID = intval($optionID);
 		$this->OptionID = $optionID;
 		$this->write();
 	}
+
 	/**
 	 * updates database fields
 	 * @param Bool $force - run it, even if it has run already
@@ -98,22 +110,22 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 */
 	public function runUpdate($force = true) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('PickupOrDeliveryModifier::runUpdate');
+		self::$calculations_done = false;
 		$this->checkField("OptionID");
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("RegionAndCountry");
-		$this->checkField("DebugString");
 		if (isset($_GET['debug_profile'])) Profiler::unmark('PickupOrDeliveryModifier::runUpdate');
 		parent::runUpdate($force);
+		$this->checkField("DebugString");
 	}
-
-
 
 // ######################################## *** form functions (e. g. Showform and getform)
 
 
 
 	/**
+	 * standard Modifier Method
 	 * @return Boolean
 	 */
 	public function ShowForm() {
@@ -129,6 +141,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return ($this->ShowForm() && self::$include_form_in_order_table) ? true : false;
 	}
 
+	/**
+	 *
+	 * @return Form
+	 */
 	function getModifierForm($optionalController = null, $optionalValidator = null) {
 		Requirements::themedCSS("PickUpOrDeliveryModifier");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
@@ -151,7 +167,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$fields = new FieldSet();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$options = $this->LiveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
+		$options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
 		$optionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
 		$actions = new FieldSet(
@@ -160,71 +176,26 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
 	}
 
-	/**
-	 * Returns the available delivery options based on the current order country and region settings.
-	 * @return DataObjectSet
-	 */
-	protected function LiveOptions() {
-		$countryID = EcommerceCountry::get_country_id();
-		$regionID = EcommerceRegion::get_region();
-		$weight = $this->LiveTotalWeight();
-
-		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
-		if($options) {
-			foreach($options as $option) {
-
-				if($countryID) {
-					$optionCountries = $option->AvailableInCountries();
-					if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) { // Invalid
-						continue;
-					}
-				}
-
-				if($regionID) {
-					$optionRegions = $option->AvailableInRegions();
-					if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) { // Invalid
-						continue;
-					}
-				}
-
-				$weightBrackets = $option->WeightBrackets();
-				if($weightBrackets->Count()) {
-					$found = false;
-					foreach($weightBrackets as $weightBracket) {
-						if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
-							$found = true;
-							break;
-						}
-					}
-					if(! $found) {
-						continue;
-					}
-				}
-
-				$result[] = $option;
-			}
-		}
-
-		if(! isset($result)) {
-			$result[] = PickUpOrDeliveryModifierOptions::default_object();
-		}
-
-		return new DataObjectSet($result);
-	}
-
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
+	/**
+	 * @return Boolean
+	 */
 	public function ShowInTable() {
 		return true;
 	}
+
+	/**
+	 * @return Boolean
+	 */
 	public function CanBeRemoved() {
 		return false;
 	}
+
 	/**
 	 * NOTE: the function below is  HACK and needs fixing proper.
 	 *
 	 */
-
 	public function CartValue() {return $this->getCartValue();}
 	public function getCartValue() {
 		return $this->LiveCalculatedTotal();
@@ -232,72 +203,84 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 // ######################################## ***  inner calculations.... USES CALCULATED VALUES
 
-
-	protected function LiveOptionObject() {
+	/**
+	 * returns the current selected option as object
+	 * @return PickUpOrDeliveryModifierOptions;
+	 */
+	protected function liveOptionObject() {
 		return DataObject::get_by_id('PickUpOrDeliveryModifierOptions', $this->LiveOptionID());
 	}
+
+	/**
+	 * works out if Weight is applicable at all
+	 * @return Boolean
+	 */
+	protected function useWeight(){
+		return EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight;
+	}
+
+	/**
+	 * Returns the available delivery options based on the current country and region
+	 * for the order.
+	 * Must always return something!
+	 * @return DataObjectSet
+	 */
+	protected function liveOptions() {
+		$countryID = EcommerceCountry::get_country_id();
+		$regionID = EcommerceRegion::get_region_id();
+		$weight = $this->LiveTotalWeight();
+		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
+		if($options) {
+			foreach($options as $option) {
+				//check countries
+				if($countryID) {
+					$optionCountries = $option->AvailableInCountries();
+					//exclude if not found in country list
+					if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) {
+						continue;
+					}
+				}
+				//check regions
+				if($regionID) {
+					$optionRegions = $option->AvailableInRegions();
+					//exclude if not found in region list
+					if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
+						continue;
+					}
+				}
+				$result[] = $option;
+			}
+		}
+		if(! isset($result)) {
+			$result[] = PickUpOrDeliveryModifierOptions::default_object();
+		}
+		return new DataObjectSet($result);
+	}
+
 
 // ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
 
 	/**
 	 * Precondition : There are always options available.
+	 * @return Int
 	 */
 	protected function LiveOptionID() {
-		$options = $this->LiveOptions();
-
+		$options = $this->liveOptions();
 		if($options->find('ID', $this->OptionID)) {
 			return $this->OptionID;
 		}
-
 		$option = $options->find('IsDefault', 1);
 		if(! $option) {
 			$option = $options->First();
 		}
-
 		return $option->ID;
 	}
 
-	/*protected function LiveOptionID() {
-		$optionID = $this->OptionID;
-		$defaultOption = null;
-		if(!$optionID) {
-			$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
-			$optionID = $defaultOption->ID;
-		}
-		if($optionID) {
-			$optionArray = $this->getOptionListForDropDown();
-			if(is_array($optionArray)) {
-				if(!isset($optionArray[$optionID])){
-					if(!$defaultOption) {
-						$defaultOption = PickUpOrDeliveryModifierOptions::default_object();
-					}
-					if($defaultOption) {
-						if(in_array($defaultOption->ID, $optionArray)) {
-							return $defaultOption->ID;
-						}
-					}
-					if(count($optionArray)) {
-						foreach($optionArray as $id => $title) {
-							return $id;
-						}
-					}
-					$optionID = 0;
-				}
-			}
-		}
-		return $optionID;
-	}*/
-
 	/**
-	*@return string
-	**/
-
-	protected function LiveTableValue() {
-		return $this->LiveCalculatedTotal();
-	}
-
+	 * @return String
+	 */
 	protected function LiveName() {
-		$obj = $this->LiveOptionObject();
+		$obj = $this->liveOptionObject();
 		if(is_object($obj)) {
 			$v = $obj->Name;
 			if($obj->ExplanationPageID) {
@@ -311,18 +294,26 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return _t("PickUpOrDeliveryModifier.POSTAGEANDHANDLING", "Postage and Handling");
 	}
 
+	/**
+	 * cached in Order, no need to cache here.
+	 * @return Double
+	 */
 	protected function LiveSubTotalAmount() {
 		$order = $this->Order();
 		return $order->SubTotal();
 	}
 
+	/**
+	 * description of region and country being shipped to.
+	 * @return String
+	 */
 	protected function LiveRegionAndCountry() {
 		$details = array();
 		$option = $this->Option();
 		if($option) {
-			$regionID = EcommerceRegion::get_region();
+			$regionID = EcommerceRegion::get_region_id();
 			if($regionID) {
-				$region = DataObject::get_one("EcommerceRegion", $regionID);
+				$region = DataObject::get_by_id("EcommerceRegion", $regionID);
 				if($region) {
 					$details[] = $region->Name;
 				}
@@ -344,88 +335,124 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 	/**
-	*@return currency
+	* @return Double
 	**/
-
-
-
 	protected function LiveCalculatedTotal() {
-		$amount = 0;
-		$obj = $this->LiveOptionObject();
+		//________________ start caching mechanism
+		if(self::$calculations_done) {
+			return self::$actual_charges;
+		}
+		self::$calculations_done = true;
+		//________________ end caching mechanism
+
 		self::$actual_charges = 0;
-		if($items = $this->Order()->Items()) {
-			$amount = $this->LiveSubTotalAmount();
-			$weightBrackets = $obj->WeightBrackets();
-			$foundWeightBracket = null;
-			if($weightBrackets->Count()) {
-				$weight = $this->LiveTotalWeight();
-				foreach($weightBrackets as $weightBracket) {
-					if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
-						$foundWeightBracket = $weightBracket;
-						break;
-					}
-				}
-			}
-			if(($amount-0) == 0){
-				self::$actual_charges = 0;
+		//do we have enough information
+		$obj = $this->liveOptionObject();
+		if($items = $this->Order()->Items() && is_object($obj) && $obj->exists()) {
+			$this->debugMessage .= "<hr />option selected: ".$obj->Title.", and items present";
+			//lets check sub-total
+			$subTotalAmount = $this->LiveSubTotalAmount();
+			if(floatval($subTotalAmount) == 0){
 				$this->debugMessage .= "<hr />sub total amount is 0";
 			}
-			else if($foundWeightBracket) {
-				self::$actual_charges = $foundWeightBracket->FixedCost;
-				$this->debugMessage .= "<hr />sub total amount is {$foundWeightBracket->FixedCost}";
+			// no need to charge, order is big enough
+			$minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
+			if($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
+				self::$actual_charges =  0;
+				$this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount ".self::$actual_charges;
 			}
 			else {
-				if( is_object($obj) && $obj->exists()) {
-					// no need to charge, order is big enough
-					$this->debugMessage .= "<hr />option selected ".$obj->Title;
-					$minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
-					if($minForZeroRate > 0 && $minForZeroRate < $amount) {
-						self::$actual_charges =  0;
-						$this->debugMessage .= "<hr />MinimumOrderAmountForZeroRate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount ".self::$actual_charges;
+				$weight = $this->LiveTotalWeight();
+				if($weight) {
+					$this->debugMessage .= "<hr />there is weight: $weight";
+					//weight brackets
+					$weightBrackets = $obj->WeightBrackets();
+					$foundWeightBracket = null;
+					$weightBracketQuantity = 1;
+					if($weightBrackets && $weightBrackets->Count()) {
+						$minimumMinimum = null;
+						$maximumMaximum = null;
+						foreach($weightBrackets as $weightBracket) {
+							if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
+								//look for absolute min and max
+								if($minimumMinimum == null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {  $minimumMinimum = $weightBracket;}
+								if($maximumMaximum == null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {  $maximumMaximum = $weightBracket;}
+								$foundWeightBracket = $weightBracket;
+								break;
+							}
+						}
+						if(!$foundWeightBracket && $minimumMinimum) {
+							if($weight < $minimumMinimum->MinimumWeight) {
+								$foundWeightBracket = $minimumMinimum;
+							}
+						}
+						if(!$foundWeightBracket && $maximumMaximum) {
+							if($weight > $maximumMaximum->MaximumWeight) {
+								$foundWeightBracket = $maximumMaximum->MaximumWeight;
+								$weightBracketQuantity = floor(($weight / $maximumMaximum->MaximumWeight);
+								$restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity)
+								foreach($weightBrackets as $weightBracket) {
+									if($weightBracket->MinimumWeight <= $restWeight && $restWeight <= $weightBracket->MaximumWeight) {
+										$additionalWeightBracket = $weightBracket;
+										break;
+									}
+								}
+							}
+						}
 					}
-					else {
+					//we found some applicable weight brackets
+					if($foundWeightBracket) {
+						self::$actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
+						$this->debugMessage .= "<hr />found Weight Bracket: {$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) times $weightBracketQuantity";
+						if($additionalWeightBracket) {
+							self::$actual_charges += $additionalWeightBracket->FixedCost;
+							$this->debugMessage .= "<hr />+ additional Weight Bracket: {$foundWeightBracket->FixedCost}} ({$foundWeightBracket->Name})";
+						}
+					}
+					elseif($weight && $obj->WeightMultiplier) {
 						// add weight based shipping
-						$weight = $this->LiveTotalWeight();
+						if(!$obj->WeightUnit) {
+							$obj->WeightUnit = 1;
+						}
 						$this->debugMessage .= "<hr />actual weight:".$weight." multiplier = ".$obj->WeightMultiplier." weight unit = ".$obj->WeightUnit." ";
 						//legacy fix
-						if(!$obj->WeightUnit) { $obj->WeightUnit = 1;}
-						if($weight && $obj->WeightMultiplier && $obj->WeightUnit ) {
-							$units = ceil($weight / $obj->WeightUnit);
-							self::$actual_charges += $units * $obj->WeightMultiplier;
-							$this->debugMessage .= "<hr />weight charge: ".self::$actual_charges;
-						}
-						// add percentage
-						if($obj->Percentage) {
-							self::$actual_charges += $amount * $obj->Percentage;
-							$this->debugMessage .= "<hr />percentage charge: ".$amount * $obj->Percentage;
-						}
-						// add fixed price
-						if($obj->FixedCost) {
-							self::$actual_charges += $obj->FixedCost;
-							$this->debugMessage .= "<hr />fixed charge: ". $obj->FixedCost;
-						}
-						//is it enough?
-						if(self::$actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
-							$oldActualCharge = self::$actual_charges;
-							self::$actual_charges = $obj->MinimumDeliveryCharge;
-							$this->debugMessage .= "<hr />too little: actual charge: ".$oldActualCharge.", minimum delivery charge: ".$obj->MinimumDeliveryCharge;
-						}
-						// is it too much
-						if(self::$actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
-							self::$actual_charges = $obj->MaximumDeliveryCharge;
-							$this->debugMessage .= "<hr />too much".self::$actual_charges;
-						}
+						$units = ceil($weight / $obj->WeightUnit);
+						$weightCharge =  $units * $obj->WeightMultiplier;
+						self::$actual_charges += $weightCharge;
+						$this->debugMessage .= "<hr />weight charge: ".$weightCharge;
 					}
 				}
-				else {
-					//do nothing
-					$this->debugMessage .= "<hr />default";
+					// add percentage
+				if($obj->Percentage) {
+					$percentageCharge = $subTotalAmount * $obj->Percentage;
+					self::$actual_charges += $percentageCharge;
+					$this->debugMessage .= "<hr />percentage charge: ".$percentageCharge;
+				}
+				// add fixed price
+				if($obj->FixedCost) {
+					self::$actual_charges += $obj->FixedCost;
+					$this->debugMessage .= "<hr />fixed charge: ". $obj->FixedCost;
+				}
+				//is it enough?
+				if(self::$actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
+					$oldActualCharge = self::$actual_charges;
+					self::$actual_charges = $obj->MinimumDeliveryCharge;
+					$this->debugMessage .= "<hr />too little: actual charge: ".$oldActualCharge.", minimum delivery charge: ".$obj->MinimumDeliveryCharge;
+				}
+				// is it too much
+				if(self::$actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
+					self::$actual_charges = $obj->MaximumDeliveryCharge;
+					$this->debugMessage .= "<hr />too much: ".self::$actual_charges.", maximum delivery charge is ".$obj->MaximumDeliveryCharge;
 				}
 			}
 		}
 		else {
-			self::$actual_charges = 0;
-			$this->debugMessage .= "<hr />no action";
+			if(!$items) {
+				$this->debugMessage .= "<hr />no items present";
+			}
+			else {
+				$this->debugMessage .= "<hr />no delivery option available";
+			}
 		}
 		$this->debugMessage .= "<hr />final score: ".self::$actual_charges;
 		if(isset($_GET["debug"])) {
@@ -434,27 +461,24 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return self::$actual_charges;
 	}
 
+	/**
+	 *
+	 *
+	 * @return Double
+	 */
 	protected function LiveTotalWeight() {
-		if(self::get_weight_field()) {
-			if(self::$total_weight === null) {
-				self::$total_weight = 0;
-				$items = $this->Order()->Items();
-				$fieldName = self::get_weight_field();
-				//get index numbers for bonus products - this can only be done now once they have actually been added
-				foreach($items as $itemIndex => $item) {
-					$buyable = $item->Buyable();
-					if($buyable) {
-						// Calculate the total weight of the order
-						if(! empty($buyable->$fieldName) && $item->Quantity) {
-							self::$total_weight += intval($buyable->$fieldName) * $item->Quantity;
-						}
-						elseif(! $buyable->Weight)  {
-							$this->debugMessage .= "<hr/>buyable without weight: #{$buyable->ID}";
-						}
-						elseif(! $item->Quantity) {
-							$this->debugMessage .= "<hr/>item without uc quanty: #{$item->ID}";
-							if($this->quanty) {
-								$this->debugMessage .= "<hr/>item does have lc quanty: #{$item->ID}";
+		if(self::$total_weight === null) {
+			self::$total_weight = 0;
+			if($this->useWeight()) {
+				if($fieldName = self::get_weight_field()) {
+					$items = $this->Order()->Items();
+					//get index numbers for bonus products - this can only be done now once they have actually been added
+					foreach($items as $itemIndex => $item) {
+						$buyable = $item->Buyable();
+						if($buyable) {
+							// Calculate the total weight of the order
+							if(! empty($buyable->$fieldName) && $item->Quantity) {
+								self::$total_weight += $buyable->$fieldName * $item->Quantity;
 							}
 						}
 					}
@@ -464,6 +488,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		return self::$total_weight;
 	}
 
+	/**
+	 * returns an explanation of cost.
+	 * @return String
+	 */
 	protected function LiveDebugString() {
 		return $this->debugMessage;
 	}

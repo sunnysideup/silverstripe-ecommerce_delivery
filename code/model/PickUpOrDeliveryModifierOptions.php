@@ -48,13 +48,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
 		"Name" => "Long Name",
-		"MinimumDeliveryCharge" => "Minimum delivery charge. Enter zero (0) to ignore.",
-		"MaximumDeliveryCharge" => "Maximum delivery charge. Enter zero (0) to ignore.",
-		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if the total order is over ... then there is no fee for this option). Enter zero (0) to ignore.",
-		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. Enter zero (0) to ignore. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
-		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.  Enter zero (0) to ignore.",
-		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).  Enter zero (0) to ignore.",
-		"FixedCost" =>  "This option has a fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).  Enter zero (0) to ignore.",
+		"MinimumDeliveryCharge" => "Minimum delivery charge.",
+		"MaximumDeliveryCharge" => "Maximum delivery charge.",
+		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if this option is selected and the total order is over [enter below] then delivery is free).",
+		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
+		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
+		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
+		"FixedCost" =>  "Fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).",
 		"Sort" =>  "Sort Index - lower numbers show first."
 	);
 
@@ -89,24 +89,36 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 
 	public static $default_sort = "\"IsDefault\" DESC, \"Sort\" ASC, \"Name\" ASC";
 
+	/**
+	 * returns the default PickUpOrDeliveryModifierOptions object
+	 * if none exists, it creates one.
+	 * @return PickUpOrDeliveryModifierOptions
+	 */
 	static function default_object() {
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		if($obj = DataObject::get_one("PickUpOrDeliveryModifierOptions", $filter = "\"IsDefault\" = 1")) {
-			return $obj;
+			//do nothing
 		}
 		else {
 			$obj = new PickUpOrDeliveryModifierOptions();
 			$obj->IsDefault = 1;
 			$obj->write();
-			return $obj;
 		}
+		return $obj;
 	}
 
+	/**
+	 * returns an array of countries available for all options combined.
+	 * like this
+	 * array(
+	 *	"NZ" => "NZ"
+	 * );
+	 * @return Array
+	 */
 	static function get_all_as_country_array() {
 		$array = array();
-		$Options = DataObject::get("PickUpOrDeliveryModifierOptions");
-		if($Options) {
-			foreach($Options as $option) {
+		$options = DataObject::get("PickUpOrDeliveryModifierOptions");
+		if($options) {
+			foreach($options as $option) {
 				if($countries = $option->AvailableInCountries()) {
 					foreach($countries as $country) {
 						$array[$option->Code][] = $country->Code;
@@ -117,11 +129,17 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $array;
 	}
 
+	/**
+	 * @return String
+	 */
 	function IsDefaultNice(){return $this->getIsDefaultNice();}
 	function getIsDefaultNice(){
 		return $this->IsDefault ? "yes"  : "no";
 	}
 
+	/**
+	 * standard SS method
+	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$countryField = $this->createManyManyComplexTableField("EcommerceCountry", "AvailableInCountries");
@@ -136,10 +154,22 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Link to page explaining postage / delivery (if any)", "SiteTree" ));
-		$weightBrackets = $this->WeightBrackets();
-		if($weightBrackets && $weightBrackets->count()) {
-			$fields->replaceField("WeightMultiplier", new LiteralField("WeightMultiplier", "<p>This option uses weight brackets to calculate weight cost.</p>"));
+		$fields->addFieldToTab("Root.Main", new HeaderField("MinimumAndMaximum", "Minimum and Maximum (enter zero (0) to ignore)"), "MinimumDeliveryCharge");
+		if(EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
+			$fields->addFieldToTab("Root.Main", new HeaderField("WeightOptions", "Weight Options (also see Weight Brackets tab)"), "WeightMultiplier");
+			$weightBrackets = $this->WeightBrackets();
+			if($weightBrackets && $weightBrackets->count()) {
+				$fields->removeByName("WeightMultiplier");
+				$fields->removeByName("WeightUnit");
+			}
 		}
+		else {
+			$fields->removeByName("WeightBrackets");
+			$fields->removeByName("WeightMultiplier");
+			$fields->removeByName("WeightUnit");
+		}
+		$fields->addFieldToTab("Root.Main", new HeaderField("OtherCharges", "Other Charges (enter zero (0) to ignore)"), "Percentage");
+		$fields->addFieldToTab("Root.Main", new HeaderField("MoreInformation", "Other Settings"), "Sort");
 		return $fields;
 	}
 
@@ -181,10 +211,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		}
 	}
 
+	/**
+	 * make sure there is only exactly one default
+	 */
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		// no other record but current one is not default
-		if(!$this->IsDefault && !DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"ID\" <> ".intval($this->ID))) {
+		if((!$this->IsDefault) && (!DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"ID\" <> ".intval($this->ID)))) {
 			DB::query("
 				UPDATE \"PickUpOrDeliveryModifierOptions\"
 				SET \"IsDefault\" = 1
@@ -199,6 +232,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		}
 	}
 
+	/**
+	 * make sure all of unique code
+	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
@@ -216,7 +252,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	}
 }
 
-
+/**
+ * below we record options for weight brackets with fixed cost
+ * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
+ *
+ *
+ *
+ */
 
 class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
@@ -244,7 +286,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 		"Name" => "Description (e.g. small parcel)",
 		"MinimumWeight" => "The minimum weight in kilograms",
 		"MaximumWeight" => "The maximum weight in kilograms",
-		"FixedCost" => "Currency"
+		"FixedCost" => "Total price (fixed cost)"
 	);
 
 	public static $summary_fields = array(
