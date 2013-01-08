@@ -268,8 +268,8 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
 	static $db = array(
 		"Name" => "Varchar",
-		"MinimumWeight" => "Double",
-		"MaximumWeight" => "Double",
+		"MinimumWeight" => "Int",
+		"MaximumWeight" => "Int",
 		"FixedCost" => "Currency"
 	);
 
@@ -288,8 +288,8 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
 	public static $field_labels = array(
 		"Name" => "Description (e.g. small parcel)",
-		"MinimumWeight" => "The minimum weight in kilograms",
-		"MaximumWeight" => "The maximum weight in kilograms",
+		"MinimumWeight" => "The minimum weight in grams",
+		"MaximumWeight" => "The maximum weight in grams",
 		"FixedCost" => "Total price (fixed cost)"
 	);
 

@@ -121,6 +121,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 */
 	public function runUpdate($force = true) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('PickupOrDeliveryModifier::runUpdate');
+		$this->debugMessage = "";
 		self::$calculations_done = false;
 		self::$selected_option = null;
 		self::$available_options = null;
@@ -129,9 +130,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$this->checkField("TotalWeight");
 		$this->checkField("SubTotalAmount");
 		$this->checkField("RegionAndCountry");
+		$this->checkField("CalculatedTotal");
+		$this->checkField("DebugString");
 		if (isset($_GET['debug_profile'])) Profiler::unmark('PickupOrDeliveryModifier::runUpdate');
 		parent::runUpdate($force);
-		$this->checkField("DebugString");
 	}
 
 // ######################################## *** form functions (e. g. Showform and getform)
@@ -384,9 +386,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			$this->debugMessage .= "<hr />option selected: ".$obj->Title.", and items present";
 			//lets check sub-total
 			$subTotalAmount = $this->LiveSubTotalAmount();
-			if(floatval($subTotalAmount) == 0){
-				$this->debugMessage .= "<hr />sub total amount is 0";
-			}
+			$this->debugMessage .= "<hr />sub total amount is: \$". $subTotalAmount;
 			// no need to charge, order is big enough
 			$minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
 			if($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
@@ -396,35 +396,38 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			else {
 				$weight = $this->LiveTotalWeight();
 				if($weight) {
-					$this->debugMessage .= "<hr />there is weight: $weight";
+					$this->debugMessage .= "<hr />there is weight: {$weight}gr.";
 					//weight brackets
 					$weightBrackets = $obj->WeightBrackets();
 					$foundWeightBracket = null;
 					$weightBracketQuantity = 1;
+					$additionalWeightBracket = null;
 					if($weightBrackets && $weightBrackets->Count()) {
 						$minimumMinimum = null;
 						$maximumMaximum = null;
 						foreach($weightBrackets as $weightBracket) {
-							if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
-								//look for absolute min and max
-								if($minimumMinimum == null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {  $minimumMinimum = $weightBracket;}
-								if($maximumMaximum == null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {  $maximumMaximum = $weightBracket;}
+							if((!$foundWeightBracket) && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
 								$foundWeightBracket = $weightBracket;
-								break;
+							}
+							//look for absolute min and max
+							if($minimumMinimum == null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
+								$minimumMinimum = $weightBracket;
+							}
+							if($maximumMaximum == null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
+								$maximumMaximum = $weightBracket;
 							}
 						}
-						if(!$foundWeightBracket && $minimumMinimum) {
+						if(!$foundWeightBracket) {
 							if($weight < $minimumMinimum->MinimumWeight) {
 								$foundWeightBracket = $minimumMinimum;
 							}
-						}
-						if(!$foundWeightBracket && $maximumMaximum) {
-							if($weight > $maximumMaximum->MaximumWeight) {
-								$foundWeightBracket = $maximumMaximum->MaximumWeight;
-								$weightBracketQuantity = floor(($weight / $maximumMaximum->MaximumWeight);
-								$restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity)
+							elseif($weight > $maximumMaximum->MaximumWeight) {
+								$foundWeightBracket = $maximumMaximum;
+								$weightBracketQuantity = floor($weight / $maximumMaximum->MaximumWeight);
+								$restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity);
+								$additionalWeightBracket = null;
 								foreach($weightBrackets as $weightBracket) {
-									if($weightBracket->MinimumWeight <= $restWeight && $restWeight <= $weightBracket->MaximumWeight) {
+									if(($weightBracket->MinimumWeight <= $restWeight) && ($restWeight <= $weightBracket->MaximumWeight)) {
 										$additionalWeightBracket = $weightBracket;
 										break;
 									}
@@ -435,10 +438,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 					//we found some applicable weight brackets
 					if($foundWeightBracket) {
 						self::$actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
-						$this->debugMessage .= "<hr />found Weight Bracket: {$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) times $weightBracketQuantity";
+						$this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times $weightBracketQuantity";
 						if($additionalWeightBracket) {
 							self::$actual_charges += $additionalWeightBracket->FixedCost;
-							$this->debugMessage .= "<hr />+ additional Weight Bracket: {$foundWeightBracket->FixedCost}} ({$foundWeightBracket->Name})";
+							$this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
 						}
 					}
 					elseif($weight && $obj->WeightMultiplier) {
@@ -458,12 +461,12 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				if($obj->Percentage) {
 					$percentageCharge = $subTotalAmount * $obj->Percentage;
 					self::$actual_charges += $percentageCharge;
-					$this->debugMessage .= "<hr />percentage charge: ".$percentageCharge;
+					$this->debugMessage .= "<hr />percentage charge: \$".$percentageCharge;
 				}
 				// add fixed price
-				if($obj->FixedCost) {
+				if($obj->FixedCost <> 0) {
 					self::$actual_charges += $obj->FixedCost;
-					$this->debugMessage .= "<hr />fixed charge: ". $obj->FixedCost;
+					$this->debugMessage .= "<hr />fixed charge: \$". $obj->FixedCost;
 				}
 				//is it enough?
 				if(self::$actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
@@ -486,7 +489,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				$this->debugMessage .= "<hr />no delivery option available";
 			}
 		}
-		$this->debugMessage .= "<hr />final score: ".self::$actual_charges;
+		$this->debugMessage .= "<hr />final score: \$".self::$actual_charges;
 		if(isset($_GET["debug"])) {
 			print_r($this->debugMessage);
 		}
