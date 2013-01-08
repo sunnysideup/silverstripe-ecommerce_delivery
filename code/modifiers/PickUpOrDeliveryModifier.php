@@ -355,9 +355,23 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		self::$actual_charges = 0;
 		if($items = $this->Order()->Items()) {
 			$amount = $this->LiveSubTotalAmount();
+			$weightBrackets = $option->WeightBrackets();
+			$foundWeightBracket = null;
+			if($weightBrackets->Count()) {
+				foreach($weightBrackets as $weightBracket) {
+					if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
+						$foundWeightBracket = $weightBracket;
+						break;
+					}
+				}
+			}
 			if(($amount-0) == 0){
 				self::$actual_charges = 0;
 				$this->debugMessage .= "<hr />sub total amount is 0";
+			}
+			else if($foundWeightBracket) {
+				self::$actual_charges = $foundWeightBracket->FixedCost;
+				$this->debugMessage .= "<hr />sub total amount is {$foundWeightBracket->FixedCost}";
 			}
 			else {
 				if( is_object($obj) && $obj->exists()) {
