@@ -418,7 +418,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		}
 		return self::$actual_charges;
 	}
-	
+
 	protected function LiveTotalWeight() {
 		if(self::get_weight_field()) {
 			if(self::$total_weight === null) {
@@ -427,7 +427,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				$fieldName = self::get_weight_field();
 				//get index numbers for bonus products - this can only be done now once they have actually been added
 				foreach($items as $itemIndex => $item) {
-					$buyable = $item->Buyable()
+					$buyable = $item->Buyable();
 					if($buyable) {
 						// Calculate the total weight of the order
 						if(! empty($buyable->$fieldName) && $item->Quantity) {
