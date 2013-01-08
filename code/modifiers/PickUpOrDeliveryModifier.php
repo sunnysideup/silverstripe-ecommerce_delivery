@@ -431,7 +431,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 					if($buyable) {
 						// Calculate the total weight of the order
 						if(! empty($buyable->$fieldName) && $item->Quantity) {
-							self::$total_weight += intva($buyable->$fieldName) * $item->Quantity;
+							self::$total_weight += intval($buyable->$fieldName) * $item->Quantity;
 						}
 						elseif(! $buyable->Weight)  {
 							$this->debugMessage .= "<hr/>buyable without weight: #{$buyable->ID}";
