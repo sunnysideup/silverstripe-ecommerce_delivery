@@ -358,6 +358,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			$weightBrackets = $obj->WeightBrackets();
 			$foundWeightBracket = null;
 			if($weightBrackets->Count()) {
+				$weight = $this->LiveTotalWeight();
 				foreach($weightBrackets as $weightBracket) {
 					if($weightBracket->MinimumWeight <= $weight && $weight <= $weightBracket->MaximumWeight) {
 						$foundWeightBracket = $weightBracket;
