@@ -10,13 +10,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"IsDefault" => "Boolean",
 		"Code" => "Varchar(25)",
 		"Name" => "Varchar(175)",
+		"Percentage" => "Double",
+		"FixedCost" => "Currency",
+		"WeightMultiplier" => "Double",
+		"WeightUnit" => "Double",
 		"MinimumDeliveryCharge" => "Currency",
 		"MaximumDeliveryCharge" => "Currency",
 		"MinimumOrderAmountForZeroRate" => "Currency",
-		"WeightMultiplier" => "Double",
-		"WeightUnit" => "Double",
-		"Percentage" => "Double",
-		"FixedCost" => "Currency",
 		"Sort" => "Int"
 	);
 
@@ -48,26 +48,26 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
 		"Name" => "Long Name",
+		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
+		"FixedCost" =>  "Fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).",
+		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
+		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
 		"MinimumDeliveryCharge" => "Minimum delivery charge.",
 		"MaximumDeliveryCharge" => "Maximum delivery charge.",
 		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if this option is selected and the total order is over [enter below] then delivery is free).",
-		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
-		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
-		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
-		"FixedCost" =>  "Fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).",
 		"Sort" =>  "Sort Index - lower numbers show first."
 	);
 
 	public static $defaults = array(
 		"Code" => "homedelivery",
 		"Name" => "Home Delivery",
+		"Percentage" => 0,
+		"FixedCost" => 10,
+		"WeightMultiplier" => 0,
+		"WeightUnit" => 1,
 		"MinimumDeliveryCharge" => 10,
 		"MaximumDeliveryCharge" => 100,
 		"MinimumOrderAmountForZeroRate" => 50,
-		"WeightMultiplier" => 0,
-		"WeightUnit" => 1,
-		"Percentage" => 0,
-		"FixedCost" => 10,
 		"Sort" => 100
 	);
 
@@ -154,13 +154,18 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Link to page explaining postage / delivery (if any)", "SiteTree" ));
+
+		//add headings
+		$fields->addFieldToTab("Root.Main", new HeaderField("Charges", "Other Charges (enter zero (0) to ignore)"), "Percentage");
 		$fields->addFieldToTab("Root.Main", new HeaderField("MinimumAndMaximum", "Minimum and Maximum (enter zero (0) to ignore)"), "MinimumDeliveryCharge");
 		if(EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
-			$fields->addFieldToTab("Root.Main", new HeaderField("WeightOptions", "Weight Options (also see Weight Brackets tab)"), "WeightMultiplier");
 			$weightBrackets = $this->WeightBrackets();
 			if($weightBrackets && $weightBrackets->count()) {
 				$fields->removeByName("WeightMultiplier");
 				$fields->removeByName("WeightUnit");
+			}
+			else {
+				$fields->addFieldToTab("Root.Main", new HeaderField("WeightOptions", "Weight Options (also see Weight Brackets tab)"), "WeightMultiplier");
 			}
 		}
 		else {
@@ -168,7 +173,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->removeByName("WeightMultiplier");
 			$fields->removeByName("WeightUnit");
 		}
-		$fields->addFieldToTab("Root.Main", new HeaderField("OtherCharges", "Other Charges (enter zero (0) to ignore)"), "Percentage");
 		$fields->addFieldToTab("Root.Main", new HeaderField("MoreInformation", "Other Settings"), "Sort");
 		return $fields;
 	}
@@ -233,7 +237,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	}
 
 	/**
-	 * make sure all of unique code
+	 * make sure all are unique codes
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
@@ -252,6 +256,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	}
 }
 
+
 /**
  * below we record options for weight brackets with fixed cost
  * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
@@ -259,7 +264,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
  *
  *
  */
-
 class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
 	static $db = array(
