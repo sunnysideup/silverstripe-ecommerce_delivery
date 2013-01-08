@@ -59,7 +59,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 *@var String $weight_field - the field used in the Buyable to work out the weight.
 	 *
 	 */
-	protected static $weight_field = "";
+	protected static $weight_field = 'Weight';
 		static function set_weight_field($s) {self::$weight_field = $s;}
 		static function get_weight_field() {return self::$weight_field;}
 
