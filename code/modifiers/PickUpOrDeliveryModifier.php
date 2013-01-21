@@ -508,12 +508,14 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				if($fieldName = self::get_weight_field()) {
 					$items = $this->Order()->Items();
 					//get index numbers for bonus products - this can only be done now once they have actually been added
-					foreach($items as $itemIndex => $item) {
-						$buyable = $item->Buyable();
-						if($buyable) {
-							// Calculate the total weight of the order
-							if(! empty($buyable->$fieldName) && $item->Quantity) {
-								self::$total_weight += $buyable->$fieldName * $item->Quantity;
+					if($items && $items->count()) {
+						foreach($items as $itemIndex => $item) {
+							$buyable = $item->Buyable();
+							if($buyable) {
+								// Calculate the total weight of the order
+								if(! empty($buyable->$fieldName) && $item->Quantity) {
+									self::$total_weight += $buyable->$fieldName * $item->Quantity;
+								}
 							}
 						}
 					}

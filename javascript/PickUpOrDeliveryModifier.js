@@ -27,20 +27,26 @@ var PickUpOrDeliveryModifier = {
 	availableCountries: new Array(),
 
 	init: function() {
-		var options = {
-			beforeSubmit:  PickUpOrDeliveryModifier.showRequest,  // pre-submit callback
-			success: PickUpOrDeliveryModifier.showResponse,  // post-submit callback
-			dataType: "json"
-		};
-		jQuery('#' + PickUpOrDeliveryModifier.formID).ajaxForm(options);
-		jQuery("#" + PickUpOrDeliveryModifier.formID + " ." + PickUpOrDeliveryModifier.actionsClass).hide();
-		PickUpOrDeliveryModifier.updateCountryList();
-		jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).change(
-			function() {
-				PickUpOrDeliveryModifier.updateCountryList();
-				jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
-			}
-		);
+		if(jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).size() < 2) {
+			jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
+		}
+		else {
+			jQuery("#" + PickUpOrDeliveryModifier.formID).show();
+			var options = {
+				beforeSubmit:  PickUpOrDeliveryModifier.showRequest,  // pre-submit callback
+				success: PickUpOrDeliveryModifier.showResponse,  // post-submit callback
+				dataType: "json"
+			};
+			jQuery('#' + PickUpOrDeliveryModifier.formID).ajaxForm(options);
+			jQuery("#" + PickUpOrDeliveryModifier.formID + " ." + PickUpOrDeliveryModifier.actionsClass).hide();
+			PickUpOrDeliveryModifier.updateCountryList();
+			jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).change(
+				function() {
+					PickUpOrDeliveryModifier.updateCountryList();
+					jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
+				}
+			);
+		}
 	},
 
 	// pre-submit callback
