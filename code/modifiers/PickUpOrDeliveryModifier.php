@@ -146,7 +146,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 */
 	public function ShowForm() {
 		if($this->Order()->Items() ) {
-			if($options = this->liveOptions()) {
+			if($options = $this->liveOptions()) {
 				return $options-count() > 1;
 			}
 		}
