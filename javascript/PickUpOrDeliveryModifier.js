@@ -29,8 +29,10 @@ var PickUpOrDeliveryModifier = {
 	init: function() {
 		if(jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).size() < 2) {
 			jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
+			alert("X");
 		}
 		else {
+			alert("Y");
 			jQuery("#" + PickUpOrDeliveryModifier.formID).show();
 			var options = {
 				beforeSubmit:  PickUpOrDeliveryModifier.showRequest,  // pre-submit callback
