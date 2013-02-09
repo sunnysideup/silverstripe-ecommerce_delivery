@@ -27,7 +27,7 @@ var PickUpOrDeliveryModifier = {
 	availableCountries: new Array(),
 
 	init: function() {
-		if(jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).size() < 2) {
+		if(jQuery("#" + PickUpOrDeliveryModifier.formID + PickUpOrDeliveryModifier.DropdownIDappendix+" option").size() < 1) {
 			jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
 		}
 		else {
