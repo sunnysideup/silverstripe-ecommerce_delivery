@@ -145,9 +145,11 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Boolean
 	 */
 	public function ShowForm() {
-		if($this->Order()->Items() ) {
-			if($options = $this->liveOptions()) {
-				return $options->count() > 1;
+		if($this->ShowInTable()) {
+			if($this->Order()->Items() ) {
+				if($options = $this->liveOptions()) {
+					return $options->count() > 1;
+				}
 			}
 		}
 		return false;
@@ -203,6 +205,9 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Boolean
 	 */
 	public function ShowInTable() {
+		if($this->useWeight() && $this->LiveTotalWeight() == 0) {
+			return false;
+		}
 		return true;
 	}
 
