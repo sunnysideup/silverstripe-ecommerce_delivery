@@ -205,9 +205,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Boolean
 	 */
 	public function ShowInTable() {
-		if($this->useWeight() && $this->LiveTotalWeight() == 0) {
-			return false;
-		}
 		return true;
 	}
 
@@ -500,9 +497,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			}
 		}
 		$this->debugMessage .= "<hr />final score: \$".self::$actual_charges;
-		if(isset($_GET["debug"])) {
-			print_r($this->debugMessage);
-		}
+		//special case, we are using weight and there is no weight!
 		return self::$actual_charges;
 	}
 
