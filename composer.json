@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/ecommerce_delivery",
+	"name": "sunnysideup/ecommerce_delivery",
 	"type": "silverstripe-module",
 	"description": "delivery module for silverstripe e-commerce",
 	"homepage": "http://www.silverstripe-ecommerce.com",
