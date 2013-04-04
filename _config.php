@@ -30,6 +30,7 @@ StoreAdmin:
 //Object::add_extension('EcommerceCountry', 'PickUpOrDeliveryModifierOptionsCountry');
 //Object::add_extension('EcommerceRegion', 'PickUpOrDeliveryModifierOptionsRegion');
 //PickUpOrDeliveryModifier::set_include_form_in_order_table(true);
+//CountryRegionDeliveryModifier::set_check_options_count_to_show_form(false);
 
 //NOTE: add http://svn.gpmd.net/svn/open/multiselectfield/tags/0.2/ for nicer interface
 //===================---------------- END ecommerce_delivery  MODULE ----------------===================

@@ -21,10 +21,16 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 		return $fields;
 	}
 	/*
+	protected static $check_options_count_to_show_form = true;
+	static function set_check_options_count_to_show_form($value) {self::$check_options_count_to_show_form = $value;}
+
 	public function ShowForm() {
 		$show = parent::ShowForm();
-		$options = $this->LiveOptions();
-		return $show && $options->Count() > 1;
+		if(self::$check_options_count_to_show_form) {
+			$options = $this->LiveOptions();
+			$show = $show && $options->Count() > 1;
+		}
+		return $show;
 	}
 
 	/**
