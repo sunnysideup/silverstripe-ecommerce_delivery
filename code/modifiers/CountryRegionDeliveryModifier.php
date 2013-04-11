@@ -17,7 +17,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->replaceField("CountryCode", new DropDownField("CountryCode", self::$field_labels["CountryCode"], Geoip::getCountryDropDown()));
+		$fields->replaceField("CountryCode", new DropDownField("CountryCode", self::$field_labels["CountryCode"], EcommerceCountry::get_country_dropdown()));
 		return $fields;
 	}
 	/*
