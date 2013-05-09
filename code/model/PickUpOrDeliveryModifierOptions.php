@@ -95,7 +95,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 * @return PickUpOrDeliveryModifierOptions
 	 */
 	static function default_object() {
-		if($obj = DataObject::get_one("PickUpOrDeliveryModifierOptions", $filter = "\"IsDefault\" = 1")) {
+		if($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault", "1"))->First()) {
 			//do nothing
 		}
 		else {
@@ -116,8 +116,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 */
 	static function get_all_as_country_array() {
 		$array = array();
-		$options = DataObject::get("PickUpOrDeliveryModifierOptions");
-		if($options) {
+		$options = PickUpOrDeliveryModifierOptions::get();
+		if($options->count()) {
 			foreach($options as $option) {
 				if($countries = $option->AvailableInCountries()) {
 					foreach($countries as $country) {

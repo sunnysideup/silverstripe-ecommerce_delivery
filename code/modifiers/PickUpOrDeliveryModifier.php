@@ -168,8 +168,8 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 *
 	 * @return Form
 	 */
-	function getModifierForm($optionalController = null, $optionalValidator = null) {
-		Requirements::themedCSS("PickUpOrDeliveryModifier");
+	function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
+		Requirements::themedCSS("PickUpOrDeliveryModifier", "ecommerce_delivery");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
@@ -583,7 +583,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @param Array $js javascript array
 	 * @return Array for AJAX JSON
 	 **/
-	function updateForAjax(array &$js) {
+	function updateForAjax(array $js) {
 		parent::updateForAjax($js);
 		$options = $this->LiveOptions()->map('ID', 'Name');
 		foreach($options as $id => $name) {
