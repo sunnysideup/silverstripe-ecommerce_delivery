@@ -70,7 +70,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	protected static $total_weight = null;
 
 	/**
-	 * @var DataObjectSet
+	 * @var DataList
 	 */
 	protected static $available_options = null;
 
@@ -231,7 +231,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return PickUpOrDeliveryModifierOptions;
 	 */
 	protected function liveOptionObject() {
-		return DataObject::get_by_id('PickUpOrDeliveryModifierOptions', $this->LiveOptionID());
+		return PickUpOrDeliveryModifierOptions::get()->byID($this->LiveOptionID());
 	}
 
 	/**
@@ -246,15 +246,15 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * Returns the available delivery options based on the current country and region
 	 * for the order.
 	 * Must always return something!
-	 * @return DataObjectSet
+	 * @return DataList
 	 */
 	protected function liveOptions() {
 		if(!self::$available_options) {
 			$countryID = EcommerceCountry::get_country_id();
 			$regionID = EcommerceRegion::get_region_id();
 			$weight = $this->LiveTotalWeight();
-			$options = DataObject::get('PickUpOrDeliveryModifierOptions');
-			if($options) {
+			$options = PickUpOrDeliveryModifierOptions::get();
+			if($options->count()) {
 				foreach($options as $option) {
 					//check countries
 					if($countryID) {
@@ -278,7 +278,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			if(! isset($result)) {
 				$result[] = PickUpOrDeliveryModifierOptions::default_object();
 			}
-			self::$available_options = new DataObjectSet($result);
+			self::$available_options = new ArrayList($result);
 		}
 		return self::$available_options;
 	}
@@ -354,14 +354,14 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		if($option) {
 			$regionID = EcommerceRegion::get_region_id();
 			if($regionID) {
-				$region = DataObject::get_by_id("EcommerceRegion", $regionID);
+				$region = EcommerceRegion::get()->byID($regionID);
 				if($region) {
 					$details[] = $region->Name;
 				}
 			}
 			$countryID = EcommerceCountry::get_country_id();
 			if($countryID) {
-				$country = DataObject::get_by_id("EcommerceCountry", $countryID);
+				$country = EcommerceCountry::get()->byID($countryID);
 				if($country) {
 					$details[] = $country->Name;
 				}
@@ -559,11 +559,12 @@ class PickUpOrDeliveryModifier extends OrderModifier {
       $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();
 		}
  		if($exist > 0) {
- 			if($modifiers = DataObject::get('PickUpOrDeliveryModifier')) {
-				$defaultOption = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"IsDefault\" = 1");
+			$modifiers = PickUpOrDeliveryModifier::get();
+ 			if($modifiers->count()) {
+				$defaultOption = PickUpOrDeliveryModifierOptions::get()->Filter(array("IsDefault" => 1))->First();
 				foreach($modifiers as $modifier) {
 					if(!isset($modifier->OptionID) || !$modifier->OptionID) {
-						$option = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"Code\" = '".$modifier->Code."'");
+						$option = PickUpOrDeliveryModifierOptions::get()->Filter(array("Code" => $modifier->Code))->First();
 						if(!$option) {
 							$option = $defaultOption;
 						}
@@ -584,7 +585,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Array for AJAX JSON
 	 **/
 	function updateForAjax(array $js) {
-		parent::updateForAjax($js);
+		$js = parent::updateForAjax($js);
 		$options = $this->LiveOptions()->map('ID', 'Name');
 		foreach($options as $id => $name) {
 			$jsonOptions[] = array('id' => $id, 'name' => $name);
@@ -595,6 +596,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			'p' => $this->LiveOptionID(),
 			'v' => $jsonOptions
 		);
+		return $js;
 	}
 
 // ######################################## *** debug functions
@@ -606,7 +608,8 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
 	function processOrderModifier($data, $form = null) {
 		if(isset($data['PickupOrDeliveryType'])) {
 			$newOption = intval($data['PickupOrDeliveryType']);
-			if(DataObject::get_by_id("PickUpOrDeliveryModifierOptions", $newOption)) {
+			$newOptionObj = PickUpOrDeliveryModifierOptions::get()->byID($newOption);
+			if($newOptionObj) {
 				$order = ShoppingCart::current_order();
 				if($order) {
 					if($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {

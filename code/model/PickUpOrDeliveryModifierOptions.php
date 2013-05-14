@@ -95,7 +95,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 * @return PickUpOrDeliveryModifierOptions
 	 */
 	static function default_object() {
-		if($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault", "1"))->First()) {
+		if($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => "1"))->First()) {
 			//do nothing
 		}
 		else {
@@ -120,8 +120,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		if($options->count()) {
 			foreach($options as $option) {
 				if($countries = $option->AvailableInCountries()) {
-					foreach($countries as $country) {
-						$array[$option->Code][] = $country->Code;
+					if($countries->count()) {
+						foreach($countries as $country) {
+							$array[$option->Code][] = $country->Code;
+						}
 					}
 				}
 			}
@@ -180,8 +182,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	private function createManyManyComplexTableField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries") {
 		$title = '';
 		$field = null;
-		$dos = DataObject::get($dataObjectName);
-		if($dos) {
+		$dos = $dataObjectName::get();
+		if($dos->count()) {
 			if(class_exists("MultiSelectField")) {
 				$array = $dos->toDropdownMap('ID','Title');
 				//$name, $title = "", $source = array(), $value = "", $form = null
@@ -193,18 +195,25 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			}
 			else {
 				// $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
-				$field = new ManyManyComplexTableField(
-					$this,
-					$fieldName,
-					$dataObjectName,
-					array('Name' => 'Name'),
-					null,
-					null,
-					"\"Checked\" DESC, \"Name\" ASC"
-				);
-				$field->setAddTitle("Select locations for which this delivery / pick-up option is available");
-				$field->setPermissions(array("export"));
-				$field->setPageSize(250);
+				
+				$gridFieldConfig = GridFieldConfig::create();
+				$gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
+				$gridFieldConfig->addComponent(new GridFieldAddNewButton('buttons-before-left'));
+				$gridFieldConfig->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
+				$gridFieldConfig->addComponent(new GridFieldToolbarHeader());
+				$gridFieldConfig->addComponent($sort = new GridFieldSortableHeader());
+				$gridFieldConfig->addComponent($filter = new GridFieldFilterHeader());
+				$gridFieldConfig->addComponent(new GridFieldDataColumns());
+				$gridFieldConfig->addComponent(new GridFieldEditButton());
+				$gridFieldConfig->addComponent(new GridFieldDeleteAction(true));
+				$gridFieldConfig->addComponent(new GridFieldPageCount('toolbar-header-right'));
+				$gridFieldConfig->addComponent($pagination = new GridFieldPaginator());
+				$gridFieldConfig->addComponent(new GridFieldDetailForm());
+				
+				$source = $this->AvailableInCountries();
+				return new GridField("AvailableInCountries", _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "Available in Countries"), $source , $gridFieldConfig);
+				
+				
 			}
 		}
 		if($field) {
@@ -221,7 +230,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		// no other record but current one is not default
-		if((!$this->IsDefault) && (!DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"ID\" <> ".intval($this->ID)))) {
+		if((!$this->IsDefault) && (PickUpOrDeliveryModifierOptions::get()->Exclude(array("ID" => intval($this->ID)))->count() == 0)) {
 			DB::query("
 				UPDATE \"PickUpOrDeliveryModifierOptions\"
 				SET \"IsDefault\" = 1
@@ -241,7 +250,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
 		$this->Code = eregi_replace("[^[:alnum:]]", " ", $this->Code );
 		$this->Code = trim(eregi_replace(" +", "", $this->Code));
 		$i = 0;
@@ -249,7 +257,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$this->Code = self::$defaults["Code"];
 		}
 		$baseCode = $this->Code;
-		while($other = DataObject::get_one("PickUpOrDeliveryModifierOptions", "\"Code\" = '".$this->Code."' AND \"ID\" <> ".$this->ID) && $i < 10){
+		while(PickUpOrDeliveryModifierOptions::get()->Filter(array("Code" => $this->Code))->Exclude(array("ID" => $this->ID))->count() && $i < 10){
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
 		}
