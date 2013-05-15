@@ -250,8 +250,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-		$this->Code = eregi_replace("[^[:alnum:]]", " ", $this->Code );
-		$this->Code = trim(eregi_replace(" +", "", $this->Code));
+		$this->Code = trim(preg_replace("/[^a-zA-Z0-9]+/", "", $this->Code));
 		$i = 0;
 		if(!$this->Code) {
 			$this->Code = self::$defaults["Code"];
