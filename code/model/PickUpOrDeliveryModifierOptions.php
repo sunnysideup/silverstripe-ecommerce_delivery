@@ -144,11 +144,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$countryField = $this->createManyManyComplexTableField("EcommerceCountry", "AvailableInCountries");
+		$countryField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Countries");
 		if($countryField) {
 			$fields->replaceField("AvailableInCountries", $countryField);
 		}
-		$regionField = $this->createManyManyComplexTableField("EcommerceRegion", "AvailableInRegions");
+		$regionField = $this->createGridField("EcommerceRegion", "AvailableInRegions", "Regions");
 		if($regionField) {
 			$fields->replaceField("AvailableInRegions", $regionField);
 		}
@@ -179,7 +179,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $fields;
 	}
 
-	private function createManyManyComplexTableField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries") {
+	private function createGridField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries", $title) {
 		$title = '';
 		$field = null;
 		$dos = $dataObjectName::get();
@@ -198,7 +198,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 				
 				$gridFieldConfig = GridFieldConfig::create();
 				$gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
-				$gridFieldConfig->addComponent(new GridFieldAddNewButton('buttons-before-left'));
 				$gridFieldConfig->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
 				$gridFieldConfig->addComponent(new GridFieldToolbarHeader());
 				$gridFieldConfig->addComponent($sort = new GridFieldSortableHeader());
@@ -210,10 +209,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 				$gridFieldConfig->addComponent($pagination = new GridFieldPaginator());
 				$gridFieldConfig->addComponent(new GridFieldDetailForm());
 				
-				$source = $this->AvailableInCountries();
-				return new GridField("AvailableInCountries", _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "Available in Countries"), $source , $gridFieldConfig);
-				
-				
+				$source = $this->$fieldName();
+				return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "Available in ".$title), $source , $gridFieldConfig);
 			}
 		}
 		if($field) {

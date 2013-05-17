@@ -14,8 +14,8 @@ Nicolaas Francken [at] sunnysideup.co.nz
 
 Requirements
 -----------------------------------------------
-Ecommerce 1.0+ / SSU Branch
-SilverStripe 2.4+
+Ecommerce 3.0
+SilverStripe 3.0+
 
 Project Home
 -----------------------------------------------
