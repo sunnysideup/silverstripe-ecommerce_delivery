@@ -187,13 +187,13 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 				Requirements::customScript($js, "PickupOrDeliveryModifier");
 			}
 		}
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
 		$options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
 		$optionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction_WithoutLabel('processOrderModifier', 'Update Pickup / Delivery Option')
 		);
 		return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
