@@ -194,7 +194,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$optionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
 		$actions = new FieldList(
-			new FormAction_WithoutLabel('processOrderModifier', 'Update Pickup / Delivery Option')
+			new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
 		);
 		return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
 	}
