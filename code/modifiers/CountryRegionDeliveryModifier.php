@@ -35,7 +35,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 
 	/**
 	 * Returns the available delivery options based on the current order country and region settings.
-	 * @return DataObjectSet
+	 * @return ArrayList
 
 	protected function LiveOptions() {
 		$countryID = EcommerceCountry::get_country_id();
@@ -66,7 +66,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 		if(! isset($result)) {
 			$result[] = PickUpOrDeliveryModifierOptions::default_object();
 		}
-		return new DataObjectSet($result);
+		return new ArrayList($result);
 	}
 	*/
 

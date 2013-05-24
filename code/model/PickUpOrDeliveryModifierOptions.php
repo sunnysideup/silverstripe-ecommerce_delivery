@@ -185,7 +185,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		$dos = $dataObjectName::get();
 		if($dos->count()) {
 			if(class_exists("MultiSelectField")) {
-				$array = $dos->toDropdownMap('ID','Title');
+				$array = $dos->map('ID','Title');
 				//$name, $title = "", $source = array(), $value = "", $form = null
 				$field = new MultiSelectField(
 					$fieldName,
@@ -195,7 +195,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			}
 			else {
 				// $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
-				
+
 				$gridFieldConfig = GridFieldConfig::create();
 				$gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
 				$gridFieldConfig->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
@@ -208,7 +208,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 				$gridFieldConfig->addComponent(new GridFieldPageCount('toolbar-header-right'));
 				$gridFieldConfig->addComponent($pagination = new GridFieldPaginator());
 				$gridFieldConfig->addComponent(new GridFieldDetailForm());
-				
+
 				$source = $this->$fieldName();
 				return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "Available in ".$title), $source , $gridFieldConfig);
 			}
