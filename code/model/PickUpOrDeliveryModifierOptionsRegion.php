@@ -5,15 +5,11 @@
  *
  **/
 
-class PickUpOrDeliveryModifierOptionsRegion extends DataObjectDecorator {
+class PickUpOrDeliveryModifierOptionsRegion extends DataExtension {
 
-	public function extraStatics() {
-		return array (
-			'belongs_many_many' => array(
-				"AvailableInRegions" => "PickUpOrDeliveryModifierOptions"
-			)
-		);
-	}
+	static $belongs_many_many = array(
+		"AvailableInRegions" => "PickUpOrDeliveryModifierOptions"
+	);
 
 }
 
