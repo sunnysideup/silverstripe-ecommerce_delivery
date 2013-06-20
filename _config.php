@@ -14,15 +14,12 @@
 /**
  * ADD TO ECOMMERCE.YAML:
 Order:
-	modifiers: [
-		...
-		PickUpOrDeliveryModifier
-	]
+  modifiers:
+    - PickUpOrDeliveryModifier
+
 StoreAdmin:
-	managed_models: [
-		...
-		PickUpOrDeliveryModifierOptions
-	]
+  managed_models:
+    - PickUpOrDeliveryModifierOptions
 
 */
 
