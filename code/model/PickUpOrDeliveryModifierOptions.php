@@ -257,6 +257,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
 		}
+		if($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
+			if($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
+				$this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
+			}
+		}
 	}
 }
 

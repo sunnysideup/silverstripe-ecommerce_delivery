@@ -586,18 +586,22 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 **/
 	function updateForAjax(array $js) {
 		$js = parent::updateForAjax($js);
-		$options = $this->LiveOptions()->map('ID', 'Name')->toArray();
-		if($options && count($options)) {
-			foreach($options as $id => $name) {
-				$jsonOptions[] = array('id' => $id, 'name' => $name);
+		$jsonOptions = array();
+		$liveOptions = $this->LiveOptions();
+		if($liveOptions && $liveOptions->count()) {
+			$options = $liveOptions->map('ID', 'Name');
+			if($options && count($options)) {
+				foreach($options as $id => $name) {
+					$jsonOptions[] = array('id' => $id, 'name' => $name);
+				}
 			}
-			$js[] = array(
-				't' => 'dropdown',
-				's' => 'PickupOrDeliveryType',
-				'p' => $this->LiveOptionID(),
-				'v' => $jsonOptions
-			);
 		}
+		$js[] = array(
+			't' => 'dropdown',
+			's' => 'PickupOrDeliveryType',
+			'p' => $this->LiveOptionID(),
+			'v' => $jsonOptions
+		);
 		return $js;
 	}
 
