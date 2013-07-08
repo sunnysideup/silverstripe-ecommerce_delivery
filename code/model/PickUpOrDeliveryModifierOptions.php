@@ -185,7 +185,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		$dos = $dataObjectName::get();
 		if($dos->count()) {
 			if(class_exists("MultiSelectField")) {
-				$array = $dos->map('ID','Title');
+				$array = $dos->map('ID','Title')->toArray();
 				//$name, $title = "", $source = array(), $value = "", $form = null
 				$field = new MultiSelectField(
 					$fieldName,

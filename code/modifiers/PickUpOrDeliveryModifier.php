@@ -190,7 +190,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
+		$options = $this->liveOptions()->map('ID', 'Name')->toArray();//$this->getOptionListForDropDown();
 		$optionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
 		$actions = new FieldList(
@@ -589,7 +589,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$jsonOptions = array();
 		$liveOptions = $this->LiveOptions();
 		if($liveOptions && $liveOptions->count()) {
-			$options = $liveOptions->map('ID', 'Name');
+			$options = $liveOptions->map('ID', 'Name')->toArray();
 			if($options && count($options)) {
 				foreach($options as $id => $name) {
 					$jsonOptions[] = array('id' => $id, 'name' => $name);

@@ -41,7 +41,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
 		$countryID = EcommerceCountry::get_country_id();
 		$regionID = EcommerceRegion::get_region();
 
-		$options = DataObject::get('PickUpOrDeliveryModifierOptions');
+		$options = DataObject::get('PickUpOrDeliveryModifierOptions'); //Needs to be upgraded for 3.0 if uncommented.
 		if($options) {
 			foreach($options as $option) {
 
