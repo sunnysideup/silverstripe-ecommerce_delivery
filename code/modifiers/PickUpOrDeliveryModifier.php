@@ -190,7 +190,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$options = $this->liveOptions()->map('ID', 'Name')->toArray();//$this->getOptionListForDropDown();
+		$options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
 		$optionID = $this->LiveOptionID();
 		$fields->push(new DropdownField('PickupOrDeliveryType', 'Preference', $options, $optionID));
 		$actions = new FieldList(
