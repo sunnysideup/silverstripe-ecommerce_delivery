@@ -589,7 +589,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$jsonOptions = array();
 		$liveOptions = $this->LiveOptions();
 		if($liveOptions && $liveOptions->count()) {
-			$options = $liveOptions->map('ID', 'Name')->toArray();
+			$options = $liveOptions->map('ID', 'Name');
 			if($options && count($options)) {
 				foreach($options as $id => $name) {
 					$jsonOptions[] = array('id' => $id, 'name' => $name);
