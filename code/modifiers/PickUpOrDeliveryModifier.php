@@ -12,7 +12,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 // ######################################## *** model defining static variables (e.g. $db, $has_one)
 
-	public static $db = array(
+	private static $db = array(
 		"TotalWeight" => "Double",
 		"RegionAndCountry" => "Varchar",
 		"SerializedCalculationObject" => "Text",
@@ -20,19 +20,17 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		"SubTotalAmount" => "Currency"
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		"Option" => "PickUpOrDeliveryModifierOptions"
 	);
 
-	public static $singular_name = "Pickup / Delivery Charge";
+	private static $singular_name = "Pickup / Delivery Charge";
 		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
 
-	public static $plural_name = "Pickup / Delivery Charges";
+	private static $plural_name = "Pickup / Delivery Charges";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
 
-	protected static $include_form_in_order_table = true;
-		static function set_include_form_in_order_table($b) {self::$include_form_in_order_table = $b;}
-		static function get_include_form_in_order_table() {return self::$include_form_in_order_table;}
+	private static $include_form_in_order_table = true;
 
 
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
@@ -52,47 +50,45 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	}
 
 
-// ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
+// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
 	/**
 	 *@var String $weight_field - the field used in the Buyable to work out the weight.
 	 *
 	 */
-	protected static $weight_field = 'Weight';
-		static function set_weight_field($s) {self::$weight_field = $s;}
-		static function get_weight_field() {return self::$weight_field;}
+	private static $weight_field = 'Weight';
 
 	/**
 	 * @var Float $total_weight
 	 * the total amount of weight for the order
 	 * saved here for speed's sake
 	 */
-	protected static $total_weight = null;
+	private static $total_weight = null;
 
 	/**
 	 * @var DataList
 	 */
-	protected static $available_options = null;
+	private static $available_options = null;
 
 	/**
 	 * @var PickUpOrDeliveryModifierOptions
 	 * The most applicable option
 	 */
-	protected static $selected_option = null;
+	private static $selected_option = null;
 
 	/**
 	 * @var Double
 	 * the total amount charged in the end.
 	 * saved here for speed's sake
 	 */
-	protected static $actual_charges = 0;
+	private static $actual_charges = 0;
 
 	/**
 	 * @var Boolean
 	 * the total amount charged in the end
 	 * saved here for speed's sake
 	 */
-	protected static $calculations_done = false;
+	private static $calculations_done = false;
 
 	/**
 	 * @var String
@@ -120,7 +116,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return void
 	 */
 	public function runUpdate($force = true) {
-		if (isset($_GET['debug_profile'])) Profiler::mark('PickupOrDeliveryModifier::runUpdate');
 		$this->debugMessage = "";
 		self::$calculations_done = false;
 		self::$selected_option = null;
@@ -132,7 +127,6 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$this->checkField("RegionAndCountry");
 		$this->checkField("CalculatedTotal");
 		$this->checkField("DebugString");
-		if (isset($_GET['debug_profile'])) Profiler::unmark('PickupOrDeliveryModifier::runUpdate');
 		parent::runUpdate($force);
 	}
 
@@ -510,7 +504,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		if(self::$total_weight === null) {
 			self::$total_weight = 0;
 			if($this->useWeight()) {
-				if($fieldName = self::get_weight_field()) {
+				if($fieldName = Config::inst()->get('PickUpOrDeliveryModifier', 'weight_field')) {
 					$items = $this->Order()->Items();
 					//get index numbers for bonus products - this can only be done now once they have actually been added
 					if($items && $items->count()) {

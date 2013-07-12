@@ -6,7 +6,7 @@
  */
 class PickUpOrDeliveryModifierOptions extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		"IsDefault" => "Boolean",
 		"Code" => "Varchar(25)",
 		"Name" => "Varchar(175)",
@@ -20,30 +20,30 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"Sort" => "Int"
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		"ExplanationPage" => "SiteTree"
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		"WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket"
 	);
 
-	public static $many_many = array(
+	private static $many_many = array(
 		"AvailableInCountries" => "EcommerceCountry",
 		"AvailableInRegions" => "EcommerceRegion"
 	);
 
-	public static $indexes = array(
+	private static $indexes = array(
 		"IsDefault" => true,
 		"Code" => true
 	);
 
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Code",
 		"Name" => "PartialMatchFilter"
 	);
 
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"IsDefaultNice" => "Default option",
 		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
@@ -58,7 +58,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"Sort" =>  "Sort Index - lower numbers show first."
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"Code" => "homedelivery",
 		"Name" => "Home Delivery",
 		"Percentage" => 0,
@@ -71,23 +71,23 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"Sort" => 100
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"IsDefaultNice",
 		"Code",
 		"Name"
 	);
 
-	public static $casting = array(
+	private static $casting = array(
 		"IsDefaultNice" => "Varchar"
 	);
 
-	public static $singular_name = "Delivery / Pick-up Option";
+	private static $singular_name = "Delivery / Pick-up Option";
 		function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Option");}
 
-	public static $plural_name = "Delivery / Pick-up Options";
+	private static $plural_name = "Delivery / Pick-up Options";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Options");}
 
-	public static $default_sort = "\"IsDefault\" DESC, \"Sort\" ASC, \"Name\" ASC";
+	private static $default_sort = "\"IsDefault\" DESC, \"Sort\" ASC, \"Name\" ASC";
 
 	/**
 	 * returns the default PickUpOrDeliveryModifierOptions object
@@ -275,46 +275,46 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
  */
 class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"MinimumWeight" => "Int",
 		"MaximumWeight" => "Int",
 		"FixedCost" => "Currency"
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		"Option" => "PickUpOrDeliveryModifierOptions"
 	);
 
-	public static $indexes = array(
+	private static $indexes = array(
 		"MinimumWeight" => true,
 		"MaximumWeight" => true
 	);
 
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter"
 	);
 
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Name" => "Description (e.g. small parcel)",
 		"MinimumWeight" => "The minimum weight in grams",
 		"MaximumWeight" => "The maximum weight in grams",
 		"FixedCost" => "Total price (fixed cost)"
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Name",
 		"MinimumWeight",
 		"MaximumWeight",
 		"FixedCost"
 	);
 
-	public static $singular_name = "Weight Bracket";
+	private static $singular_name = "Weight Bracket";
 		function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
 
-	public static $plural_name = "Weight Brackets";
+	private static $plural_name = "Weight Brackets";
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
 
-	public static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
+	private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
 
 }
