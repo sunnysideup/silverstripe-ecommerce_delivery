@@ -195,6 +195,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			}
 			else {
 				// $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
+				/**
+				* @todo: Auto completer may not be functioning correctly: ExactMatchFilter does not accept EcommerceCountryFilters_AllowSales as modifiers
+				*
+				*/
 
 				$gridFieldConfig = GridFieldConfig::create();
 				$gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
