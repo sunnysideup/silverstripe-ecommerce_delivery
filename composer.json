@@ -1,9 +1,9 @@
 {
-	"name": "sunnysideup/ecommerce_delivery",
+	"name": "sunnysideup/ecommerce_delivery_electronic",
 	"type": "silverstripe-module",
-	"description": "delivery module for silverstripe e-commerce",
+	"description": "add electronic products to your silverstripe e-commerce",
 	"homepage": "http://www.silverstripe-ecommerce.com",
-	"keywords": ["ecommerce", "e-commerce", "shop", "delivery", "silverstripe"],
+	"keywords": ["ecommerce", "e-commerce", "shop", "delivery electronic","delivery", "electronic", "silverstripe"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
@@ -15,7 +15,7 @@
 	],
 	"require":{
 		"php": ">=5.3.2",
-		"silverstripe/framework": ">=3.0.x-dev,<3.1",
-		"sunnysideup/ecommerce": ">=3.0.x-dev,<3.1"
+		"silverstripe/framework": "~3.0",
+		"sunnysideup/ecommerce": "~3.0"
 	}
 }
