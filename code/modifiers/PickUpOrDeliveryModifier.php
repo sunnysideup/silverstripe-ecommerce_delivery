@@ -555,10 +555,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
  		if($exist > 0) {
 			$modifiers = PickUpOrDeliveryModifier::get();
  			if($modifiers->count()) {
-				$defaultOption = PickUpOrDeliveryModifierOptions::get()->Filter(array("IsDefault" => 1))->First();
+				$defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => 1))->First();
 				foreach($modifiers as $modifier) {
 					if(!isset($modifier->OptionID) || !$modifier->OptionID) {
-						$option = PickUpOrDeliveryModifierOptions::get()->Filter(array("Code" => $modifier->Code))->First();
+						$option = PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $modifier->Code))->First();
 						if(!$option) {
 							$option = $defaultOption;
 						}

@@ -36,7 +36,7 @@ class ElectronicDelivery_OrderStep extends OrderStep {
 		"AdditionalFile7" => "File"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanPay" => 0,
 		"CustomerCanCancel" => 0,
@@ -186,7 +186,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	/**
 	 * Standard SS variable
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Created" => "Date",
 		"Type" => "Type",
 		"Title" => "Title",
@@ -196,7 +196,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	/**
 	 * Standard SS variable
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => false,
 		"Expired" => false
 	);
@@ -234,7 +234,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * Standard SS var
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -249,28 +249,28 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * Standard SS var
 	 * @var String
 	 */
-	public static $singular_name = "Electronic Delivery Details";
+	private static $singular_name = "Electronic Delivery Details";
 		function i18n_singular_name() { return _t("OrderStatusLog.ELECTRONICDELIVERYDETAIL", "Electronic Delivery Detail");}
 
 	/**
 	 * Standard SS var
 	 * @var String
 	 */
-	public static $plural_name = "Electronic Deliveries Details";
+	private static $plural_name = "Electronic Deliveries Details";
 		function i18n_plural_name() { return _t("OrderStatusLog.ELECTRONICDELIVERIESDETAILS", "Electronic Deliveries Details");}
 
 	/**
 	 * Standard SS var
 	 * @var String
 	 */
-	public static $default_sort = "\"Created\" DESC";
+	private static $default_sort = "\"Created\" DESC";
 
 
 	/**
 	* Size of the folder name (recommended to be at least 5+)
 	* @var Int
 	*/
-	protected static $random_folder_name_character_count = 12;
+	private static $random_folder_name_character_count = 12;
 		static function set_random_folder_name_character_count($i){self::$random_folder_name_character_count = $i;}
 
 	/**
@@ -278,14 +278,14 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * content: Options -Indexes
 	* @var Boolean
 	*/
-	protected static $add_htaccess_file = true;
+	private static $add_htaccess_file = true;
 		static function set_add_htaccess_file($b){self::$add_htaccess_file = $b;}
 
 	/**
 	 * List of files to be ignored
 	 * @var Array
 	 */
-	protected static $files_to_be_excluded = array();
+	private static $files_to_be_excluded = array();
 		static function set_files_to_be_excluded($a){self::$files_to_be_excluded = $a;}
 		static function get_files_to_be_excluded(){return self::$files_to_be_excluded;}
 
@@ -293,7 +293,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * Permissions on download folders
 	 * @var string
 	 */
-	protected static $permissions_on_folder = "0755";
+	private static $permissions_on_folder = "0755";
 		static function set_permissions_on_folder($s){self::$permissions_on_folder = $s;}
 		static function get_permissions_on_folder(){return self::$permissions_on_folder;}
 
@@ -302,7 +302,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * @var String $order_dir - the root folder for the place where the files for the order are saved.
 	 * if the variable is equal to downloads then the downloads URL is www.mysite.com/downloads/
 	 */
-	protected static $order_dir = 'downloads';
+	private static $order_dir = 'downloads';
 		static function set_order_dir($s) {self::$order_dir = $s;}
 		static function get_order_dir() {return self::$order_dir;}
 

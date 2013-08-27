@@ -231,7 +231,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		// no other record but current one is not default
-		if((!$this->IsDefault) && (PickUpOrDeliveryModifierOptions::get()->Exclude(array("ID" => intval($this->ID)))->count() == 0)) {
+		if((!$this->IsDefault) && (PickUpOrDeliveryModifierOptions::get()->exclude(array("ID" => intval($this->ID)))->count() == 0)) {
 			DB::query("
 				UPDATE \"PickUpOrDeliveryModifierOptions\"
 				SET \"IsDefault\" = 1
@@ -257,7 +257,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$this->Code = self::$defaults["Code"];
 		}
 		$baseCode = $this->Code;
-		while(PickUpOrDeliveryModifierOptions::get()->Filter(array("Code" => $this->Code))->Exclude(array("ID" => $this->ID))->count() && $i < 10){
+		while(PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $this->Code))->exclude(array("ID" => $this->ID))->count() && $i < 100){
 			$i++;
 			$this->Code = $baseCode.'_'.$i;
 		}
