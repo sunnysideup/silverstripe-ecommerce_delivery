@@ -77,14 +77,14 @@ class ElectronicDelivery_OrderStep extends OrderStep {
 	 * @return Boolean
 	 **/
 	public function doStep(Order $order) {
-		if(!DataObject::get_one("ElectronicDelivery_OrderLog", "\"OrderID\" = ".$order->ID)) {
+		if( ! ElectronicDelivery_OrderLog::get()->filter("OrderID", $order->ID)->First()) {
 			$files = new ArrayList();
 
 			// Add any global files specified in the orderstep
 			for($i = 1; $i < 8; $i++) {
 				$fieldName = "AdditionalFile".$i."ID";
 				if($this->$fieldName) {
-					$file = DataObject::get_by_id("File", $this->$fieldName);
+					File::get()->byID($this->$fieldName);
 					$files->push($file);
 				}
 			}
@@ -131,6 +131,15 @@ class ElectronicDelivery_OrderStep extends OrderStep {
 	}
 
 	/**
+	 *
+	 * @return Boolean
+	 */
+	public functon IsExpired(){
+		die("to be completed");
+	}
+
+
+	/**
 	 * Explains the current order step.
 	 * @return String
 	 */
@@ -138,12 +147,13 @@ class ElectronicDelivery_OrderStep extends OrderStep {
 		return _t("OrderStep.DOWNLOADED_DESCRIPTION", "During this step the customer downloads her or his order. The shop admininistrator does not do anything during this step.");
 	}
 
-
 	protected function getFoldersToBeExpired() {
-		return DataObject::get(
-			"ElectronicDelivery_OrderLog",
-			"\"Expired\" = 0 AND UNIX_TIMESTAMP(NOW())  - UNIX_TIMESTAMP(\"Created\")  > (60 * 60 * 24 * ".$this->NumberOfHoursBeforeDownloadGetsDeleted." ) "
-		);
+		return ElectronicDelivery_OrderLog::get()
+			->where(
+				"\"Expired\" = 0 AND
+				(UNIX_TIMESTAMP(NOW())  - UNIX_TIMESTAMP(\"Created\"))  >
+				(60 * 60 * 24 * ".$this->NumberOfHoursBeforeDownloadGetsDeleted." ) "
+			);
 	}
 
 
@@ -271,7 +281,6 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	* @var Int
 	*/
 	private static $random_folder_name_character_count = 12;
-		static function set_random_folder_name_character_count($i){self::$random_folder_name_character_count = $i;}
 
 	/**
 	 * if set to true, an .htaccess file will be added to the download folder with the following
@@ -279,33 +288,24 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	* @var Boolean
 	*/
 	private static $add_htaccess_file = true;
-		static function set_add_htaccess_file($b){self::$add_htaccess_file = $b;}
 
 	/**
 	 * List of files to be ignored
 	 * @var Array
 	 */
 	private static $files_to_be_excluded = array();
-		static function set_files_to_be_excluded($a){self::$files_to_be_excluded = $a;}
-		static function get_files_to_be_excluded(){return self::$files_to_be_excluded;}
 
 	/**
 	 * Permissions on download folders
 	 * @var string
 	 */
 	private static $permissions_on_folder = "0755";
-		static function set_permissions_on_folder($s){self::$permissions_on_folder = $s;}
-		static function get_permissions_on_folder(){return self::$permissions_on_folder;}
-
 
 	/**
 	 * @var String $order_dir - the root folder for the place where the files for the order are saved.
 	 * if the variable is equal to downloads then the downloads URL is www.mysite.com/downloads/
 	 */
 	private static $order_dir = 'downloads';
-		static function set_order_dir($s) {self::$order_dir = $s;}
-		static function get_order_dir() {return self::$order_dir;}
-
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -359,7 +359,6 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 
 	}
 
-
 	/**
 	 * Standard SS method
 	 * Creates the folder and files.
@@ -380,7 +379,6 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 			$this->Note = "<p>"._t("OrderStatusLog.DOWNLOADSHAVEEXPIRED", "Downloads have expired")."</p>";
 		}
 	}
-
 
 	/**
 	 * Standard SS method
@@ -423,13 +421,15 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 		}
 		else {
 		//create folder....
-			$randomFolderName = substr(md5(time()+rand(1,999)), 0, self::$random_folder_name_character_count)."_".$this->OrderID;
+			$folderCount = $this->Config()->get("random_folder_name_character_count");
+			$randomFolderName = substr(md5(time()+rand(1,999)), 0, $folderCount)."_".$this->OrderID;
 			$fullFolderName = $this->getBaseFolder(true)."/".$randomFolderName;
 			if(file_exists($fullFolderName)) {
 				$allOk = true;
 			}
 			else {
-				$allOk = @mkdir($fullFolderName, self::get_permissions_on_folder());
+				$permissions = $this->Config()->get("permissions_on_folder");
+				$allOk = @mkdir($fullFolderName, $permissions);
 			}
 			if($allOk){
 				$this->FolderName = $fullFolderName;
@@ -452,10 +452,11 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	 * @return String
 	 */
 	protected function getBaseFolder($absolutePath = true) {
-		$baseFolderRelative = self::$order_dir;
+		$baseFolderRelative = $folderCount = $this->Config()->get("order_dir");
 		$baseFolderAbsolute = Director::baseFolder()."/".$baseFolderRelative;
 		if(!file_exists($baseFolderAbsolute)) {
-			@mkdir($baseFolderAbsolute, self::get_permissions_on_folder());
+			$permissions = $this->Config()->get("permissions_on_folder");
+			@mkdir($baseFolderAbsolute, $permissions);
 		}
 		if(!file_exists($baseFolderAbsolute)) {
 			user_error("Can not create folder: ".$baseFolderAbsolute);
@@ -466,7 +467,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 			fwrite($manifestExcludeFileHandle, "Please do not delete this file");
 			fclose($manifestExcludeFileHandle);
 		}
-		if(self::$add_htaccess_file) {
+		if($folderCount = $this->Config()->get("add_htaccess_file")) {
 			$htaccessfile = $baseFolderAbsolute."/".".htaccess";
 			if(!file_exists($htaccessfile)) {
 				$htaccessfileHandle = fopen($htaccessfile, 'w') or user_error("Can not create ".$htaccessfile);
@@ -497,7 +498,8 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 					$fullFileName = $fullPath."/".$file;
 					if( substr($file, strlen($file) - 1) != "." ) {
 						if ( (!is_dir($fullFileName) && $showFiles) || ($showFolders && is_dir($fullFileName)) ) {
-							if(!in_array($file, self::$files_to_be_excluded)) {
+							$filesToBeExcluded = $this->Config()->get("files_to_be_excluded");
+							if(!in_array($file, $filesToBeExcluded)) {
 								array_push($files, $fullFileName);
 							}
 						}
@@ -519,6 +521,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 			}
 		}
 	}
+
 
 
 }

@@ -4,3 +4,10 @@ Order:
     - OtherModifierA
     - PickUpOrDeliveryModifier
     - GSTTaxModifier
+
+ElectronicDelivery_OrderLog:
+  random_folder_name_character_count: 12
+  add_htaccess_file: true
+  files_to_be_excluded: []
+  permissions_on_folder: "0755"
+  order_dir: "downloads"

@@ -155,7 +155,7 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	 * @return Boolean
 	 */
 	public function ShowFormInEditableOrderTable() {
-		return ($this->ShowForm() && self::$include_form_in_order_table) ? true : false;
+		return ($this->ShowForm() && $this->Config()->get("include_form_in_order_table")) ? true : false;
 	}
 
 	/**

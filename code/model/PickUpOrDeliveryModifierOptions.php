@@ -254,7 +254,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		$this->Code = trim(preg_replace("/[^a-zA-Z0-9]+/", "", $this->Code));
 		$i = 0;
 		if(!$this->Code) {
-			$this->Code = self::$defaults["Code"];
+			$defaults = $this->Config()->get("Code");
+			$this->Code = empty($defaults["Code"]) ? "CODE" : $defaults["Code"];
 		}
 		$baseCode = $this->Code;
 		while(PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $this->Code))->exclude(array("ID" => $this->ID))->count() && $i < 100){
