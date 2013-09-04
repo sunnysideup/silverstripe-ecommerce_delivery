@@ -1,10 +1,12 @@
 #MAKE SURE TO INCLUDE in mysite/_config/ecommerce.yml
+#... denotes other modifiers you may want to include
 Order:
   modifiers:
-    - OtherModifierA
+    - ...
     - PickUpOrDeliveryModifier
-    - GSTTaxModifier
+    - ...
 
+# options for electronic delivery
 ElectronicDelivery_OrderLog:
   random_folder_name_character_count: 12
   add_htaccess_file: true

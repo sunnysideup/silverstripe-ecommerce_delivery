@@ -134,7 +134,7 @@ class ElectronicDelivery_OrderStep extends OrderStep {
 	 *
 	 * @return Boolean
 	 */
-	public functon IsExpired(){
+	public function IsExpired(){
 		die("to be completed");
 	}
 
