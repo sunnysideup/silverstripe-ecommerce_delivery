@@ -10,3 +10,13 @@ StoreAdmin:
 OrderModifierForm_Controller:
   allowed_actions:
     - PickUpOrDeliveryModifier
+
+---
+Only:
+  classexists: 'DataObjectSorterDOD'
+---
+
+PickUpOrDeliveryModifierOptions:
+  extensions:
+    - DataObjectSorterDOD
+
