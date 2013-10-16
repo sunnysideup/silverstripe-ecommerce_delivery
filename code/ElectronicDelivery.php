@@ -22,11 +22,11 @@
 
 class ElectronicDelivery_OrderStep extends OrderStep {
 
-	static $db = array(
+	private static $db = array(
 		"NumberOfHoursBeforeDownloadGetsDeleted" => "Int"
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		"AdditionalFile1" => "File",
 		"AdditionalFile2" => "File",
 		"AdditionalFile3" => "File",
@@ -180,7 +180,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	/**
 	 * Standard SS variable
 	 */
-	static $db = array(
+	private static $db = array(
 		"FolderName" => "Varchar(255)",
 		"Expired" => "Boolean",
 		"FilesAsString" => "Text"
@@ -189,7 +189,7 @@ class ElectronicDelivery_OrderLog extends OrderStatusLog {
 	/**
 	 * Standard SS variable
 	 */
-	static $many_many = array(
+	private static $many_many = array(
 		"Files" => "File"
 	);
 

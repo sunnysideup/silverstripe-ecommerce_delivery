@@ -94,7 +94,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 * if none exists, it creates one.
 	 * @return PickUpOrDeliveryModifierOptions
 	 */
-	static function default_object() {
+	public static function default_object() {
 		if($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => "1"))->First()) {
 			//do nothing
 		}
@@ -114,7 +114,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	 * );
 	 * @return Array
 	 */
-	static function get_all_as_country_array() {
+	public static function get_all_as_country_array() {
 		$array = array();
 		$options = PickUpOrDeliveryModifierOptions::get();
 		if($options->count()) {
