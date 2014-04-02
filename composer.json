@@ -14,10 +14,12 @@
 		}
 	],
 	"require":{
+		"silverstripe/framework": "~3.1",
+		"silverstripe/cms": "~3.1",
 		"sunnysideup/ecommerce": "dev-master",
 		"sunnysideup/dataobjectsorter": "dev-master"
 	},
 	"extra": {
-		"installer-name": "ecommerce_delivery"
+		"installer-name": "ecommerce_delivery_electronic"
 	}
 }
