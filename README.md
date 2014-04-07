@@ -1,7 +1,6 @@
-###############################################
+
 ecommerce delivery
-Pre 0.1 proof of concept
-###############################################
+================================================================================
 
 Adds pick-up and or delivery to your e-commerce order.
 You can set charges as fixed prices, based on total
