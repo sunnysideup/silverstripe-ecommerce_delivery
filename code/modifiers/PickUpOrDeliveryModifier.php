@@ -541,6 +541,14 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 
 // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
+	function requireDefaultRecords() {
+		parent::requireDefaultRecords();
+		// we must check for individual database types here because each deals with schema in a none standard way
+		$modifiers = PickUpOrDeliveryModifier::get()->filter(array("OptionID" => 0));
+		if($modifiers->count()) {
+			DB::alteration_message("You need to upgrade PickUpOrDeliveryModifier <a href=\"/dev/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier\">do it now!</a>", "deleted");
+		}
+	}
 // ######################################## *** AJAX related functions
 	/**
 	 *
