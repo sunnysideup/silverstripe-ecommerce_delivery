@@ -139,6 +139,47 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		return $this->IsDefault ? "yes"  : "no";
 	}
 
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canCreate($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canCreate($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canView($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canCreate($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canEdit($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canDelete($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canDelete($member);
+	}
+
 	/**
 	 * standard SS method
 	 */
@@ -321,5 +362,46 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 		function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
 
 	private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
+
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canCreate($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canCreate($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canView($member = null){
+		return true;
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canEdit($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canDelete($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canDelete($member);
+	}
+
 
 }
