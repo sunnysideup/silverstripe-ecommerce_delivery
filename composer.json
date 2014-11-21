@@ -3,7 +3,7 @@
 	"type": "silverstripe-module",
 	"description": "add electronic products to your silverstripe e-commerce",
 	"homepage": "http://www.silverstripe-ecommerce.com",
-	"keywords": ["ecommerce", "e-commerce", "shop", "cart", "delivery electronic","delivery", "electronic", "silverstripe"],
+	"keywords": ["ecommerce", "e-commerce", "shop", "cart", "delivery", "silverstripe"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
