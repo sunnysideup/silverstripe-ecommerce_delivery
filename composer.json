@@ -18,6 +18,6 @@
 		"sunnysideup/dataobjectsorter": "dev-master"
 	},
 	"extra": {
-		"installer-name": "ecommerce_delivery_electronic"
+		"installer-name": "ecommerce_delivery"
 	}
 }
