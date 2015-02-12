@@ -17,6 +17,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"MinimumDeliveryCharge" => "Currency",
 		"MaximumDeliveryCharge" => "Currency",
 		"MinimumOrderAmountForZeroRate" => "Currency",
+		"FreeShippingUpToThisOrderAmount" => "Currency",
 		"Sort" => "Int"
 	);
 
@@ -48,14 +49,27 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		"IsDefault" => "Default delivery option?",
 		"Code" => "Code",
 		"Name" => "Long Name",
-		"Percentage" => "Percentage (number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
-		"FixedCost" =>  "Fixed cost (e.g. entering 10 will add a fixed 10 dollars delivery fee).",
-		"WeightMultiplier" => "Cost per kilogram. It multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123)",
-		"WeightUnit" => "Weight unit in kilograms.  If you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
-		"MinimumDeliveryCharge" => "Minimum delivery charge.",
-		"MaximumDeliveryCharge" => "Maximum delivery charge.",
-		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate (i.e. if this option is selected and the total order is over [enter below] then delivery is free).",
-		"Sort" =>  "Sort Index - lower numbers show first."
+		"Percentage" => "Percentage",
+		"FixedCost" =>  "Fixed cost",
+		"WeightMultiplier" => "Cost per kilogram",
+		"WeightUnit" => "Weight unit in kilograms",
+		"MinimumDeliveryCharge" => "Minimum delivery charge",
+		"MaximumDeliveryCharge" => "Maximum delivery charge",
+		"MinimumOrderAmountForZeroRate" => "Minimum for 0 rate",
+		"FreeShippingUpToThisOrderAmount" => "Free shipping up to",
+		"Sort" =>  "Sort Index"
+	);
+
+	private static $field_labels_right = array(
+		"Percentage" => "number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
+		"FixedCost" =>  "e.g. entering 10 will add a fixed 10 dollars delivery fee.",
+		"WeightMultiplier" => "it multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123).",
+		"WeightUnit" => "if you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
+		"MinimumDeliveryCharge" => "minimum delivery charge.",
+		"MaximumDeliveryCharge" => "maximum delivery charge.",
+		"MinimumOrderAmountForZeroRate" => "if this option is selected and the total order is over [enter above] then delivery is free.",
+		"FreeShippingUpToThisOrderAmount" => "if this option is selected and the total order is below [enter above] then delivery is free. This is for situations where a small order would have a large delivery cost.",
+		"Sort" =>  "lower numbers show first."
 	);
 
 	private static $defaults = array(
@@ -217,6 +231,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->removeByName("WeightUnit");
 		}
 		$fields->addFieldToTab("Root.Main", new HeaderField("MoreInformation", "Other Settings"), "Sort");
+		foreach($this->Config()->get("field_labels_right") as $fieldName => $fieldDescription ) {
+			$field = $fields->dataFieldByName($fieldName);
+			if($field) {
+				$field->setRightTitle($fieldDescription);
+			}
+		}
 		return $fields;
 	}
 

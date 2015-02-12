@@ -390,9 +390,14 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 			$this->debugMessage .= "<hr />sub total amount is: \$". $subTotalAmount;
 			// no need to charge, order is big enough
 			$minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
+			$maxForZeroRate = floatval($obj->FreeShippingUpToThisOrderAmount);
 			if($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
 				self::$actual_charges =  0;
-				$this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount ".self::$actual_charges;
+				$this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered".self::$actual_charges;
+			}
+			elseif($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
+				self::$actual_charges =  0;
+				$this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered".self::$actual_charges;
 			}
 			else {
 				$weight = $this->LiveTotalWeight();
