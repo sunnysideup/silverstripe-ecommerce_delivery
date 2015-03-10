@@ -65,6 +65,15 @@ var PickUpOrDeliveryModifier = {
 
 	addAvailableCountriesItem: function(index, countriesArray) {
 		PickUpOrDeliveryModifier.availableCountries[index] = countriesArray;
+		return this;
+	},
+
+	/**
+	 * alias for addAvailableCountriesItem
+	 */
+	addItem: function(index, countriesArray) {
+		this.addAvailableCountriesItem(index, countriesArray);
+		return this;
 	},
 
 	updateCountryList: function() {

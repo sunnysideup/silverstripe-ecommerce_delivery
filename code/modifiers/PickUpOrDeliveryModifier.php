@@ -172,12 +172,21 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 		$array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
 		if($array && is_array($array) && count($array)) {
 			$js = '';
+			$count = 0;
 			foreach($array as $key => $option) {
 				if($option && is_array($option) && count($option)) {
-					$js .= 'PickUpOrDeliveryModifier.addAvailableCountriesItem("'.$key.'",new Array("'.implode('","', $option).'")); ';
+					if($count == 0) {
+						$js .= 'PickUpOrDeliveryModifier'."\n".'.addItem("'.$key.'",new Array("'.implode('","', $option).'"))';
+					}
+					else {
+						$js .= "\n".'.addItem("'.$key.'",new Array("'.implode('","', $option).'"))';
+					}
+					$count++;
 				}
 			}
 			if($js) {
+				//add final semi-comma
+				$js .= ";";
 				Requirements::customScript($js, "PickupOrDeliveryModifier");
 			}
 		}
