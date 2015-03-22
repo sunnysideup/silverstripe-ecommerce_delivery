@@ -210,11 +210,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		if(class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
 			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
-		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Link to page explaining postage / delivery (if any)", "SiteTree" ));
+		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree" ));
 
 		//add headings
 		$fields->addFieldToTab("Root.Main", new HeaderField("Charges", "Other Charges (enter zero (0) to ignore)"), "Percentage");
 		$fields->addFieldToTab("Root.Main", new HeaderField("MinimumAndMaximum", "Minimum and Maximum (enter zero (0) to ignore)"), "MinimumDeliveryCharge");
+		$fields->addFieldToTab("Root.Main", new HeaderField("ExplanationHeader", _t("PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER", "More information about delivery option")), "ExplanationPageID");
 		if(EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
 			$weightBrackets = $this->WeightBrackets();
 			if($weightBrackets && $weightBrackets->count()) {
