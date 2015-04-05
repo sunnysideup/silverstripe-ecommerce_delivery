@@ -208,7 +208,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 			$fields->replaceField("AvailableInRegions", $regionField);
 		}
 		if(class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
-			$fields->addFieldToTab("Root.SortList", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
+			$fields->addFieldToTab("Root.Sort", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
 		}
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree" ));
 
