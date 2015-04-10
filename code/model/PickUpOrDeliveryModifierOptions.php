@@ -61,14 +61,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 	);
 
 	private static $field_labels_right = array(
-		"Percentage" => "number between 0 = 0% and 1 = 100%) of total order cost as charge for this option (e.g. 0.05 would add 5 cents to every dollar ordered).",
-		"FixedCost" =>  "e.g. entering 10 will add a fixed 10 dollars delivery fee.",
-		"WeightMultiplier" => "it multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1.23kg = $123).",
+		"Percentage" => "number between 0 = 0% and 1 = 100% (e.g. 0.05 would add 5 cents to every dollar ordered).",
+		"FixedCost" =>  "e.g. entering 10 will add a fixed 10 dollars (or whatever currency is being used) delivery fee.",
+		"WeightMultiplier" => "it multiplies the total weight of the total order with this number to work out charge for delivery. NOTE: you can also setup weight brackets (e.g. from 0 - 1kg = $123, from 1kg - 2kg = $456).",
 		"WeightUnit" => "if you enter 0.1 here, the price will go up with every 100 grams of total order weight.",
 		"MinimumDeliveryCharge" => "minimum delivery charge.",
 		"MaximumDeliveryCharge" => "maximum delivery charge.",
-		"MinimumOrderAmountForZeroRate" => "if this option is selected and the total order is over [enter above] then delivery is free.",
-		"FreeShippingUpToThisOrderAmount" => "if this option is selected and the total order is below [enter above] then delivery is free. This is for situations where a small order would have a large delivery cost.",
+		"MinimumOrderAmountForZeroRate" => "if this option is selected and the total order is over the amounted entered above then delivery is free.",
+		"FreeShippingUpToThisOrderAmount" => "if this option is selected and the total order is less than the amount entered above then delivery is free. This is for situations where a small order would have a large delivery cost.",
 		"Sort" =>  "lower numbers show first."
 	);
 
@@ -213,9 +213,30 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
 		$fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree" ));
 
 		//add headings
-		$fields->addFieldToTab("Root.Main", new HeaderField("Charges", "Other Charges (enter zero (0) to ignore)"), "Percentage");
-		$fields->addFieldToTab("Root.Main", new HeaderField("MinimumAndMaximum", "Minimum and Maximum (enter zero (0) to ignore)"), "MinimumDeliveryCharge");
-		$fields->addFieldToTab("Root.Main", new HeaderField("ExplanationHeader", _t("PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER", "More information about delivery option")), "ExplanationPageID");
+		$fields->addFieldToTab(
+			"Root.Main",
+			new HeaderField(
+				"Charges",
+				_t("PickUpOrDeliveryModifierOptions.CHARGES", "Charges (enter zero (0) to ignore)")
+			),
+			"Percentage"
+		);
+		$fields->addFieldToTab(
+			"Root.Main",
+			new HeaderField(
+				"MinimumAndMaximum",
+				_t("PickUpOrDeliveryModifierOptions.MIN_AND_MAX", "Minimum and Maximum (enter zero (0) to ignore)")
+			),
+			"MinimumDeliveryCharge"
+		);
+		$fields->addFieldToTab(
+			"Root.Main",
+			new HeaderField(
+				"ExplanationHeader",
+				_t("PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER", "More information about delivery option")
+			),
+			"ExplanationPageID"
+		);
 		if(EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
 			$weightBrackets = $this->WeightBrackets();
 			if($weightBrackets && $weightBrackets->count()) {
