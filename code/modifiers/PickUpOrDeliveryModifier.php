@@ -25,10 +25,10 @@ class PickUpOrDeliveryModifier extends OrderModifier {
 	);
 
 	private static $singular_name = "Pickup / Delivery Charge";
-		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up Charge");}
+		function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up");}
 
 	private static $plural_name = "Pickup / Delivery Charges";
-		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up Charges");}
+		function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up");}
 
 	private static $include_form_in_order_table = true;
 
