@@ -30,6 +30,9 @@ if(
         availableCountries: new Array(),
 
         init: function() {
+            if(typeof PickUpOrDeliveryModifierOptions !== "undefined") {
+                this.availableCountries = PickUpOrDeliveryModifierOptions;
+            }
             if(jQuery("#" + PickUpOrDeliveryModifier.formID + PickUpOrDeliveryModifier.DropdownIDappendix+" option").size() < 1) {
                 jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
             }
