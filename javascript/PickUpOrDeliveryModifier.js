@@ -1,4 +1,8 @@
-;
+/**
+ * make sure it can import EcomCart
+ * see init
+ */
+
 if(
     (document.getElementById("PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier") !== null && typeof document.getElementById("PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier") !== "undefined")
 ) {
@@ -29,7 +33,11 @@ if(
 
         availableCountries: new Array(),
 
+        EcomCart: {},
+
         init: function() {
+            var EcomCart = require("./EcomCart");
+            this.EcomCart = EcomCart.EcomCart;
             if(typeof PickUpOrDeliveryModifierOptions !== "undefined") {
                 this.availableCountries = PickUpOrDeliveryModifierOptions;
             }
@@ -66,7 +74,7 @@ if(
             //redo quantity boxes
             //jQuery("#" + PickUpOrDeliveryModifier.updatedDivID).css("height", "auto");
             jQuery("#" + PickUpOrDeliveryModifier.formID).removeClass(PickUpOrDeliveryModifier.loadingClass);
-            EcomCart.setChanges(responseText);
+            PickUpOrDeliveryModifier.EcomCart.setChanges(responseText);
         },
 
         addAvailableCountriesItem: function(index, countriesArray) {
