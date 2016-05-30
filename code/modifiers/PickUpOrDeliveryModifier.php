@@ -8,7 +8,8 @@
  * It lets you set fixed shipping costs, or a fixed
  * cost for each region you're delivering to.
  */
-class PickUpOrDeliveryModifier extends OrderModifier {
+class PickUpOrDeliveryModifier extends OrderModifier
+{
 
 // ######################################## *** model defining static variables (e.g. $db, $has_one)
 
@@ -594,29 +595,5 @@ class PickUpOrDeliveryModifier extends OrderModifier {
     }
 
 // ######################################## *** debug functions
-
-}
-
-class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
-
-    function processOrderModifier($data, $form = null) {
-        if(isset($data['PickupOrDeliveryType'])) {
-            $newOption = intval($data['PickupOrDeliveryType']);
-            $newOptionObj = PickUpOrDeliveryModifierOptions::get()->byID($newOption);
-            if($newOptionObj) {
-                $order = ShoppingCart::current_order();
-                if($order) {
-                    if($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
-                        foreach($modifiers as $modifier) {
-                            $modifier->setOption($newOption);
-                            $modifier->runUpdate();
-                        }
-                        return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option updated"), "good");
-                    }
-                }
-            }
-        }
-        return ShoppingCart::singleton()->setMessageAndReturn( _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
-    }
 
 }
