@@ -1,5 +1,9 @@
 <?php
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
 /**
  * below we record options for weight brackets with fixed cost
  * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
@@ -44,6 +48,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
     );
 
     private static $singular_name = "Weight Bracket";
+<<<<<<< HEAD
         function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
 
     private static $plural_name = "Weight Brackets";
@@ -52,6 +57,15 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
     private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
 
 
+=======
+    function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
+
+    private static $plural_name = "Weight Brackets";
+    function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
+
+    private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
+
+>>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
     /**
      * standard SS method
      * @param Member | NULL
@@ -90,6 +104,9 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
         if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
         return parent::canDelete($member);
     }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
 }
