@@ -1,0 +1,7 @@
+---
+Name: ecommerce_delivery_routes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'ecommercedeliverysetoption//$Action/$ID/$OtherID/$Version' : 'OrderModifierForm_Controller'
