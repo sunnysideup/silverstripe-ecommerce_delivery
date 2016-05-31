@@ -45,24 +45,16 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
     );
 
     private static $singular_name = "Weight Bracket";
-<<<<<<< HEAD
-        function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
 
-    private static $plural_name = "Weight Brackets";
-        function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
-
-    private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
-
-
-=======
     function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
 
     private static $plural_name = "Weight Brackets";
+
     function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
 
     private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
 
->>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
+
     /**
      * standard SS method
      * @param Member | NULL
