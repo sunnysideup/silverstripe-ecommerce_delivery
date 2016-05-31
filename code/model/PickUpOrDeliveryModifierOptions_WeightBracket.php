@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
 /**
  * below we record options for weight brackets with fixed cost
  * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
@@ -104,9 +101,4 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
         if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
         return parent::canDelete($member);
     }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 17cefa9792a57bc7cfaf8d44b97838beb9a34472
 }
