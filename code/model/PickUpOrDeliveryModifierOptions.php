@@ -30,6 +30,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     );
 
     private static $many_many = array(
+        "ExcludeFromCountries" => "EcommerceCountry",
         "AvailableInCountries" => "EcommerceCountry",
         "AvailableInRegions" => "EcommerceRegion"
     );
@@ -199,9 +200,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      */
     function getCMSFields() {
         $fields = parent::getCMSFields();
-        $countryField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Countries");
-        if($countryField) {
-            $fields->replaceField("AvailableInCountries", $countryField);
+        $availableInCountriesField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Countries");
+        if($availableInCountriesField) {
+            $fields->replaceField("AvailableInCountries", $availableInCountriesField);
+        }
+        $excludeFromCountriesField = $this->createGridField("EcommerceCountry", "ExcludeFromCountries", "Countries");
+        if($excludeFromCountriesField) {
+            $fields->replaceField("ExcludeFromCountries", $excludeFromCountriesField);
         }
         $regionField = $this->createGridField("EcommerceRegion", "AvailableInRegions", "Regions");
         if($regionField) {

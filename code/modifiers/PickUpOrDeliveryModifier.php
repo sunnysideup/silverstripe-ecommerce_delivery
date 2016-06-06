@@ -262,9 +262,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 foreach($options as $option) {
                     //check countries
                     if($countryID) {
-                        $optionCountries = $option->AvailableInCountries();
+                        $availableInCountriesList = $option->AvailableInCountries();
                         //exclude if not found in country list
-                        if($optionCountries->Count() > 0 && ! $optionCountries->find('ID', $countryID)) {
+                        if($availableInCountriesList->Count() > 0 && ! $availableInCountriesList->find('ID', $countryID)) {
+                            continue;
+                        }
+                        //exclude if in exclusion list
+                        $excludedFromCountryList = $option->ExcludeFromCountries();
+                        if($excludedFromCountryList->Count() > 0 && $excludedFromCountryList->find('ID', $countryID)) {
                             continue;
                         }
                     }

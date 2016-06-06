@@ -7,9 +7,9 @@
 
 class PickUpOrDeliveryModifierOptionsCountry extends DataExtension {
 
-	private static $belongs_many_many = array(
-		"AvailableInCountries" => "PickUpOrDeliveryModifierOptions"
-	);
+    private static $belongs_many_many = array(
+        "AvailableInCountries" => "PickUpOrDeliveryModifierOptions",
+        "ExcludeFromCountries" => "PickUpOrDeliveryModifierOptions"
+    );
 
 }
-
