@@ -3,6 +3,7 @@ Name: ecommerce_delivery
 Before: 'mysite/*'
 After: 'framework/*','cms/*','ecommerce/*'
 ---
+
 StoreAdmin:
   managed_models:
     - PickUpOrDeliveryModifierOptions
@@ -19,4 +20,3 @@ Only:
 PickUpOrDeliveryModifierOptions:
   extensions:
     - DataObjectSorterDOD
-
