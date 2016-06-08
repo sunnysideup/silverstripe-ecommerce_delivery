@@ -491,7 +491,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
             //examine price brackets
             elseif($subTotalAmount && $subTotalBrackets->count()) {
-                $this->debugMessage .= "<hr />there is subTotal: {$subTotal} and subtotal brackets.";
+                $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
                 //subTotal brackets
                 $foundSubTotalBracket = null;
                 foreach($subTotalBrackets as $subTotalBracket) {
