@@ -25,14 +25,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
         "ExplanationPage" => "SiteTree"
     );
 
-    private static $has_many = array(
-        "WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket"
-    );
-
     private static $many_many = array(
         "ExcludeFromCountries" => "EcommerceCountry",
         "AvailableInCountries" => "EcommerceCountry",
-        "AvailableInRegions" => "EcommerceRegion"
+        "AvailableInRegions" => "EcommerceRegion",
+        "WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket",
+        "SubtotalBrackets" => "PickUpOrDeliveryModifierOptions_SubTotalBracket"
     );
 
     private static $indexes = array(
@@ -77,13 +75,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
         "Code" => "homedelivery",
         "Name" => "Home Delivery",
         "Percentage" => 0,
-        "FixedCost" => 10,
+        "FixedCost" => 0,
         "WeightMultiplier" => 0,
         "WeightUnit" => 1,
-        "MinimumDeliveryCharge" => 10,
-        "MaximumDeliveryCharge" => 100,
-        "MinimumOrderAmountForZeroRate" => 50,
-        "Sort" => 100
+        "MinimumDeliveryCharge" => 0,
+        "MaximumDeliveryCharge" => 0,
+        "MinimumOrderAmountForZeroRate" => 0,
+        "Sort" => 0
     );
 
     private static $summary_fields = array(

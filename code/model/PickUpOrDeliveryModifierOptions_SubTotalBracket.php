@@ -2,18 +2,18 @@
 
 
 /**
- * below we record options for weight brackets with fixed cost
- * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
+ * below we record options for subTotal brackets with fixed cost
+ * e.g. if Order.SubTotal > 10 and Order.SubTotal < 20 => Charge is $111.
  *
  *
  *
  */
-class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
+class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject {
 
     private static $db = array(
         "Name" => "Varchar",
-        "MinimumWeight" => "Int",
-        "MaximumWeight" => "Int",
+        "MinimumSubTotal" => "Currency",
+        "MaximumSubTotal" => "Currency",
         "FixedCost" => "Currency"
     );
 
@@ -22,8 +22,8 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
     );
 
     private static $indexes = array(
-        "MinimumWeight" => true,
-        "MaximumWeight" => true
+        "MinimumSubTotal" => true,
+        "MaximumSubTotal" => true
     );
 
     private static $searchable_fields = array(
@@ -31,28 +31,28 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
     );
 
     private static $field_labels = array(
-        "Name" => "Description (e.g. small parcel)",
-        "MinimumWeight" => "The minimum weight in grams",
-        "MaximumWeight" => "The maximum weight in grams",
+        "Name" => "Description (e.g. order below a hundy)",
+        "MinimumSubTotal" => "The minimum Sub-Total for the Order",
+        "MaximumSubTotal" => "The maximum Sub-Total for the Order",
         "FixedCost" => "Total price (fixed cost)"
     );
 
     private static $summary_fields = array(
         "Name",
-        "MinimumWeight",
-        "MaximumWeight",
+        "MinimumSubTotal",
+        "MaximumSubTotal",
         "FixedCost"
     );
 
-    private static $singular_name = "Weight Bracket";
+    private static $singular_name = "Sub-Total Bracket";
 
-    function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
+    function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKET", "Sub-Total Bracket");}
 
-    private static $plural_name = "Weight Brackets";
+    private static $plural_name = "SubTotal Brackets";
 
-    function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
+    function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKETS", "Sub-Total Brackets");}
 
-    private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
+    private static $default_sort = "MinimumSubTotal ASC, MaximumSubTotal ASC";
 
 
     /**
