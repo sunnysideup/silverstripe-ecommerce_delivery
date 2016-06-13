@@ -91,7 +91,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     );
 
     private static $casting = array(
-        "IsDefaultNice" => "Varchar"
+        "IsDefaultNice" => "Varchar",
+        "ListOfCountries" => "Varchar"
     );
 
     private static $singular_name = "Delivery / Pick-up Option";
