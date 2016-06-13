@@ -56,7 +56,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
         "MaximumDeliveryCharge" => "Maximum delivery charge",
         "MinimumOrderAmountForZeroRate" => "Minimum for 0 rate",
         "FreeShippingUpToThisOrderAmount" => "Free shipping up to",
-        "Sort" =>  "Sort Index"
+        "Sort" =>  "Sort Index",
+        "ListOfCountries" =>  "Applicable Countries"
     );
 
     private static $field_labels_right = array(
@@ -87,7 +88,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     private static $summary_fields = array(
         "IsDefaultNice",
         "Code",
-        "Name"
+        "Name",
+        'ListOfCountries'
     );
 
     private static $casting = array(
@@ -354,5 +356,17 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
                 $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
             }
         }
+    }
+
+    function getListOfCountries(){
+        $in = '';
+        $out = '';
+        if($this->AvailableInCountries()->count()) {
+            $in = "".implode(', ', $this->AvailableInCountries()->column("Code"));
+        }
+        if($this->ExcludeFromCountries()->count()) {
+            $out = " // OUT: ".implode(', ', $this->ExcludeFromCountries()->column("Code"));
+        }
+        return $in.$out;
     }
 }
