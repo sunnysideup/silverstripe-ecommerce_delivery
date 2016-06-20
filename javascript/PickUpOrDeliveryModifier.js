@@ -36,8 +36,12 @@ if(
         EcomCart: {},
 
         init: function() {
-            var EcomCart = require("./EcomCart");
-            this.EcomCart = EcomCart.EcomCart;
+            if(typeof EcomCart === "undefined" ) {
+                var EcomCart = require("./EcomCartWebPack");
+                this.EcomCart = EcomCart.EcomCart;
+            } else {
+                PickUpOrDeliveryModifier.EcomCart = EcomCart;
+            }
             if(typeof PickUpOrDeliveryModifierOptions !== "undefined") {
                 this.availableCountries = PickUpOrDeliveryModifierOptions;
             }
