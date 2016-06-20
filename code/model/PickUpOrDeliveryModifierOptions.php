@@ -26,11 +26,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     );
 
     private static $many_many = array(
-        "ExcludeFromCountries" => "EcommerceCountry",
         "AvailableInCountries" => "EcommerceCountry",
         "AvailableInRegions" => "EcommerceRegion",
         "WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket",
         "SubtotalBrackets" => "PickUpOrDeliveryModifierOptions_SubTotalBracket"
+    );
+
+    private static $belongs_many_many = array(
+        "ExcludeFromCountries" => "EcommerceCountry",
     );
 
     private static $indexes = array(

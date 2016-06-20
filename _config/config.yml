@@ -12,6 +12,10 @@ OrderModifierForm_Controller:
   allowed_actions:
     - PickUpOrDeliveryModifier
 
+EcommerceCountry:
+  extensions:
+    - PickUpOrDeliveryModifierOptionsCountry
+
 ---
 Only:
   classexists: 'DataObjectSorterDOD'
