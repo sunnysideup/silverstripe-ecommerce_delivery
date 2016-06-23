@@ -204,11 +204,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      */
     function getCMSFields() {
         $fields = parent::getCMSFields();
-        $availableInCountriesField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Countries");
+        $availableInCountriesField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Available in");
         if($availableInCountriesField) {
             $fields->replaceField("AvailableInCountries", $availableInCountriesField);
         }
-        $excludeFromCountriesField = $this->createGridField("EcommerceCountry", "ExcludeFromCountries", "Countries");
+        $excludeFromCountriesField = $this->createGridField("EcommerceCountry", "ExcludeFromCountries", "Excluded from");
         if($excludeFromCountriesField) {
             $fields->replaceField("ExcludeFromCountries", $excludeFromCountriesField);
         }
@@ -272,7 +272,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     }
 
     private function createGridField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries", $title) {
-        $title = '';
         $field = null;
         $dos = $dataObjectName::get();
         if($dos->count()) {
@@ -306,7 +305,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
                 $gridFieldConfig->addComponent(new GridFieldDetailForm());
 
                 $source = $this->$fieldName();
-                return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "Available in ".$title), $source , $gridFieldConfig);
+                return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "".$title), $source , $gridFieldConfig);
             }
         }
         if($field) {
