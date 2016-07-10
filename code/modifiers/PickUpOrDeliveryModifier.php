@@ -82,7 +82,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * the total amount charged in the end.
      * saved here for speed's sake
      */
-    private static $actual_charges = 0;
+    private static $_actual_charges = 0;
 
     /**
      * @var Boolean
@@ -390,12 +390,12 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected function LiveCalculatedTotal() {
         //________________ start caching mechanism
         if(self::$calculations_done) {
-            return self::$actual_charges;
+            return self::$_actual_charges;
         }
         self::$calculations_done = true;
         //________________ end caching mechanism
 
-        self::$actual_charges = 0;
+        self::$_actual_charges = 0;
         //do we have enough information
         $obj = $this->liveOptionObject();
         if($items = $this->Order()->Items() && is_object($obj) && $obj->exists()) {
@@ -413,14 +413,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
             // zero becauase over minForZeroRate
             if($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
-                self::$actual_charges =  0;
-                $this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered".self::$actual_charges;
+                self::$_actual_charges =  0;
+                $this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered".self::$_actual_charges;
             }
 
             //zero because below maxForZeroRate
             elseif($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
-                self::$actual_charges =  0;
-                $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered".self::$actual_charges;
+                self::$_actual_charges =  0;
+                $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered".self::$_actual_charges;
             }
 
             //examine weight brackets
@@ -463,10 +463,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
                 //we found some applicable weight brackets
                 if($foundWeightBracket) {
-                    self::$actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
+                    self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
                     $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times $weightBracketQuantity";
                     if($additionalWeightBracket) {
-                        self::$actual_charges += $additionalWeightBracket->FixedCost;
+                        self::$_actual_charges += $additionalWeightBracket->FixedCost;
                         $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
                     }
                 }
@@ -484,7 +484,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 //legacy fix
                 $units = ceil($weight / $obj->WeightUnit);
                 $weightCharge =  $units * $obj->WeightMultiplier;
-                self::$actual_charges += $weightCharge;
+                self::$_actual_charges += $weightCharge;
                 $this->debugMessage .= "<hr />weight charge: ".$weightCharge;
             }
 
@@ -502,7 +502,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
                 //we found some applicable subTotal brackets
                 if($foundSubTotalBracket) {
-                    self::$actual_charges += $foundSubTotalBracket->FixedCost;
+                    self::$_actual_charges += $foundSubTotalBracket->FixedCost;
                     $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
                 }
             }
@@ -510,26 +510,26 @@ class PickUpOrDeliveryModifier extends OrderModifier
             // add percentage
             if($obj->Percentage) {
                 $percentageCharge = $subTotalAmount * $obj->Percentage;
-                self::$actual_charges += $percentageCharge;
+                self::$_actual_charges += $percentageCharge;
                 $this->debugMessage .= "<hr />percentage charge: \$".$percentageCharge;
             }
 
             // add fixed price
             if($obj->FixedCost <> 0) {
-                self::$actual_charges += $obj->FixedCost;
+                self::$_actual_charges += $obj->FixedCost;
                 $this->debugMessage .= "<hr />fixed charge: \$". $obj->FixedCost;
             }
 
             //is it enough?
-            if(self::$actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
-                $oldActualCharge = self::$actual_charges;
-                self::$actual_charges = $obj->MinimumDeliveryCharge;
+            if(self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
+                $oldActualCharge = self::$_actual_charges;
+                self::$_actual_charges = $obj->MinimumDeliveryCharge;
                 $this->debugMessage .= "<hr />too little: actual charge: ".$oldActualCharge.", minimum delivery charge: ".$obj->MinimumDeliveryCharge;
             }
             // is it too much
-            if(self::$actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
-                self::$actual_charges = $obj->MaximumDeliveryCharge;
-                $this->debugMessage .= "<hr />too much: ".self::$actual_charges.", maximum delivery charge is ".$obj->MaximumDeliveryCharge;
+            if(self::$_actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
+                self::$_actual_charges = $obj->MaximumDeliveryCharge;
+                $this->debugMessage .= "<hr />too much: ".self::$_actual_charges.", maximum delivery charge is ".$obj->MaximumDeliveryCharge;
             }
         }
         else {
@@ -540,9 +540,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 $this->debugMessage .= "<hr />no delivery option available";
             }
         }
-        $this->debugMessage .= "<hr />final score: \$".self::$actual_charges;
+        $this->debugMessage .= "<hr />final score: \$".self::$_actual_charges;
         //special case, we are using weight and there is no weight!
-        return self::$actual_charges;
+        return self::$_actual_charges;
     }
 
     /**
