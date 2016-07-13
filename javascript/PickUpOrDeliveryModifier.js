@@ -19,7 +19,7 @@ if(
 
         formID: "PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier",
 
-        DropdownIDappendix: "_PickupOrDeliveryType",
+        optionSetOptions: "PickupOrDeliveryType",
 
         loadingClass: "loading",
 
@@ -45,7 +45,7 @@ if(
             if(typeof PickUpOrDeliveryModifierOptions !== "undefined") {
                 this.availableCountries = PickUpOrDeliveryModifierOptions;
             }
-            if(jQuery("#" + PickUpOrDeliveryModifier.formID + PickUpOrDeliveryModifier.DropdownIDappendix+" option").size() < 1) {
+            if(jQuery("#" + PickUpOrDeliveryModifier.formID + " input[name='"+PickUpOrDeliveryModifier.optionSetOptions+"']").length < 1) {
                 jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
             }
             else {
@@ -58,7 +58,7 @@ if(
                 jQuery('#' + PickUpOrDeliveryModifier.formID).ajaxForm(options);
                 jQuery("#" + PickUpOrDeliveryModifier.formID + " ." + PickUpOrDeliveryModifier.actionsClass).hide();
                 PickUpOrDeliveryModifier.updateCountryList();
-                jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).change(
+                jQuery("#" + PickUpOrDeliveryModifier.formID  + " input[name='"+PickUpOrDeliveryModifier.optionSetOptions+"']").change(
                     function() {
                         PickUpOrDeliveryModifier.updateCountryList();
                         jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
@@ -95,7 +95,7 @@ if(
         },
 
         updateCountryList: function() {
-            var currentIndex = jQuery("#" + PickUpOrDeliveryModifier.formID+ PickUpOrDeliveryModifier.DropdownIDappendix).val();
+            var currentIndex = jQuery("#" + PickUpOrDeliveryModifier.formID + " input[name='"+PickUpOrDeliveryModifier.optionSetOptions+"']").val();
             var currentCountryValue = jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val();
             var acceptableOptions = PickUpOrDeliveryModifier.availableCountries[currentIndex];
             var hasValidValue = false;

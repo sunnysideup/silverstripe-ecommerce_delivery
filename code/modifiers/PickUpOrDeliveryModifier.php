@@ -196,7 +196,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $fields->push($this->descriptionField());
         $options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
         $optionID = $this->LiveOptionID();
-        $fields->push(new CheckboxSetField('PickupOrDeliveryType', 'Preference', $options, $optionID));
+        $fields->push(OptionSetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
