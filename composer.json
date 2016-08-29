@@ -1,23 +1,33 @@
 {
-	"name": "sunnysideup/ecommerce_delivery",
-	"type": "silverstripe-module",
-	"description": "add delivery costs to your silverstripe e-commerce",
-	"homepage": "http://www.silverstripe-ecommerce.com",
-	"keywords": ["ecommerce", "e-commerce", "shop", "cart", "delivery", "silverstripe", "shipping", "courrier", "sending", "tracking code", "pick-up"],
-	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-	"authors":[
-		{
-			"name": "Nicolaas Francken",
-			"homepage": "https://github.com/sunnysideup",
-			"email" : "modules@sunnysideup.co.nz",
-			"role" : "lead developer"
-		}
-	],
-	"require":{
-		"sunnysideup/ecommerce": "dev-master",
-		"sunnysideup/dataobjectsorter": "dev-master"
-	},
-	"extra": {
-		"installer-name": "ecommerce_delivery"
-	}
+    "name": "sunnysideup/ecommerce_delivery",
+    "type": "silverstripe-module",
+    "description": "add delivery costs to your silverstripe e-commerce",
+    "keywords": [
+        "ecommerce",
+        "e-commerce",
+        "shop",
+        "cart",
+        "delivery",
+        "silverstripe",
+        "shipping",
+        "courrier",
+        "sending",
+        "tracking code",
+        "pick-up"
+    ],
+    "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "sunnysideup/ecommerce": "dev-master",
+        "sunnysideup/dataobjectsorter": "dev-master"
+    },
+    "extra": {
+        "installer-name": "ecommerce_delivery"
+    }
 }
