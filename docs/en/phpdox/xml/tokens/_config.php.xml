@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<source xmlns="http://xml.phpdox.net/token">
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/temp_modules/silverstripe-ecommerce_delivery/docs/en/phpdox/../../.." file="_config.php" realpath="/var/www/temp_modules/silverstripe-ecommerce_delivery/_config.php" size="640" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="e53d81ddf2a3bd00881c23d369197f39e166db76" relative="_config.php"/>
+  <line no="1">
+    <token name="T_OPEN_TAG">&lt;?php</token>
+  </line>
+  <line no="2"/>
+  <line no="3"/>
+  <line no="4">
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="5">
+    <token name="T_DOC_COMMENT"> * developed by www.sunnysideup.co.nz</token>
+  </line>
+  <line no="6">
+    <token name="T_DOC_COMMENT"> * author: Nicolaas - modules [at] sunnysideup.co.nz</token>
+  </line>
+  <line no="7">
+    <token name="T_DOC_COMMENT">**/</token>
+  </line>
+  <line no="8"/>
+  <line no="9"/>
+  <line no="10">
+    <token name="T_COMMENT">//copy the lines between the START AND END line to your /mysite/_config.php file and choose the right settings</token>
+  </line>
+  <line no="11">
+    <token name="T_COMMENT">//===================---------------- START ecommerce_delivery_electronically MODULE ----------------===================</token>
+  </line>
+  <line no="12">
+    <token name="T_COMMENT">//===================---------------- END ecommerce_delivery_electronically  MODULE ----------------===================</token>
+  </line>
+  <line no="13">
+    <token name="T_COMMENT">/*</token>
+  </line>
+  <line no="14"/>
+  <line no="15">
+    <token name="T_COMMENT">dont forget to add the following .htaccess file to your originating folders:</token>
+  </line>
+  <line no="16"/>
+  <line no="17">
+    <token name="T_COMMENT">IndexIgnore *</token>
+  </line>
+  <line no="18">
+    <token name="T_COMMENT">order allow,deny</token>
+  </line>
+  <line no="19">
+    <token name="T_COMMENT">deny from all</token>
+  </line>
+  <line no="20"/>
+  <line no="21">
+    <token name="T_COMMENT">so that no-one can access the original files.</token>
+  </line>
+  <line no="22"/>
+  <line no="23"/>
+  <line no="24">
+    <token name="T_COMMENT">*/</token>
+  </line>
+  <line no="25"/>
+</source>

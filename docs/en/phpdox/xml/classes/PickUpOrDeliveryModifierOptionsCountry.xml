@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="PickUpOrDeliveryModifierOptionsCountry" namespace="" name="PickUpOrDeliveryModifierOptionsCountry" abstract="false" final="false" start="8" end="44">
+  <file path="/var/www/temp_modules/silverstripe-ecommerce_delivery/docs/en/phpdox/../../../code/model" file="PickUpOrDeliveryModifierOptionsCountry.php" realpath="/var/www/temp_modules/silverstripe-ecommerce_delivery/code/model/PickUpOrDeliveryModifierOptionsCountry.php" size="1258" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="e594b789a6caf0db917e4c2f3d86c96a3f6419eb" relative="code/model/PickUpOrDeliveryModifierOptionsCountry.php"/>
+  <docblock>
+    <description/>
+    <author value="nicolaas [at] sunnysideup.co.nz"/>
+  </docblock>
+  <extends full="DataExtension" namespace="" name="DataExtension" unresolved="true"/>
+  <member name="belongs_many_many" type="array" default="" visibility="private" static="true" line="10"/>
+  <member name="many_many" type="array" default="" visibility="private" static="true" line="13"/>
+  <method name="updateCMSFields" start="21" end="43" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Update Fields"/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <parameter name="fields" byreference="false" type="object">
+      <type full="FieldList" namespace="" name="FieldList"/>
+    </parameter>
+  </method>
+</class>

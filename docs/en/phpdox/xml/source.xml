@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<source xmlns="http://xml.phpdox.net/src">
+  <dir name="/var/www/temp_modules/silverstripe-ecommerce_delivery">
+    <file name="_config.php" size="640" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="e53d81ddf2a3bd00881c23d369197f39e166db76" xml="tokens/_config.php.xml"/>
+    <dir name="tasks">
+      <file name="EcommerceTaskUpgradePickUpOrDeliveryModifier.php" size="2224" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="b52bc6c35d7c8f6d4d128cd6e596725ffe16e9fc" xml="tokens/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier.php.xml"/>
+    </dir>
+    <dir name="thirdparty">
+      <file name="PackagingBox.php" size="7139" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="d571af3f14fefc05468b53e42ea970473b47a9fe" xml="tokens/thirdparty/PackagingBox.php.xml"/>
+    </dir>
+    <dir name="code">
+      <dir name="model">
+        <file name="PickUpOrDeliveryModifierOptionsCountry.php" size="1258" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="e594b789a6caf0db917e4c2f3d86c96a3f6419eb" xml="tokens/code/model/PickUpOrDeliveryModifierOptionsCountry.php.xml"/>
+        <file name="PickUpOrDeliveryModifierOptions_WeightBracket.php" size="2804" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="da151b60b68a838d18178ddfa4998bf33d386ff7" xml="tokens/code/model/PickUpOrDeliveryModifierOptions_WeightBracket.php.xml"/>
+        <file name="PickUpOrDeliveryModifierOptions_SubTotalBracket.php" size="2882" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="d314261da5a86cd5e37bcaddce20e0e325252cb0" xml="tokens/code/model/PickUpOrDeliveryModifierOptions_SubTotalBracket.php.xml"/>
+        <file name="PickUpOrDeliveryModifierOptionsRegion.php" size="252" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="aa1e882b9635eeb1002f167733e1b08433cf5f4d" xml="tokens/code/model/PickUpOrDeliveryModifierOptionsRegion.php.xml"/>
+        <file name="PickUpOrDeliveryModifierOptions.php" size="15009" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="3f7866882bb684317534548a4a5071032db888cd" xml="tokens/code/model/PickUpOrDeliveryModifierOptions.php.xml"/>
+      </dir>
+      <dir name="modifiers">
+        <file name="PickUpOrDeliveryModifier.php" size="25547" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="95304aec4c1673425093ab1f0ecb1df483cb4d9c" xml="tokens/code/modifiers/PickUpOrDeliveryModifier.php.xml"/>
+        <file name="CountryRegionDeliveryModifier.php" size="855" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="558d801654e94a2281466d26854bd5967958fe54" xml="tokens/code/modifiers/CountryRegionDeliveryModifier.php.xml"/>
+      </dir>
+      <dir name="forms">
+        <file name="PickUpOrDeliveryModifier_Form.php" size="1123" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="9f3e9ea43ec12f80738d428d90d0b1039b265be9" xml="tokens/code/forms/PickUpOrDeliveryModifier_Form.php.xml"/>
+      </dir>
+    </dir>
+  </dir>
+</source>

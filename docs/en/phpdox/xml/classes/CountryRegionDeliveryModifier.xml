@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="CountryRegionDeliveryModifier" namespace="" name="CountryRegionDeliveryModifier" abstract="false" final="false" start="13" end="42">
+  <file path="/var/www/temp_modules/silverstripe-ecommerce_delivery/docs/en/phpdox/../../../code/modifiers" file="CountryRegionDeliveryModifier.php" realpath="/var/www/temp_modules/silverstripe-ecommerce_delivery/code/modifiers/CountryRegionDeliveryModifier.php" size="855" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="558d801654e94a2281466d26854bd5967958fe54" relative="code/modifiers/CountryRegionDeliveryModifier.php"/>
+  <docblock>
+    <description compact="to do: delete this class!"/>
+  </docblock>
+  <extends full="PickUpOrDeliveryModifier" namespace="" name="PickUpOrDeliveryModifier"/>
+  <method name="getCMSFields" start="19" end="32" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="TableSubTitle" start="34" end="37" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getTableSubTitle" start="38" end="41" abstract="false" final="false" static="false" visibility="public"/>
+  <parent full="PickUpOrDeliveryModifier" namespace="" name="PickUpOrDeliveryModifier">
+    <extends full="OrderModifier" namespace="" name="OrderModifier" unresolved="true"/>
+    <member name="debugMessage" type="string" default="&quot;&quot;" visibility="protected" static="false" line="105">
+      <docblock>
+        <description/>
+        <var type="object">Debugging tool<type full="String" namespace="" name="String"/></var>
+      </docblock>
+    </member>
+    <method name="i18n_singular_name" start="29" end="32" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="35" end="38" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getCMSFields" start="45" end="58" abstract="false" final="false" static="false" visibility="public">
+      <inline>
+        <comment value="debug fields" line="48"/>
+      </inline>
+    </method>
+    <method name="setOption" start="115" end="120" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="set the selected option (selected by user using form)"/>
+        <param type="object" variable="$optionID">
+          <type full="Int" namespace="" name="Int"/>
+        </param>
+      </docblock>
+      <parameter name="optionID" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="runUpdate" start="127" end="141" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="updates database fields"/>
+        <param description="- run it, even if it has run already" type="object" variable="$force">
+          <type full="Bool" namespace="" name="Bool"/>
+        </param>
+        <return type="object">
+          <type full="void" namespace="" name="void"/>
+        </return>
+      </docblock>
+      <parameter name="force" byreference="false" type="boolean" default="true"/>
+    </method>
+    <method name="ShowForm" start="151" end="161" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard Modifier Method"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ShowFormInEditableOrderTable" start="168" end="171" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Should the form be included in the editable form on the checkout page?"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getModifierForm" start="177" end="215" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Form" namespace="" name="Form"/>
+        </return>
+      </docblock>
+      <parameter name="optionalController" byreference="false" type="{unknown}" default="" constant="null">
+        <type full="Controller" namespace="" name="Controller"/>
+      </parameter>
+      <parameter name="optionalValidator" byreference="false" type="{unknown}" default="" constant="null">
+        <type full="Validator" namespace="" name="Validator"/>
+      </parameter>
+      <inline>
+        <comment value="Requirements::block(THIRDPARTY_DIR.&quot;/jquery/jquery.js&quot;);" line="181"/>
+        <comment value="Requirements::javascript(Director::protocol().&quot;ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;);" line="182"/>
+        <comment value="$this-&gt;getOptionListForDropDown();" line="208"/>
+      </inline>
+    </method>
+    <method name="ShowInTable" start="222" end="225" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="CanBeRemoved" start="230" end="233" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="CartValue" start="239" end="242" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="NOTE: the function below is  HACK and needs fixing proper."/>
+      </docblock>
+    </method>
+    <method name="getCartValue" start="243" end="246" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="liveOptionObject" start="254" end="257" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns the current selected option as object"/>
+        <return type="object">
+          <type full="PickUpOrDeliveryModifierOptions;" namespace="" name="PickUpOrDeliveryModifierOptions;"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="useWeight" start="263" end="266" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="works out if Weight is applicable at all"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="liveOptions" start="274" end="313" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Returns the available delivery options based on the current country and region for the order.">Must always return something!</description>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveOptionID" start="322" end="336" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Precondition : There are always options available."/>
+        <return type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveName" start="341" end="355" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveSubTotalAmount" start="361" end="365" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="cached in Order, no need to cache here."/>
+        <return type="object">
+          <type full="Double" namespace="" name="Double"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveSerializedCalculationObject" start="371" end="377" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="description of region and country being shipped to."/>
+        <return description="| NULL" type="object">
+          <type full="PickUpOrDeliveryModifierOptions" namespace="" name="PickUpOrDeliveryModifierOptions"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveRegionAndCountry" start="383" end="408" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="description of region and country being shipped to."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveCalculatedTotal" start="413" end="567" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Double" namespace="" name="Double"/>
+        </return>
+      </docblock>
+      <inline>
+        <comment value="________________ start caching mechanism" line="415"/>
+        <comment value="________________ end caching mechanism" line="420"/>
+        <comment value="do we have enough information" line="423"/>
+        <comment value="special case, we are using weight and there is no weight!" line="565"/>
+      </inline>
+    </method>
+    <method name="LiveTotalWeight" start="574" end="597" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Double" namespace="" name="Double"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LiveDebugString" start="603" end="606" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns an explanation of cost."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="IsChargeable" start="611" end="614" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="requireDefaultRecords" start="618" end="626" abstract="false" final="false" static="false" visibility="public">
+      <inline>
+        <comment value="we must check for individual database types here because each deals with schema in a none standard way" line="621"/>
+      </inline>
+    </method>
+    <method name="updateForAjax" start="633" end="656" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param description="javascript array" type="object" variable="$js">
+          <type full="Array" namespace="" name="Array"/>
+        </param>
+        <return description="for AJAX JSON" type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </return>
+      </docblock>
+      <parameter name="js" byreference="false" type="array"/>
+    </method>
+  </parent>
+</class>

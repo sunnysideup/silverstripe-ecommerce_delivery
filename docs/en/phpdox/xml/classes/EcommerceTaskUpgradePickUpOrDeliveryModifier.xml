@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskUpgradePickUpOrDeliveryModifier" namespace="" name="EcommerceTaskUpgradePickUpOrDeliveryModifier" abstract="false" final="false" start="3" end="43">
+  <file path="/var/www/temp_modules/silverstripe-ecommerce_delivery/docs/en/phpdox/../../../tasks" file="EcommerceTaskUpgradePickUpOrDeliveryModifier.php" realpath="/var/www/temp_modules/silverstripe-ecommerce_delivery/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier.php" size="2224" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="b52bc6c35d7c8f6d4d128cd6e596725ffe16e9fc" relative="tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier.php"/>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="title" type="string" default="&quot;Upgrade PickUpOrDeliveryModifier&quot;" visibility="protected" static="false" line="5"/>
+  <member name="description" type="string" default="&quot;Fix the option field&quot;" visibility="protected" static="false" line="7"/>
+  <member name="options_old_to_new" type="array" default="" visibility="private" static="true" line="9"/>
+  <method name="run" start="11" end="42" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+</class>

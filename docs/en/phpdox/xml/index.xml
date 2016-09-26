@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index xmlns="http://xml.phpdox.net/src" basedir="/var/www/temp_modules/silverstripe-ecommerce_delivery">
+  <namespace name="">
+    <class name="EcommerceTaskUpgradePickUpOrDeliveryModifier" src="tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier.php" xml="classes/EcommerceTaskUpgradePickUpOrDeliveryModifier.xml"/>
+    <class name="PackagingBox" src="thirdparty/PackagingBox.php" xml="classes/PackagingBox.xml"/>
+    <class name="PickUpOrDeliveryModifierOptionsCountry" src="code/model/PickUpOrDeliveryModifierOptionsCountry.php" xml="classes/PickUpOrDeliveryModifierOptionsCountry.xml"/>
+    <class name="PickUpOrDeliveryModifierOptions_WeightBracket" src="code/model/PickUpOrDeliveryModifierOptions_WeightBracket.php" description="below we record options for weight brackets with fixed cost e.g. if Order.Weight &gt; 10 and Order.Weight &lt; 20 =&gt; Charge is $111." xml="classes/PickUpOrDeliveryModifierOptions_WeightBracket.xml"/>
+    <class name="PickUpOrDeliveryModifierOptions_SubTotalBracket" src="code/model/PickUpOrDeliveryModifierOptions_SubTotalBracket.php" description="below we record options for subTotal brackets with fixed cost e.g. if Order.SubTotal &gt; 10 and Order.SubTotal &lt; 20 =&gt; Charge is $111." xml="classes/PickUpOrDeliveryModifierOptions_SubTotalBracket.xml"/>
+    <class name="PickUpOrDeliveryModifierOptionsRegion" src="code/model/PickUpOrDeliveryModifierOptionsRegion.php" xml="classes/PickUpOrDeliveryModifierOptionsRegion.xml"/>
+    <class name="PickUpOrDeliveryModifierOptions" src="code/model/PickUpOrDeliveryModifierOptions.php" xml="classes/PickUpOrDeliveryModifierOptions.xml"/>
+    <class name="PickUpOrDeliveryModifier" src="code/modifiers/PickUpOrDeliveryModifier.php" xml="classes/PickUpOrDeliveryModifier.xml"/>
+    <class name="CountryRegionDeliveryModifier" src="code/modifiers/CountryRegionDeliveryModifier.php" description="to do: delete this class!" xml="classes/CountryRegionDeliveryModifier.xml"/>
+    <class name="PickUpOrDeliveryModifier_Form" src="code/forms/PickUpOrDeliveryModifier_Form.php" xml="classes/PickUpOrDeliveryModifier_Form.xml"/>
+  </namespace>
+</index>

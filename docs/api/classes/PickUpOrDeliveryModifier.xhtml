@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - PickUpOrDeliveryModifier</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">PickUpOrDeliveryModifier</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/code/modifiers/PickUpOrDeliveryModifier.php.xhtml#line11">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>PickUpOrDeliveryModifier</h1>
+        <h4>It lets you set fixed shipping costs, or a fixed cost for each region you're delivering to.</h4>
+        <p/>
+        <ul>
+          <li>Author: Nicolaas [at] sunnysideup.co.nz</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class PickUpOrDeliveryModifier
+                extends OrderModifier
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Pickup / Delivery Charge";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Pickup / Delivery Charges";
+                    </li><li>private static boolean <a href="#members">$include_form_in_order_table</a> =
+                        true;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$weight_field</a> =
+                        'Weight';
+                    </li><li>private static <span title="Float">Float</span> <a href="#members">$_total_weight</a> =
+                        null;
+                    </li><li>private static <span title="DataList">DataList</span> <a href="#members">$available_options</a> =
+                        null;
+                    </li><li>private static <span title="PickUpOrDeliveryModifierOptions">PickUpOrDeliveryModifierOptions</span> <a href="#members">$selected_option</a> =
+                        null;
+                    </li><li>private static <span title="Double">Double</span> <a href="#members">$_actual_charges</a> =
+                        0;
+                    </li><li>private static <span title="Boolean">Boolean</span> <a href="#members">$calculations_done</a> =
+                        false;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$debugMessage</a> =
+                        "";
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getCMSFields.xhtml">getCMSFields</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/setOption.xhtml">setOption</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/runUpdate.xhtml">runUpdate</a>()
+                    </li><li>public Boolean <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowForm.xhtml">ShowForm</a>()
+                    </li><li>public Boolean <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowFormInEditableOrderTable.xhtml">ShowFormInEditableOrderTable</a>()
+                    </li><li>public Form <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getModifierForm.xhtml">getModifierForm</a>()
+                    </li><li>public Boolean <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowInTable.xhtml">ShowInTable</a>()
+                    </li><li>public Boolean <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/CanBeRemoved.xhtml">CanBeRemoved</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/CartValue.xhtml">CartValue</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getCartValue.xhtml">getCartValue</a>()
+                    </li><li>protected PickUpOrDeliveryModifierOptions; <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/liveOptionObject.xhtml">liveOptionObject</a>()
+                    </li><li>protected Boolean <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/useWeight.xhtml">useWeight</a>()
+                    </li><li>protected DataList <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/liveOptions.xhtml">liveOptions</a>()
+                    </li><li>protected Int <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveOptionID.xhtml">LiveOptionID</a>()
+                    </li><li>protected String <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveName.xhtml">LiveName</a>()
+                    </li><li>protected Double <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveSubTotalAmount.xhtml">LiveSubTotalAmount</a>()
+                    </li><li>protected PickUpOrDeliveryModifierOptions <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveSerializedCalculationObject.xhtml">LiveSerializedCalculationObject</a>()
+                    </li><li>protected String <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveRegionAndCountry.xhtml">LiveRegionAndCountry</a>()
+                    </li><li>protected Double <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveCalculatedTotal.xhtml">LiveCalculatedTotal</a>()
+                    </li><li>protected Double <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveTotalWeight.xhtml">LiveTotalWeight</a>()
+                    </li><li>protected String <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveDebugString.xhtml">LiveDebugString</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/IsChargeable.xhtml">IsChargeable</a>()
+                    </li><li>public void <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/requireDefaultRecords.xhtml">requireDefaultRecords</a>()
+                    </li><li>public Array <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/updateForAjax.xhtml">updateForAjax</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>OrderModifier</li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_actual_charges"><strong>$_actual_charges</strong>
+                —
+                <a title="Double" href="../classes/Double.xhtml">Double</a></li>
+            <li id="_total_weight"><strong>$_total_weight</strong>
+                —
+                <a title="Float" href="../classes/Float.xhtml">Float</a></li>
+            <li id="available_options"><strong>$available_options</strong>
+                —
+                <a title="DataList" href="../classes/DataList.xhtml">DataList</a></li>
+            <li id="calculations_done"><strong>$calculations_done</strong>
+                —
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a></li>
+            <li id="db">
+              <strong>$db</strong>
+            </li>
+            <li id="has_one">
+              <strong>$has_one</strong>
+            </li>
+            <li id="include_form_in_order_table">
+              <strong>$include_form_in_order_table</strong>
+            </li>
+            <li id="plural_name">
+              <strong>$plural_name</strong>
+            </li>
+            <li id="selected_option"><strong>$selected_option</strong>
+                —
+                <a title="PickUpOrDeliveryModifierOptions" href="../classes/PickUpOrDeliveryModifierOptions.xhtml">PickUpOrDeliveryModifierOptions</a></li>
+            <li id="singular_name">
+              <strong>$singular_name</strong>
+            </li>
+            <li id="weight_field"><strong>$weight_field</strong>
+                —
+                <a title="String" href="../classes/String.xhtml">String</a></li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="debugMessage"><strong>$debugMessage</strong>
+                —
+                <a title="String" href="../classes/String.xhtml">String</a></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="LiveCalculatedTotal">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveCalculatedTotal.xhtml">LiveCalculatedTotal()</a>
+            </li>
+            <li id="LiveDebugString"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveDebugString.xhtml">LiveDebugString()</a>
+                — returns an explanation of cost.</li>
+            <li id="LiveName">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveName.xhtml">LiveName()</a>
+            </li>
+            <li id="LiveOptionID"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveOptionID.xhtml">LiveOptionID()</a>
+                — Precondition : There are always options available.</li>
+            <li id="LiveRegionAndCountry"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveRegionAndCountry.xhtml">LiveRegionAndCountry()</a>
+                — description of region and country being shipped to.</li>
+            <li id="LiveSerializedCalculationObject"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveSerializedCalculationObject.xhtml">LiveSerializedCalculationObject()</a>
+                — description of region and country being shipped to.</li>
+            <li id="LiveSubTotalAmount"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveSubTotalAmount.xhtml">LiveSubTotalAmount()</a>
+                — cached in Order, no need to cache here.</li>
+            <li id="LiveTotalWeight">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/LiveTotalWeight.xhtml">LiveTotalWeight()</a>
+            </li>
+            <li id="liveOptionObject"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/liveOptionObject.xhtml">liveOptionObject()</a>
+                — returns the current selected option as object</li>
+            <li id="liveOptions"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/liveOptions.xhtml">liveOptions()</a>
+                — Returns the available delivery options based on the current country and region for the order.</li>
+            <li id="useWeight"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/useWeight.xhtml">useWeight()</a>
+                — works out if Weight is applicable at all</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="CanBeRemoved">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/CanBeRemoved.xhtml">CanBeRemoved()</a>
+            </li>
+            <li id="CartValue"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/CartValue.xhtml">CartValue()</a>
+                — NOTE: the function below is  HACK and needs fixing proper.</li>
+            <li id="IsChargeable">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/IsChargeable.xhtml">IsChargeable()</a>
+            </li>
+            <li id="ShowForm"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowForm.xhtml">ShowForm()</a>
+                — standard Modifier Method</li>
+            <li id="ShowFormInEditableOrderTable"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowFormInEditableOrderTable.xhtml">ShowFormInEditableOrderTable()</a>
+                — Should the form be included in the editable form on the checkout page?</li>
+            <li id="ShowInTable">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/ShowInTable.xhtml">ShowInTable()</a>
+            </li>
+            <li id="getCMSFields">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getCMSFields.xhtml">getCMSFields()</a>
+            </li>
+            <li id="getCartValue">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getCartValue.xhtml">getCartValue()</a>
+            </li>
+            <li id="getModifierForm">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/getModifierForm.xhtml">getModifierForm()</a>
+            </li>
+            <li id="i18n_plural_name">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="requireDefaultRecords">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/requireDefaultRecords.xhtml">requireDefaultRecords()</a>
+            </li>
+            <li id="runUpdate"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/runUpdate.xhtml">runUpdate()</a>
+                — updates database fields</li>
+            <li id="setOption"><a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/setOption.xhtml">setOption()</a>
+                — set the selected option (selected by user using form)</li>
+            <li id="updateForAjax">
+              <a title="PickUpOrDeliveryModifier" href="../classes/PickUpOrDeliveryModifier/updateForAjax.xhtml">updateForAjax()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.9.0 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>
