@@ -4,8 +4,8 @@
  * @author nicolaas [at] sunnysideup.co.nz
  * Precondition : There can only be 1 default option
  */
-class PickUpOrDeliveryModifierOptions extends DataObject {
-
+class PickUpOrDeliveryModifierOptions extends DataObject
+{
     private static $db = array(
         "IsDefault" => "Boolean",
         "Code" => "Varchar(25)",
@@ -101,10 +101,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     );
 
     private static $singular_name = "Delivery / Pick-up Option";
-        function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Option");}
+    public function i18n_singular_name()
+    {
+        return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Option");
+    }
 
     private static $plural_name = "Delivery / Pick-up Options";
-        function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Options");}
+    public function i18n_plural_name()
+    {
+        return _t("PickUpOrDeliveryModifierOptions.DELIVERYOPTION", "Delivery / Pick-up Options");
+    }
 
     private static $default_sort = "\"IsDefault\" DESC, \"Sort\" ASC, \"Name\" ASC";
 
@@ -113,11 +119,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * if none exists, it creates one.
      * @return PickUpOrDeliveryModifierOptions
      */
-    public static function default_object() {
-        if($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => "1"))->First()) {
+    public static function default_object()
+    {
+        if ($obj = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => "1"))->First()) {
             //do nothing
-        }
-        else {
+        } else {
             $obj = new PickUpOrDeliveryModifierOptions();
             $obj->IsDefault = 1;
             $obj->write();
@@ -133,14 +139,15 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * );
      * @return Array
      */
-    public static function get_all_as_country_array() {
+    public static function get_all_as_country_array()
+    {
         $array = array();
         $options = PickUpOrDeliveryModifierOptions::get();
-        if($options->count()) {
-            foreach($options as $option) {
-                if($countries = $option->AvailableInCountries()) {
-                    if($countries->count()) {
-                        foreach($countries as $country) {
+        if ($options->count()) {
+            foreach ($options as $option) {
+                if ($countries = $option->AvailableInCountries()) {
+                    if ($countries->count()) {
+                        foreach ($countries as $country) {
                             $array[$option->Code][] = $country->Code;
                         }
                     }
@@ -153,8 +160,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     /**
      * @return String
      */
-    function IsDefaultNice(){return $this->getIsDefaultNice();}
-    function getIsDefaultNice(){
+    public function IsDefaultNice()
+    {
+        return $this->getIsDefaultNice();
+    }
+    public function getIsDefaultNice()
+    {
         return $this->IsDefault ? "yes"  : "no";
     }
 
@@ -164,8 +175,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canCreate($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canCreate($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canCreate($member);
     }
 
@@ -174,8 +188,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canView($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canView($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canCreate($member);
     }
 
@@ -184,8 +201,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canEdit($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canEdit($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canEdit($member);
     }
 
@@ -194,32 +214,36 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canDelete($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canDelete($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canDelete($member);
     }
 
     /**
      * standard SS method
      */
-    function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
         $availableInCountriesField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Available in");
-        if($availableInCountriesField) {
+        if ($availableInCountriesField) {
             $fields->replaceField("AvailableInCountries", $availableInCountriesField);
         }
         $excludeFromCountriesField = $this->createGridField("EcommerceCountry", "ExcludeFromCountries", "Excluded from");
-        if($excludeFromCountriesField) {
+        if ($excludeFromCountriesField) {
             $fields->replaceField("ExcludeFromCountries", $excludeFromCountriesField);
         }
         $regionField = $this->createGridField("EcommerceRegion", "AvailableInRegions", "Regions");
-        if($regionField) {
+        if ($regionField) {
             $fields->replaceField("AvailableInRegions", $regionField);
         }
-        if(class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
+        if (class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
             $fields->addFieldToTab("Root.Sort", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
         }
-        $fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree" ));
+        $fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree"));
 
         //add headings
         $fields->addFieldToTab(
@@ -246,45 +270,43 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
             ),
             "ExplanationPageID"
         );
-        if(EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
-            if($weightBrackets && $weightBrackets->count()) {
+            if ($weightBrackets && $weightBrackets->count()) {
                 $fields->removeByName("WeightMultiplier");
                 $fields->removeByName("WeightUnit");
-            }
-            else {
+            } else {
                 $fields->addFieldToTab("Root.Main", new HeaderField("WeightOptions", "Weight Options (also see Weight Brackets tab)"), "WeightMultiplier");
             }
-        }
-        else {
+        } else {
             $fields->removeByName("WeightBrackets");
             $fields->removeByName("WeightMultiplier");
             $fields->removeByName("WeightUnit");
         }
         $fields->addFieldToTab("Root.Main", new HeaderField("MoreInformation", "Other Settings"), "Sort");
-        foreach($this->Config()->get("field_labels_right") as $fieldName => $fieldDescription ) {
+        foreach ($this->Config()->get("field_labels_right") as $fieldName => $fieldDescription) {
             $field = $fields->dataFieldByName($fieldName);
-            if($field) {
+            if ($field) {
                 $field->setRightTitle($fieldDescription);
             }
         }
         return $fields;
     }
 
-    private function createGridField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries", $title) {
+    private function createGridField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries", $title)
+    {
         $field = null;
         $dos = $dataObjectName::get();
-        if($dos->count()) {
-            if(class_exists("MultiSelectField")) {
-                $array = $dos->map('ID','Title')->toArray();
+        if ($dos->count()) {
+            if (class_exists("MultiSelectField")) {
+                $array = $dos->map('ID', 'Title')->toArray();
                 //$name, $title = "", $source = array(), $value = "", $form = null
                 $field = new MultiSelectField(
                     $fieldName,
                     'This option is available in... ',
                     $array
                 );
-            }
-            else {
+            } else {
                 // $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
                 /**
                 * @todo: Auto completer may not be functioning correctly: ExactMatchFilter does not accept EcommerceCountryFilters_AllowSales as modifiers
@@ -305,13 +327,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
                 $gridFieldConfig->addComponent(new GridFieldDetailForm());
 
                 $source = $this->$fieldName();
-                return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "".$title), $source , $gridFieldConfig);
+                return new GridField($fieldName, _t("PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES", "".$title), $source, $gridFieldConfig);
             }
         }
-        if($field) {
+        if ($field) {
             return $field;
-        }
-        else {
+        } else {
             return new HiddenField($fieldName);
         }
     }
@@ -319,17 +340,18 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     /**
      * make sure there is only exactly one default
      */
-    function onAfterWrite() {
+    public function onAfterWrite()
+    {
         parent::onAfterWrite();
         // no other record but current one is not default
-        if((!$this->IsDefault) && (PickUpOrDeliveryModifierOptions::get()->exclude(array("ID" => intval($this->ID)))->count() == 0)) {
+        if ((!$this->IsDefault) && (PickUpOrDeliveryModifierOptions::get()->exclude(array("ID" => intval($this->ID)))->count() == 0)) {
             DB::query("
                 UPDATE \"PickUpOrDeliveryModifierOptions\"
                 SET \"IsDefault\" = 1
                 WHERE \"ID\" <> ".$this->ID.";");
         }
         //current default -> reset others
-        elseif($this->IsDefault) {
+        elseif ($this->IsDefault) {
             DB::query("
                 UPDATE \"PickUpOrDeliveryModifierOptions\"
                 SET \"IsDefault\" = 0
@@ -340,33 +362,35 @@ class PickUpOrDeliveryModifierOptions extends DataObject {
     /**
      * make sure all are unique codes
      */
-    function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
         $this->Code = trim(preg_replace("/[^a-zA-Z0-9]+/", "", $this->Code));
         $i = 0;
-        if(!$this->Code) {
+        if (!$this->Code) {
             $defaults = $this->Config()->get("Code");
             $this->Code = empty($defaults["Code"]) ? "CODE" : $defaults["Code"];
         }
         $baseCode = $this->Code;
-        while(PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $this->Code))->exclude(array("ID" => $this->ID))->count() && $i < 100){
+        while (PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $this->Code))->exclude(array("ID" => $this->ID))->count() && $i < 100) {
             $i++;
             $this->Code = $baseCode.'_'.$i;
         }
-        if($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
-            if($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
+        if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
+            if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
                 $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
             }
         }
     }
 
-    function getListOfCountries(){
+    public function getListOfCountries()
+    {
         $in = '';
         $out = '';
-        if($this->AvailableInCountries()->count()) {
+        if ($this->AvailableInCountries()->count()) {
             $in = "".implode(', ', $this->AvailableInCountries()->column("Code"));
         }
-        if($this->ExcludeFromCountries()->count()) {
+        if ($this->ExcludeFromCountries()->count()) {
             $out = " // OUT: ".implode(', ', $this->ExcludeFromCountries()->column("Code"));
         }
         return $in.$out;

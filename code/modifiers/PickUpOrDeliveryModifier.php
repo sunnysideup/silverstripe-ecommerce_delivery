@@ -26,17 +26,24 @@ class PickUpOrDeliveryModifier extends OrderModifier
     );
 
     private static $singular_name = "Pickup / Delivery Charge";
-        function i18n_singular_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up");}
+    public function i18n_singular_name()
+    {
+        return _t("PickUpOrDeliveryModifier.DELIVERYCHARGE", "Delivery / Pick-up");
+    }
 
     private static $plural_name = "Pickup / Delivery Charges";
-        function i18n_plural_name() { return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up");}
+    public function i18n_plural_name()
+    {
+        return _t("PickUpOrDeliveryModifier.DELIVERYCHARGES", "Delivery / Pick-up");
+    }
 
     private static $include_form_in_order_table = true;
 
 
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
-    function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
         //debug fields
         $fields->removeByName("TotalWeight");
@@ -105,7 +112,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * set the selected option (selected by user using form)
      * @param Int $optionID
      */
-    public  function setOption($optionID) {
+    public function setOption($optionID)
+    {
         $optionID = intval($optionID);
         $this->OptionID = $optionID;
         $this->write();
@@ -116,7 +124,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * @param Bool $force - run it, even if it has run already
      * @return void
      */
-    public function runUpdate($force = true) {
+    public function runUpdate($force = true)
+    {
         $this->debugMessage = "";
         self::$calculations_done = false;
         self::$selected_option = null;
@@ -139,10 +148,11 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * standard Modifier Method
      * @return Boolean
      */
-    public function ShowForm() {
-        if($this->ShowInTable()) {
-            if($this->Order()->Items() ) {
-                if($options = $this->liveOptions()) {
+    public function ShowForm()
+    {
+        if ($this->ShowInTable()) {
+            if ($this->Order()->Items()) {
+                if ($options = $this->liveOptions()) {
                     return $options->count() > 1;
                 }
             }
@@ -155,7 +165,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * on the checkout page?
      * @return Boolean
      */
-    public function ShowFormInEditableOrderTable() {
+    public function ShowFormInEditableOrderTable()
+    {
         return ($this->ShowForm() && $this->Config()->get("include_form_in_order_table")) ? true : false;
     }
 
@@ -163,7 +174,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      *
      * @return Form
      */
-    function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
+    public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
+    {
         Requirements::themedCSS("PickUpOrDeliveryModifier", "ecommerce_delivery");
         Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
@@ -171,21 +183,20 @@ class PickUpOrDeliveryModifier extends OrderModifier
         Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
         Requirements::javascript("ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js");
         $array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
-        if($array && is_array($array) && count($array)) {
+        if ($array && is_array($array) && count($array)) {
             $js = "\n".'var PickUpOrDeliveryModifierOptions = []';
             $count = 0;
-            foreach($array as $key => $option) {
-                if($option && is_array($option) && count($option)) {
-                    if($count == 0) {
+            foreach ($array as $key => $option) {
+                if ($option && is_array($option) && count($option)) {
+                    if ($count == 0) {
                         $js .= "\n".'    PickUpOrDeliveryModifierOptions["'.$key.'"] = new Array("'.implode('","', $option).'")';
-                    }
-                    else {
+                    } else {
                         $js .= "\n".'    PickUpOrDeliveryModifierOptions["'.$key.'"] = new Array("'.implode('","', $option).'")';
                     }
                     $count++;
                 }
             }
-            if($js) {
+            if ($js) {
                 //add final semi-comma
                 $js .= "";
                 Requirements::customScript($js, "PickupOrDeliveryModifier");
@@ -208,14 +219,16 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * @return Boolean
      */
-    public function ShowInTable() {
+    public function ShowInTable()
+    {
         return true;
     }
 
     /**
      * @return Boolean
      */
-    public function CanBeRemoved() {
+    public function CanBeRemoved()
+    {
         return false;
     }
 
@@ -223,8 +236,12 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * NOTE: the function below is  HACK and needs fixing proper.
      *
      */
-    public function CartValue() {return $this->getCartValue();}
-    public function getCartValue() {
+    public function CartValue()
+    {
+        return $this->getCartValue();
+    }
+    public function getCartValue()
+    {
         return $this->LiveCalculatedTotal();
     }
 
@@ -234,7 +251,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * returns the current selected option as object
      * @return PickUpOrDeliveryModifierOptions;
      */
-    protected function liveOptionObject() {
+    protected function liveOptionObject()
+    {
         return PickUpOrDeliveryModifierOptions::get()->byID($this->LiveOptionID());
     }
 
@@ -242,7 +260,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * works out if Weight is applicable at all
      * @return Boolean
      */
-    protected function useWeight(){
+    protected function useWeight()
+    {
         return EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight;
     }
 
@@ -252,39 +271,40 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * Must always return something!
      * @return DataList
      */
-    protected function liveOptions() {
-        if(!self::$available_options) {
+    protected function liveOptions()
+    {
+        if (!self::$available_options) {
             $countryID = EcommerceCountry::get_country_id();
             $regionID = EcommerceRegion::get_region_id();
             $weight = $this->LiveTotalWeight();
             $options = PickUpOrDeliveryModifierOptions::get();
-            if($options->count()) {
-                foreach($options as $option) {
+            if ($options->count()) {
+                foreach ($options as $option) {
                     //check countries
-                    if($countryID) {
+                    if ($countryID) {
                         $availableInCountriesList = $option->AvailableInCountries();
                         //exclude if not found in country list
-                        if($availableInCountriesList->Count() > 0 && ! $availableInCountriesList->find('ID', $countryID)) {
+                        if ($availableInCountriesList->Count() > 0 && ! $availableInCountriesList->find('ID', $countryID)) {
                             continue;
                         }
                         //exclude if in exclusion list
                         $excludedFromCountryList = $option->ExcludeFromCountries();
-                        if($excludedFromCountryList->Count() > 0 && $excludedFromCountryList->find('ID', $countryID)) {
+                        if ($excludedFromCountryList->Count() > 0 && $excludedFromCountryList->find('ID', $countryID)) {
                             continue;
                         }
                     }
                     //check regions
-                    if($regionID) {
+                    if ($regionID) {
                         $optionRegions = $option->AvailableInRegions();
                         //exclude if not found in region list
-                        if($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
+                        if ($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
                             continue;
                         }
                     }
                     $result[] = $option;
                 }
             }
-            if(! isset($result)) {
+            if (! isset($result)) {
                 $result[] = PickUpOrDeliveryModifierOptions::default_object();
             }
             self::$available_options = new ArrayList($result);
@@ -299,15 +319,15 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * Precondition : There are always options available.
      * @return Int
      */
-    protected function LiveOptionID() {
-        if(!self::$selected_option) {
+    protected function LiveOptionID()
+    {
+        if (!self::$selected_option) {
             $options = $this->liveOptions();
-            if(self::$selected_option = $options->find('ID', $this->OptionID)) {
+            if (self::$selected_option = $options->find('ID', $this->OptionID)) {
                 //do nothing;
-            }
-            else {
+            } else {
                 self::$selected_option = $options->find('IsDefault', 1);
-                if(! self::$selected_option) {
+                if (! self::$selected_option) {
                     self::$selected_option = $options->First();
                 }
             }
@@ -318,13 +338,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * @return String
      */
-    protected function LiveName() {
+    protected function LiveName()
+    {
         $obj = $this->liveOptionObject();
-        if(is_object($obj)) {
+        if (is_object($obj)) {
             $v = $obj->Name;
-            if($obj->ExplanationPageID) {
+            if ($obj->ExplanationPageID) {
                 $page = $obj->ExplanationPage();
-                if($page) {
+                if ($page) {
                     $v .= '<div id="PickUpOrDeliveryModifierExplanationLink"><a href="'.$page->Link().'" class="externalLink">'.convert::raw2sql($page->Title).'</a></div>';
                 }
             }
@@ -337,7 +358,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * cached in Order, no need to cache here.
      * @return Double
      */
-    protected function LiveSubTotalAmount() {
+    protected function LiveSubTotalAmount()
+    {
         $order = $this->Order();
         return $order->SubTotal();
     }
@@ -346,9 +368,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * description of region and country being shipped to.
      * @return PickUpOrDeliveryModifierOptions | NULL
      */
-    protected function LiveSerializedCalculationObject() {
+    protected function LiveSerializedCalculationObject()
+    {
         $obj = $this->liveOptionObject();
-        if($obj) {
+        if ($obj) {
             return serialize($obj);
         }
     }
@@ -357,29 +380,29 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * description of region and country being shipped to.
      * @return String
      */
-    protected function LiveRegionAndCountry() {
+    protected function LiveRegionAndCountry()
+    {
         $details = array();
         $option = $this->Option();
-        if($option) {
+        if ($option) {
             $regionID = EcommerceRegion::get_region_id();
-            if($regionID) {
+            if ($regionID) {
                 $region = EcommerceRegion::get()->byID($regionID);
-                if($region) {
+                if ($region) {
                     $details[] = $region->Name;
                 }
             }
             $countryID = EcommerceCountry::get_country_id();
-            if($countryID) {
+            if ($countryID) {
                 $country = EcommerceCountry::get()->byID($countryID);
-                if($country) {
+                if ($country) {
                     $details[] = $country->Name;
                 }
             }
-        }
-        else {
+        } else {
             return _t("PickUpOrDeliveryModifier.NOTSELECTED", "No delivery option has been selected");
         }
-        if(count($details)) {
+        if (count($details)) {
             return implode(", ", $details);
         }
     }
@@ -387,9 +410,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
     * @return Double
     **/
-    protected function LiveCalculatedTotal() {
+    protected function LiveCalculatedTotal()
+    {
         //________________ start caching mechanism
-        if(self::$calculations_done) {
+        if (self::$calculations_done) {
             return self::$_actual_charges;
         }
         self::$calculations_done = true;
@@ -398,7 +422,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         self::$_actual_charges = 0;
         //do we have enough information
         $obj = $this->liveOptionObject();
-        if($items = $this->Order()->Items() && is_object($obj) && $obj->exists()) {
+        if ($items = $this->Order()->Items() && is_object($obj) && $obj->exists()) {
             $this->debugMessage .= "<hr />option selected: ".$obj->Title.", and items present";
             //lets check sub-total
             $subTotalAmount = $this->LiveSubTotalAmount();
@@ -412,19 +436,19 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $subTotalBrackets = $obj->SubTotalBrackets();
 
             // zero becauase over minForZeroRate
-            if($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
+            if ($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
                 self::$_actual_charges =  0;
                 $this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered".self::$_actual_charges;
             }
 
             //zero because below maxForZeroRate
-            elseif($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
+            elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
                 self::$_actual_charges =  0;
                 $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered".self::$_actual_charges;
             }
 
             //examine weight brackets
-            elseif($weight && $weightBrackets->count()) {
+            elseif ($weight && $weightBrackets->count()) {
                 $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
                 //weight brackets
                 $foundWeightBracket = null;
@@ -432,29 +456,28 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 $additionalWeightBracket = null;
                 $minimumMinimum = null;
                 $maximumMaximum = null;
-                foreach($weightBrackets as $weightBracket) {
-                    if(( ! $foundWeightBracket) && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
+                foreach ($weightBrackets as $weightBracket) {
+                    if ((! $foundWeightBracket) && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
                         $foundWeightBracket = $weightBracket;
                     }
                     //look for absolute min and max
-                    if($minimumMinimum === null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
+                    if ($minimumMinimum === null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
                         $minimumMinimum = $weightBracket;
                     }
-                    if($maximumMaximum === null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
+                    if ($maximumMaximum === null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
                         $maximumMaximum = $weightBracket;
                     }
                 }
-                if( ! $foundWeightBracket) {
-                    if($weight < $minimumMinimum->MinimumWeight) {
+                if (! $foundWeightBracket) {
+                    if ($weight < $minimumMinimum->MinimumWeight) {
                         $foundWeightBracket = $minimumMinimum;
-                    }
-                    elseif($weight > $maximumMaximum->MaximumWeight) {
+                    } elseif ($weight > $maximumMaximum->MaximumWeight) {
                         $foundWeightBracket = $maximumMaximum;
                         $weightBracketQuantity = floor($weight / $maximumMaximum->MaximumWeight);
                         $restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity);
                         $additionalWeightBracket = null;
-                        foreach($weightBrackets as $weightBracket) {
-                            if(($weightBracket->MinimumWeight <= $restWeight) && ($restWeight <= $weightBracket->MaximumWeight)) {
+                        foreach ($weightBrackets as $weightBracket) {
+                            if (($weightBracket->MinimumWeight <= $restWeight) && ($restWeight <= $weightBracket->MaximumWeight)) {
                                 $additionalWeightBracket = $weightBracket;
                                 break;
                             }
@@ -462,10 +485,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     }
                 }
                 //we found some applicable weight brackets
-                if($foundWeightBracket) {
+                if ($foundWeightBracket) {
                     self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
                     $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times $weightBracketQuantity";
-                    if($additionalWeightBracket) {
+                    if ($additionalWeightBracket) {
                         self::$_actual_charges += $additionalWeightBracket->FixedCost;
                         $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
                     }
@@ -475,9 +498,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
 
             // weight based on multiplier ...
-            elseif($weight && $obj->WeightMultiplier) {
+            elseif ($weight && $obj->WeightMultiplier) {
                 // add weight based shipping
-                if(!$obj->WeightUnit) {
+                if (!$obj->WeightUnit) {
                     $obj->WeightUnit = 1;
                 }
                 $this->debugMessage .= "<hr />actual weight:".$weight." multiplier = ".$obj->WeightMultiplier." weight unit = ".$obj->WeightUnit." ";
@@ -490,53 +513,51 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
 
             //examine price brackets
-            elseif($subTotalAmount && $subTotalBrackets->count()) {
+            elseif ($subTotalAmount && $subTotalBrackets->count()) {
                 $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
                 //subTotal brackets
                 $foundSubTotalBracket = null;
-                foreach($subTotalBrackets as $subTotalBracket) {
-                    if(( ! $foundSubTotalBracket) && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
+                foreach ($subTotalBrackets as $subTotalBracket) {
+                    if ((! $foundSubTotalBracket) && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
                         $foundSubTotalBracket = $subTotalBracket;
                         break;
                     }
                 }
                 //we found some applicable subTotal brackets
-                if($foundSubTotalBracket) {
+                if ($foundSubTotalBracket) {
                     self::$_actual_charges += $foundSubTotalBracket->FixedCost;
                     $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
                 }
             }
 
             // add percentage
-            if($obj->Percentage) {
+            if ($obj->Percentage) {
                 $percentageCharge = $subTotalAmount * $obj->Percentage;
                 self::$_actual_charges += $percentageCharge;
                 $this->debugMessage .= "<hr />percentage charge: \$".$percentageCharge;
             }
 
             // add fixed price
-            if($obj->FixedCost <> 0) {
+            if ($obj->FixedCost <> 0) {
                 self::$_actual_charges += $obj->FixedCost;
                 $this->debugMessage .= "<hr />fixed charge: \$". $obj->FixedCost;
             }
 
             //is it enough?
-            if(self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
+            if (self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
                 $oldActualCharge = self::$_actual_charges;
                 self::$_actual_charges = $obj->MinimumDeliveryCharge;
                 $this->debugMessage .= "<hr />too little: actual charge: ".$oldActualCharge.", minimum delivery charge: ".$obj->MinimumDeliveryCharge;
             }
             // is it too much
-            if(self::$_actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
+            if (self::$_actual_charges > $obj->MaximumDeliveryCharge  && $obj->MaximumDeliveryCharge > 0) {
                 self::$_actual_charges = $obj->MaximumDeliveryCharge;
                 $this->debugMessage .= "<hr />too much: ".self::$_actual_charges.", maximum delivery charge is ".$obj->MaximumDeliveryCharge;
             }
-        }
-        else {
-            if(!$items) {
+        } else {
+            if (!$items) {
                 $this->debugMessage .= "<hr />no items present";
-            }
-            else {
+            } else {
                 $this->debugMessage .= "<hr />no delivery option available";
             }
         }
@@ -550,19 +571,20 @@ class PickUpOrDeliveryModifier extends OrderModifier
      *
      * @return Double
      */
-    protected function LiveTotalWeight() {
-        if(self::$_total_weight === null) {
+    protected function LiveTotalWeight()
+    {
+        if (self::$_total_weight === null) {
             self::$_total_weight = 0;
-            if($this->useWeight()) {
-                if($fieldName = Config::inst()->get('PickUpOrDeliveryModifier', 'weight_field')) {
+            if ($this->useWeight()) {
+                if ($fieldName = Config::inst()->get('PickUpOrDeliveryModifier', 'weight_field')) {
                     $items = $this->Order()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
-                    if($items && $items->count()) {
-                        foreach($items as $itemIndex => $item) {
+                    if ($items && $items->count()) {
+                        foreach ($items as $itemIndex => $item) {
                             $buyable = $item->Buyable();
-                            if($buyable) {
+                            if ($buyable) {
                                 // Calculate the total weight of the order
-                                if(! empty($buyable->$fieldName) && $item->Quantity) {
+                                if (! empty($buyable->$fieldName) && $item->Quantity) {
                                     self::$_total_weight += $buyable->$fieldName * $item->Quantity;
                                 }
                             }
@@ -578,24 +600,27 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * returns an explanation of cost.
      * @return String
      */
-    protected function LiveDebugString() {
+    protected function LiveDebugString()
+    {
         return $this->debugMessage;
     }
 
 
 // ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
-    public function IsChargeable () {
+    public function IsChargeable()
+    {
         return true;
     }
 
 // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
-    function requireDefaultRecords() {
+    public function requireDefaultRecords()
+    {
         parent::requireDefaultRecords();
         // we must check for individual database types here because each deals with schema in a none standard way
         $modifiers = PickUpOrDeliveryModifier::get()->filter(array("OptionID" => 0));
-        if($modifiers->count()) {
+        if ($modifiers->count()) {
             DB::alteration_message("You need to upgrade PickUpOrDeliveryModifier <a href=\"/dev/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier\">do it now!</a>", "deleted");
         }
     }
@@ -605,17 +630,18 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * @param Array $js javascript array
      * @return Array for AJAX JSON
      **/
-    function updateForAjax(array $js) {
+    public function updateForAjax(array $js)
+    {
         $js = parent::updateForAjax($js);
         $jsonOptions = array();
         $liveOptions = $this->LiveOptions();
-        if($liveOptions && $liveOptions->count()) {
+        if ($liveOptions && $liveOptions->count()) {
             $optionsArray = $liveOptions->map('ID', 'Name');
-            if($optionsArray && !is_array($optionsArray)) {
-                    $optionsArray = $optionsArray->toArray();
+            if ($optionsArray && !is_array($optionsArray)) {
+                $optionsArray = $optionsArray->toArray();
             }
-            if($optionsArray && count($optionsArray)) {
-                foreach($optionsArray as $id => $name) {
+            if ($optionsArray && count($optionsArray)) {
+                foreach ($optionsArray as $id => $name) {
                     $jsonOptions[] = array('id' => $id, 'name' => $name);
                 }
             }
@@ -630,5 +656,4 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
 // ######################################## *** debug functions
-
 }

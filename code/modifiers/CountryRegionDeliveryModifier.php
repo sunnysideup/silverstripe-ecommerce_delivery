@@ -10,12 +10,14 @@
  *
  */
 
-class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
+class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
+{
 
 
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
-    function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
         $fieldLabels = $this->Config()->get("field_labels");
         $fields->replaceField(
@@ -29,9 +31,12 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier {
         return $fields;
     }
 
-    function TableSubTitle() {return $this->getTableSubTitle();}
-    function getTableSubTitle() {
+    public function TableSubTitle()
+    {
+        return $this->getTableSubTitle();
+    }
+    public function getTableSubTitle()
+    {
         return $this->RegionAndCountry;
     }
-
 }

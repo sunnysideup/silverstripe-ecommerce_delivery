@@ -8,8 +8,8 @@
  *
  *
  */
-class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
-
+class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
+{
     private static $db = array(
         "Name" => "Varchar",
         "MinimumWeight" => "Int",
@@ -46,11 +46,17 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
 
     private static $singular_name = "Weight Bracket";
 
-    function i18n_singular_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");}
+    public function i18n_singular_name()
+    {
+        return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKET", "Weight Bracket");
+    }
 
     private static $plural_name = "Weight Brackets";
 
-    function i18n_plural_name() { return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");}
+    public function i18n_plural_name()
+    {
+        return _t("PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS", "Weight Brackets");
+    }
 
     private static $default_sort = "MinimumWeight ASC, MaximumWeight ASC";
 
@@ -60,8 +66,11 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canCreate($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canCreate($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canCreate($member);
     }
 
@@ -70,7 +79,8 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canView($member = null){
+    public function canView($member = null)
+    {
         return true;
     }
 
@@ -79,8 +89,11 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canEdit($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canEdit($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canEdit($member);
     }
 
@@ -89,8 +102,11 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject {
      * @param Member | NULL
      * @return Boolean
      */
-    public function canDelete($member = null){
-        if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+    public function canDelete($member = null)
+    {
+        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+            return true;
+        }
         return parent::canDelete($member);
     }
 }

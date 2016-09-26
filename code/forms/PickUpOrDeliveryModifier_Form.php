@@ -1,17 +1,18 @@
 <?php
 
 
-class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
-
-    function processOrderModifier($data, $form = null) {
-        if(isset($data['PickupOrDeliveryType'])) {
+class PickUpOrDeliveryModifier_Form extends OrderModifierForm
+{
+    public function processOrderModifier($data, $form = null)
+    {
+        if (isset($data['PickupOrDeliveryType'])) {
             $newOption = intval($data['PickupOrDeliveryType']);
             $newOptionObj = PickUpOrDeliveryModifierOptions::get()->byID($newOption);
-            if($newOptionObj) {
+            if ($newOptionObj) {
                 $order = ShoppingCart::current_order();
-                if($order) {
-                    if($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
-                        foreach($modifiers as $modifier) {
+                if ($order) {
+                    if ($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
+                        foreach ($modifiers as $modifier) {
                             $modifier->setOption($newOption);
                             $modifier->runUpdate();
                         }
@@ -20,7 +21,6 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm {
                 }
             }
         }
-        return ShoppingCart::singleton()->setMessageAndReturn( _t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
+        return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
     }
-
 }
