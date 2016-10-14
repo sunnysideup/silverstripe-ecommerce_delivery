@@ -109,4 +109,20 @@ class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
         }
         return parent::canDelete($member);
     }
+
+    /**
+     * CMS Fields
+     * @return FieldList
+     */
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->replaceField('Name', ReadonlyField::create('Name', 'Description'));
+        return $fields;
+    }
+
+    function onBeforeWrite() {
+        parent::onBeforeWrite();
+        $this->Name = 'MIN '.$this->MinimumSubTotal.' MAX '.$this->MaximumSubTotal. ', COST: '.$this->FixedCost;
+    }
 }
