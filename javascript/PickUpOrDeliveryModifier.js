@@ -58,12 +58,14 @@ if(
                 jQuery('#' + PickUpOrDeliveryModifier.formID).ajaxForm(options);
                 jQuery("#" + PickUpOrDeliveryModifier.formID + " ." + PickUpOrDeliveryModifier.actionsClass).hide();
                 PickUpOrDeliveryModifier.updateCountryList();
-                jQuery("#" + PickUpOrDeliveryModifier.formID  + " input[name='"+PickUpOrDeliveryModifier.optionSetOptions+"']").change(
+                var selectorForField = "#" + PickUpOrDeliveryModifier.formID  + " input[name='"+PickUpOrDeliveryModifier.optionSetOptions+"']";
+                jQuery(selectorForField).change(
                     function() {
                         PickUpOrDeliveryModifier.updateCountryList();
                         jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
                     }
                 );
+                jQuery(selectorForField).change();
             }
         },
 
