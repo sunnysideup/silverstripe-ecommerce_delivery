@@ -438,111 +438,111 @@ class PickUpOrDeliveryModifier extends OrderModifier
             // zero becauase over minForZeroRate
             if ($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
                 self::$_actual_charges =  0;
-                $this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered".self::$_actual_charges;
+                $this->debugMessage .= "<hr />Minimum Order Amount For Zero Rate: ".$obj->MinimumOrderAmountForZeroRate." is lower than amount  ordered: ".self::$_actual_charges;
             }
 
             //zero because below maxForZeroRate
             elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
                 self::$_actual_charges =  0;
-                $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered".self::$_actual_charges;
+                $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered: ".self::$_actual_charges;
             }
-
-            //examine weight brackets
-            elseif ($weight && $weightBrackets->count()) {
-                $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
-                //weight brackets
-                $foundWeightBracket = null;
-                $weightBracketQuantity = 1;
-                $additionalWeightBracket = null;
-                $minimumMinimum = null;
-                $maximumMaximum = null;
-                foreach ($weightBrackets as $weightBracket) {
-                    if ((! $foundWeightBracket) && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
-                        $foundWeightBracket = $weightBracket;
+            else {
+                //examine weight brackets
+                if ($weight && $weightBrackets->count()) {
+                    $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
+                    //weight brackets
+                    $foundWeightBracket = null;
+                    $weightBracketQuantity = 1;
+                    $additionalWeightBracket = null;
+                    $minimumMinimum = null;
+                    $maximumMaximum = null;
+                    foreach ($weightBrackets as $weightBracket) {
+                        if ((! $foundWeightBracket) && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
+                            $foundWeightBracket = $weightBracket;
+                        }
+                        //look for absolute min and max
+                        if ($minimumMinimum === null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
+                            $minimumMinimum = $weightBracket;
+                        }
+                        if ($maximumMaximum === null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
+                            $maximumMaximum = $weightBracket;
+                        }
                     }
-                    //look for absolute min and max
-                    if ($minimumMinimum === null || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
-                        $minimumMinimum = $weightBracket;
-                    }
-                    if ($maximumMaximum === null || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
-                        $maximumMaximum = $weightBracket;
-                    }
-                }
-                if (! $foundWeightBracket) {
-                    if ($weight < $minimumMinimum->MinimumWeight) {
-                        $foundWeightBracket = $minimumMinimum;
-                    } elseif ($weight > $maximumMaximum->MaximumWeight) {
-                        $foundWeightBracket = $maximumMaximum;
-                        $weightBracketQuantity = floor($weight / $maximumMaximum->MaximumWeight);
-                        $restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity);
-                        $additionalWeightBracket = null;
-                        foreach ($weightBrackets as $weightBracket) {
-                            if (($weightBracket->MinimumWeight <= $restWeight) && ($restWeight <= $weightBracket->MaximumWeight)) {
-                                $additionalWeightBracket = $weightBracket;
-                                break;
+                    if (! $foundWeightBracket) {
+                        if ($weight < $minimumMinimum->MinimumWeight) {
+                            $foundWeightBracket = $minimumMinimum;
+                        } elseif ($weight > $maximumMaximum->MaximumWeight) {
+                            $foundWeightBracket = $maximumMaximum;
+                            $weightBracketQuantity = floor($weight / $maximumMaximum->MaximumWeight);
+                            $restWeight = $weight - ($maximumMaximum->MaximumWeight * $weightBracketQuantity);
+                            $additionalWeightBracket = null;
+                            foreach ($weightBrackets as $weightBracket) {
+                                if (($weightBracket->MinimumWeight <= $restWeight) && ($restWeight <= $weightBracket->MaximumWeight)) {
+                                    $additionalWeightBracket = $weightBracket;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-                //we found some applicable weight brackets
-                if ($foundWeightBracket) {
-                    self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
-                    $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times $weightBracketQuantity";
-                    if ($additionalWeightBracket) {
-                        self::$_actual_charges += $additionalWeightBracket->FixedCost;
-                        $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
+                    //we found some applicable weight brackets
+                    if ($foundWeightBracket) {
+                        self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
+                        $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times $weightBracketQuantity";
+                        if ($additionalWeightBracket) {
+                            self::$_actual_charges += $additionalWeightBracket->FixedCost;
+                            $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
+                        }
                     }
                 }
-            }
 
 
 
-            // weight based on multiplier ...
-            elseif ($weight && $obj->WeightMultiplier) {
-                // add weight based shipping
-                if (!$obj->WeightUnit) {
-                    $obj->WeightUnit = 1;
+                // weight based on multiplier ...
+                elseif ($weight && $obj->WeightMultiplier) {
+                    // add weight based shipping
+                    if (!$obj->WeightUnit) {
+                        $obj->WeightUnit = 1;
+                    }
+                    $this->debugMessage .= "<hr />actual weight:".$weight." multiplier = ".$obj->WeightMultiplier." weight unit = ".$obj->WeightUnit." ";
+                    //legacy fix
+                    $units = ceil($weight / $obj->WeightUnit);
+                    $weightCharge =  $units * $obj->WeightMultiplier;
+                    self::$_actual_charges += $weightCharge;
+                    $this->debugMessage .= "<hr />weight charge: ".$weightCharge;
                 }
-                $this->debugMessage .= "<hr />actual weight:".$weight." multiplier = ".$obj->WeightMultiplier." weight unit = ".$obj->WeightUnit." ";
-                //legacy fix
-                $units = ceil($weight / $obj->WeightUnit);
-                $weightCharge =  $units * $obj->WeightMultiplier;
-                self::$_actual_charges += $weightCharge;
-                $this->debugMessage .= "<hr />weight charge: ".$weightCharge;
-            }
 
 
-            //examine price brackets
-            elseif ($subTotalAmount && $subTotalBrackets->count()) {
-                $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
-                //subTotal brackets
-                $foundSubTotalBracket = null;
-                foreach ($subTotalBrackets as $subTotalBracket) {
-                    if ((! $foundSubTotalBracket) && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
-                        $foundSubTotalBracket = $subTotalBracket;
-                        break;
+                //examine price brackets
+                elseif ($subTotalAmount && $subTotalBrackets->count()) {
+                    $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
+                    //subTotal brackets
+                    $foundSubTotalBracket = null;
+                    foreach ($subTotalBrackets as $subTotalBracket) {
+                        if ((! $foundSubTotalBracket) && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
+                            $foundSubTotalBracket = $subTotalBracket;
+                            break;
+                        }
+                    }
+                    //we found some applicable subTotal brackets
+                    if ($foundSubTotalBracket) {
+                        self::$_actual_charges += $foundSubTotalBracket->FixedCost;
+                        $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
                     }
                 }
-                //we found some applicable subTotal brackets
-                if ($foundSubTotalBracket) {
-                    self::$_actual_charges += $foundSubTotalBracket->FixedCost;
-                    $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
+
+                // add percentage
+                if ($obj->Percentage) {
+                    $percentageCharge = $subTotalAmount * $obj->Percentage;
+                    self::$_actual_charges += $percentageCharge;
+                    $this->debugMessage .= "<hr />percentage charge: \$".$percentageCharge;
+                }
+
+                // add fixed price
+                if ($obj->FixedCost <> 0) {
+                    self::$_actual_charges += $obj->FixedCost;
+                    $this->debugMessage .= "<hr />fixed charge: \$". $obj->FixedCost;
                 }
             }
-
-            // add percentage
-            if ($obj->Percentage) {
-                $percentageCharge = $subTotalAmount * $obj->Percentage;
-                self::$_actual_charges += $percentageCharge;
-                $this->debugMessage .= "<hr />percentage charge: \$".$percentageCharge;
-            }
-
-            // add fixed price
-            if ($obj->FixedCost <> 0) {
-                self::$_actual_charges += $obj->FixedCost;
-                $this->debugMessage .= "<hr />fixed charge: \$". $obj->FixedCost;
-            }
-
             //is it enough?
             if (self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
                 $oldActualCharge = self::$_actual_charges;
