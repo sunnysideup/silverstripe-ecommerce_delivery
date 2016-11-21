@@ -32,7 +32,7 @@ Order:
     - PickUpOrDeliveryModifier
 ```
 
-Edit your database as you see fit.
+Edit your database under admin/shop as you see fit (`http://mysite.co.nz/admin/shop/PickUpOrDeliveryModifierOptions`)
 
 If you just want one or two things from this module
 then of course you are free to copy them to your
