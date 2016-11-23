@@ -445,8 +445,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
                 self::$_actual_charges =  0;
                 $this->debugMessage .= "<hr />Maximum Order Amount For Zero Rate: ".$obj->FreeShippingUpToThisOrderAmount." is higher than amount ordered: ".self::$_actual_charges;
-            }
-            else {
+            } else {
                 //examine weight brackets
                 if ($weight && $weightBrackets->count()) {
                     $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
