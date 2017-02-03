@@ -65,7 +65,7 @@ if(
                         jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
                     }
                 );
-                jQuery(selectorForField).change();
+                //jQuery(selectorForField).change();
             }
         },
 
