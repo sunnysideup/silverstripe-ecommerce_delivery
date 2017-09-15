@@ -273,13 +273,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         );
         $fields->replaceField(
             'ExcludedProducts',
-            GridField::create(
+            $excludedProdsField = GridField::create(
                 'ExcludedProducts',
                 'Excluded Products',
                 $this->ExcludedProducts(),
                 $config = GridFieldBasicPageRelationConfig::create()
             )
         );
+        $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
         if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
             if ($weightBrackets && $weightBrackets->count()) {
