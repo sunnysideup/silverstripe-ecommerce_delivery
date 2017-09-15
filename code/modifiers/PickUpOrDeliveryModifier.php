@@ -422,7 +422,32 @@ class PickUpOrDeliveryModifier extends OrderModifier
         self::$_actual_charges = 0;
         //do we have enough information
         $obj = $this->liveOptionObject();
-        if ($items = $this->Order()->Items() && is_object($obj) && $obj->exists()) {
+        $items = $this->Order()->Items();
+        if (is_object($obj) && $obj->exists() && $items && $items->count()) {
+
+
+            //are ALL products excluded?
+            if($obj->ExcludedProducts() && $obj->ExcludedProducts()->count()) {
+                $hasIncludedProduct = false;
+                $excludedProductIDArray = $obj->ExcludedProducts()->column('ID');
+                //are all the products excluded?
+                foreach($items as $orderItem) {
+                    $product = $orderItem->Product();
+                    if($product) {
+                        if(in_array($product->ID, $excludedProductIDArray)) {
+                            //do nothing
+                        } else {
+                            $hasIncludedProduct = true;
+                            break;
+                        }
+                    }
+                }
+                if($hasIncludedProduct === false) {
+                    $this->debugMessage .= "<hr />all products are excluded from delivery charges";
+                    return self::$_actual_charges;
+                }
+            }
+
             $this->debugMessage .= "<hr />option selected: ".$obj->Title.", and items present";
             //lets check sub-total
             $subTotalAmount = $this->LiveSubTotalAmount();

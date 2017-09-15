@@ -29,7 +29,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         "AvailableInCountries" => "EcommerceCountry",
         "AvailableInRegions" => "EcommerceRegion",
         "WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket",
-        "SubtotalBrackets" => "PickUpOrDeliveryModifierOptions_SubTotalBracket"
+        "SubtotalBrackets" => "PickUpOrDeliveryModifierOptions_SubTotalBracket",
+        "ExcludedProducts" => 'Product'
     );
 
     private static $belongs_many_many = array(
@@ -269,6 +270,15 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 _t("PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER", "More information about delivery option")
             ),
             "ExplanationPageID"
+        );
+        $fields->replaceField(
+            'ExcludedProducts',
+            GridField::create(
+                'ExcludedProducts',
+                'Excluded Products',
+                $this->ExcludedProducts(),
+                $config = GridFieldBasicPageRelationConfig::create()
+            )
         );
         if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
