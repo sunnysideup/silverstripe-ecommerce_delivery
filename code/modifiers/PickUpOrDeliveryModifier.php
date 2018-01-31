@@ -40,7 +40,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     private static $include_form_in_order_table = true;
 
 
-// ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
+    // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
     public function getCMSFields()
     {
@@ -58,7 +58,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
 
-// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
+    // ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
     /**
      *@var String $weight_field - the field used in the Buyable to work out the weight.
@@ -104,9 +104,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected $debugMessage = "";
 
-// ######################################## *** CRUD functions (e.g. canEdit)
+    // ######################################## *** CRUD functions (e.g. canEdit)
 
-// ######################################## *** init and update functions
+    // ######################################## *** init and update functions
 
     /**
      * set the selected option (selected by user using form)
@@ -140,7 +140,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         parent::runUpdate($force);
     }
 
-// ######################################## *** form functions (e. g. Showform and getform)
+    // ######################################## *** form functions (e. g. Showform and getform)
 
 
 
@@ -214,7 +214,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
     }
 
-// ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
+    // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
     /**
      * @return Boolean
@@ -245,7 +245,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         return $this->LiveCalculatedTotal();
     }
 
-// ######################################## ***  inner calculations.... USES CALCULATED VALUES
+    // ######################################## ***  inner calculations.... USES CALCULATED VALUES
 
     /**
      * returns the current selected option as object
@@ -313,7 +313,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
 
-// ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
+    // ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
 
     /**
      * Precondition : There are always options available.
@@ -427,14 +427,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
 
             //are ALL products excluded?
-            if($obj->ExcludedProducts() && $obj->ExcludedProducts()->count()) {
+            if ($obj->ExcludedProducts() && $obj->ExcludedProducts()->count()) {
                 $hasIncludedProduct = false;
                 $excludedProductIDArray = $obj->ExcludedProducts()->column('ID');
                 //are all the products excluded?
-                foreach($items as $orderItem) {
+                foreach ($items as $orderItem) {
                     $product = $orderItem->Product();
-                    if($product) {
-                        if(in_array($product->ID, $excludedProductIDArray)) {
+                    if ($product) {
+                        if (in_array($product->ID, $excludedProductIDArray)) {
                             //do nothing
                         } else {
                             $hasIncludedProduct = true;
@@ -442,7 +442,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         }
                     }
                 }
-                if($hasIncludedProduct === false) {
+                if ($hasIncludedProduct === false) {
                     $this->debugMessage .= "<hr />all products are excluded from delivery charges";
                     return self::$_actual_charges;
                 }
@@ -630,14 +630,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
 
-// ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
+    // ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
     public function IsChargeable()
     {
         return true;
     }
 
-// ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
+    // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
     public function requireDefaultRecords()
     {
@@ -648,7 +648,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             DB::alteration_message("You need to upgrade PickUpOrDeliveryModifier <a href=\"/dev/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier\">do it now!</a>", "deleted");
         }
     }
-// ######################################## *** AJAX related functions
+    // ######################################## *** AJAX related functions
     /**
      *
      * @param Array $js javascript array
@@ -679,5 +679,5 @@ class PickUpOrDeliveryModifier extends OrderModifier
         return $js;
     }
 
-// ######################################## *** debug functions
+    // ######################################## *** debug functions
 }
