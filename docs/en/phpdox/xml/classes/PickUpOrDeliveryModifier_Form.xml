@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src" full="PickUpOrDeliveryModifier_Form" namespace="" name="PickUpOrDeliveryModifier_Form" abstract="false" final="false" start="4" end="26">
-  <file path="/var/www/temp_modules/silverstripe-ecommerce_delivery/docs/en/phpdox/../../../code/forms" file="PickUpOrDeliveryModifier_Form.php" realpath="/var/www/temp_modules/silverstripe-ecommerce_delivery/code/forms/PickUpOrDeliveryModifier_Form.php" size="1123" time="2016-09-26T03:18:27+00:00" unixtime="1474859907" sha1="9f3e9ea43ec12f80738d428d90d0b1039b265be9" relative="code/forms/PickUpOrDeliveryModifier_Form.php"/>
-  <extends full="OrderModifierForm" namespace="" name="OrderModifierForm" unresolved="true"/>
-  <method name="processOrderModifier" start="6" end="25" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="data" byreference="false" type="{unknown}"/>
-    <parameter name="form" byreference="false" type="{unknown}" default="" constant="null"/>
-  </method>
-</class>
