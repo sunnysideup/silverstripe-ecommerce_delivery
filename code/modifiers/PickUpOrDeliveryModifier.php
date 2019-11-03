@@ -21,6 +21,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
         "SubTotalAmount" => "Currency"
     );
 
+    private static $defaults = [
+        'Type' => 'Delivery'
+    ];
+
     private static $has_one = array(
         "Option" => "PickUpOrDeliveryModifierOptions"
     );
@@ -251,7 +255,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * returns the current selected option as object
      * @return PickUpOrDeliveryModifierOptions;
      */
-    protected function liveOptionObject()
+    protected function LiveOptionObject()
     {
         return PickUpOrDeliveryModifierOptions::get()->byID($this->LiveOptionID());
     }
@@ -271,7 +275,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * Must always return something!
      * @return DataList
      */
-    protected function liveOptions()
+    protected function LiveOptions()
     {
         if (!self::$available_options) {
             $countryID = EcommerceCountry::get_country_id();
@@ -313,6 +317,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
 
+    protected function LiveType()
+    {
+        return 'Delivery';
+    }
     // ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
 
     /**
