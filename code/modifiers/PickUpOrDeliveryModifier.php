@@ -211,7 +211,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $fields->push($this->descriptionField());
         $options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
         $optionID = $this->LiveOptionID();
-        $fields->push(OptionSetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
+        $fields->push(OptionsetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
@@ -354,7 +354,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($obj->ExplanationPageID) {
                 $page = $obj->ExplanationPage();
                 if ($page) {
-                    $v .= '<div id="PickUpOrDeliveryModifierExplanationLink"><a href="'.$page->Link().'" class="externalLink">'.convert::raw2sql($page->Title).'</a></div>';
+                    $v .= '<div id="PickUpOrDeliveryModifierExplanationLink"><a href="'.$page->Link().'" class="externalLink">'.Convert::raw2sql($page->Title).'</a></div>';
                 }
             }
             return $v;
