@@ -2,8 +2,7 @@
 
 namespace Sunnysideup\EcommerceDelivery\Modifiers;
 
-use convert;
-
+use SilverStripe\Core\Convert;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
@@ -448,7 +447,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($obj->ExplanationPageID) {
                 $page = $obj->ExplanationPage();
                 if ($page) {
-                    $v .= '<div id="PickUpOrDeliveryModifierExplanationLink"><a href="' . $page->Link() . '" class="externalLink">' . convert::raw2sql($page->Title) . '</a></div>';
+                    $v .= '<div id="PickUpOrDeliveryModifierExplanationLink"><a href="' . $page->Link() . '" class="externalLink">' . Convert::raw2sql($page->Title) . '</a></div>';
                 }
             }
             return $v;
