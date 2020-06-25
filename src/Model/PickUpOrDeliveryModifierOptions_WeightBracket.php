@@ -2,9 +2,15 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
-use DataObject;
-use Permission;
-use Config;
+
+
+
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataObject;
+
 
 
 
@@ -39,7 +45,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
     );
 
     private static $belongs_many_many = array(
-        "PickUpOrDeliveryModifierOptions" => "PickUpOrDeliveryModifierOptions"
+        "PickUpOrDeliveryModifierOptions" => PickUpOrDeliveryModifierOptions::class
     );
 
     private static $indexes = array(
@@ -89,7 +95,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canCreate($member);
@@ -112,7 +118,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canEdit($member);
@@ -125,7 +131,7 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
      */
     public function canDelete($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canDelete($member);

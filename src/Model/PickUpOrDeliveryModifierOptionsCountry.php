@@ -2,10 +2,16 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
-use DataExtension;
-use FieldList;
-use GridField;
-use GridFieldConfig_RelationEditor;
+
+
+
+
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\DataExtension;
+
 
 
 /**
@@ -16,10 +22,10 @@ use GridFieldConfig_RelationEditor;
 class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
 {
     private static $belongs_many_many = array(
-        "AvailableInCountries" => "PickUpOrDeliveryModifierOptions",
+        "AvailableInCountries" => PickUpOrDeliveryModifierOptions::class,
     );
     private static $many_many = array(
-        "ExcludeFromCountries" => "PickUpOrDeliveryModifierOptions"
+        "ExcludeFromCountries" => PickUpOrDeliveryModifierOptions::class
     );
 
     /**

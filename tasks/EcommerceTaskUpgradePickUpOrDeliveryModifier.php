@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\ORM\DB;
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
+use SilverStripe\Dev\BuildTask;
+
 class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 {
     protected $title = "Upgrade PickUpOrDeliveryModifier";

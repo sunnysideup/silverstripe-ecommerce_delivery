@@ -2,23 +2,41 @@
 
 namespace Sunnysideup\EcommerceDelivery\Modifiers;
 
-use OrderModifier;
-use ReadonlyField;
-use Controller;
-use Validator;
-use Requirements;
-use PickUpOrDeliveryModifierOptions;
-use FieldList;
-use OptionsetField;
-use FormAction;
-use PickUpOrDeliveryModifier_Form;
-use EcommerceDBConfig;
-use EcommerceCountry;
-use EcommerceRegion;
-use ArrayList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 use convert;
-use Config;
-use DB;
+
+
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Validator;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
+use Sunnysideup\EcommerceDelivery\Forms\PickUpOrDeliveryModifier_Form;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+
 
 
 /**
@@ -61,7 +79,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     ];
 
     private static $has_one = array(
-        "Option" => "PickUpOrDeliveryModifierOptions"
+        "Option" => PickUpOrDeliveryModifierOptions::class
     );
 
     private static $singular_name = "Pickup / Delivery Charge";
@@ -268,7 +286,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
-        return new PickUpOrDeliveryModifier_Form($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
+        return new PickUpOrDeliveryModifier_Form($optionalController, PickUpOrDeliveryModifier::class, $fields, $actions, $optionalValidator);
     }
 
     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
@@ -661,7 +679,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (self::$_total_weight === null) {
             self::$_total_weight = 0;
             if ($this->useWeight()) {
-                if ($fieldName = Config::inst()->get('PickUpOrDeliveryModifier', 'weight_field')) {
+                if ($fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field')) {
                     $items = $this->Order()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
                     if ($items && $items->count()) {

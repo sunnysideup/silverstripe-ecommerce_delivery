@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\EcommerceDelivery\Forms;
 
-use OrderModifierForm;
-use PickUpOrDeliveryModifierOptions;
-use ShoppingCart;
+
+
+
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
+use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
+
 
 
 
@@ -18,7 +23,7 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm
             if ($newOptionObj) {
                 $order = ShoppingCart::current_order();
                 if ($order) {
-                    if ($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
+                    if ($modifiers = $order->Modifiers(PickUpOrDeliveryModifier::class)) {
                         foreach ($modifiers as $modifier) {
                             $modifier->setOption($newOption);
                             $modifier->runUpdate();

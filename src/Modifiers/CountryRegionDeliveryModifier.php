@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\EcommerceDelivery\Modifiers;
 
-use DropdownField;
-use EcommerceCountry;
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use SilverStripe\Forms\DropdownField;
+
 
 
 /**

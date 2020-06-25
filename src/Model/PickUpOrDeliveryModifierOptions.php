@@ -2,30 +2,63 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
-use DataObject;
-use Permission;
-use Config;
-use LiteralField;
-use OptionalTreeDropdownField;
-use HeaderField;
-use GridField;
-use GridFieldBasicPageRelationConfig;
-use EcommerceDBConfig;
-use MultiSelectField;
-use GridFieldConfig;
-use GridFieldButtonRow;
-use GridFieldAddExistingAutocompleter;
-use GridFieldToolbarHeader;
-use GridFieldSortableHeader;
-use GridFieldFilterHeader;
-use GridFieldDataColumns;
-use GridFieldEditButton;
-use GridFieldDeleteAction;
-use GridFieldPageCount;
-use GridFieldPaginator;
-use GridFieldDetailForm;
-use HiddenField;
-use DB;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\CMS\Model\SiteTree;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions_WeightBracket;
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions_SubTotalBracket;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\DataobjectSorter\DataObjectSorterController;
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Forms\MultiSelectField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+
 
 
 /**
@@ -64,19 +97,19 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     );
 
     private static $has_one = array(
-        "ExplanationPage" => "SiteTree"
+        "ExplanationPage" => SiteTree::class
     );
 
     private static $many_many = array(
-        "AvailableInCountries" => "EcommerceCountry",
-        "AvailableInRegions" => "EcommerceRegion",
-        "WeightBrackets" => "PickUpOrDeliveryModifierOptions_WeightBracket",
-        "SubtotalBrackets" => "PickUpOrDeliveryModifierOptions_SubTotalBracket",
-        "ExcludedProducts" => 'Product'
+        "AvailableInCountries" => EcommerceCountry::class,
+        "AvailableInRegions" => EcommerceRegion::class,
+        "WeightBrackets" => PickUpOrDeliveryModifierOptions_WeightBracket::class,
+        "SubtotalBrackets" => PickUpOrDeliveryModifierOptions_SubTotalBracket::class,
+        "ExcludedProducts" => Product::class
     );
 
     private static $belongs_many_many = array(
-        "ExcludeFromCountries" => "EcommerceCountry",
+        "ExcludeFromCountries" => EcommerceCountry::class,
     );
 
     private static $indexes = array(
@@ -220,7 +253,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canCreate($member);
@@ -233,7 +266,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      */
     public function canView($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canCreate($member);
@@ -246,7 +279,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canEdit($member);
@@ -259,7 +292,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      */
     public function canDelete($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, "admin_permission_code"))) {
             return true;
         }
         return parent::canDelete($member);
@@ -271,22 +304,22 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $availableInCountriesField = $this->createGridField("EcommerceCountry", "AvailableInCountries", "Available in");
+        $availableInCountriesField = $this->createGridField(EcommerceCountry::class, "AvailableInCountries", "Available in");
         if ($availableInCountriesField) {
             $fields->replaceField("AvailableInCountries", $availableInCountriesField);
         }
-        $excludeFromCountriesField = $this->createGridField("EcommerceCountry", "ExcludeFromCountries", "Excluded from");
+        $excludeFromCountriesField = $this->createGridField(EcommerceCountry::class, "ExcludeFromCountries", "Excluded from");
         if ($excludeFromCountriesField) {
             $fields->replaceField("ExcludeFromCountries", $excludeFromCountriesField);
         }
-        $regionField = $this->createGridField("EcommerceRegion", "AvailableInRegions", "Regions");
+        $regionField = $this->createGridField(EcommerceRegion::class, "AvailableInRegions", "Regions");
         if ($regionField) {
             $fields->replaceField("AvailableInRegions", $regionField);
         }
-        if (class_exists("DataObjectSorterController") && $this->hasExtension("DataObjectSorterController")) {
+        if (class_exists(DataObjectSorterController::class) && $this->hasExtension(DataObjectSorterController::class)) {
             $fields->addFieldToTab("Root.Sort", new LiteralField("InvitationToSort", $this->dataObjectSorterPopupLink()));
         }
-        $fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", "SiteTree"));
+        $fields->replaceField("ExplanationPageID", new OptionalTreeDropdownField($name = "ExplanationPageID", $title = "Page", SiteTree::class));
 
         //add headings
         $fields->addFieldToTab(
@@ -346,12 +379,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         return $fields;
     }
 
-    private function createGridField($dataObjectName = "EcommerceCountry", $fieldName = "AvailableInCountries", $title)
+    private function createGridField($dataObjectName = EcommerceCountry::class, $fieldName = "AvailableInCountries", $title)
     {
         $field = null;
         $dos = $dataObjectName::get();
         if ($dos->count()) {
-            if (class_exists("MultiSelectField")) {
+            if (class_exists(MultiSelectField::class)) {
                 $array = $dos->map('ID', 'Title')->toArray();
                 //$name, $title = "", $source = array(), $value = "", $form = null
                 $field = new MultiSelectField(
