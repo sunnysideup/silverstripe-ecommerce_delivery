@@ -30,7 +30,5 @@
         "sunnysideup/dataobjectsorter": "*",
         "silverstripe/recipe-cms": "^4.4"
     },
-    "extra": {
-        "installer-name": "ecommerce_delivery"
-    }
+    "extra": []
 }
