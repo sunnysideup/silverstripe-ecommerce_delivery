@@ -22,7 +22,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
         $fieldLabels = $this->Config()->get("field_labels");
         $fields->replaceField(
             "CountryCode",
-            new DropDownField(
+            new DropdownField(
                 "CountryCode",
                 $fieldLabels["CountryCode"],
                 EcommerceCountry::get_country_dropdown()

@@ -1,14 +1,14 @@
 ---
 Name: ecommerce_delivery
-Before: 'mysite/*'
-After: 'framework/*','cms/*','ecommerce/*'
+Before: 'app/*'
+After: ['#coreconfig', '#cmsextensions', '#ecommerce']
 ---
 
 StoreAdmin:
   managed_models:
     - PickUpOrDeliveryModifierOptions
 
-OrderModifierForm_Controller:
+OrderModifierFormController:
   allowed_actions:
     - PickUpOrDeliveryModifier
 

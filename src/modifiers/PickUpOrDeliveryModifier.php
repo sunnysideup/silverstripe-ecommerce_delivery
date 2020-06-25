@@ -195,10 +195,28 @@ class PickUpOrDeliveryModifier extends OrderModifier
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
     {
         Requirements::themedCSS("PickUpOrDeliveryModifier", "ecommerce_delivery");
-        Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: THIRDPARTY_DIR."/jquery/jquery.js" (case sensitive)
+  * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
+  * EXP: Check for best usage and inclusion of Jquery
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-        Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: THIRDPARTY_DIR."/jquery-form/jquery.form.js" (case sensitive)
+  * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
+  * EXP: Check for best usage and inclusion of Jquery
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         Requirements::javascript("ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js");
         $array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
         if ($array && is_array($array) && count($array)) {
@@ -225,7 +243,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $fields->push($this->descriptionField());
         $options = $this->liveOptions()->map('ID', 'Name');//$this->getOptionListForDropDown();
         $optionID = $this->LiveOptionID();
-        $fields->push(OptionSetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
+        $fields->push(OptionsetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
@@ -404,7 +422,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function LiveRegionAndCountry()
     {
-        $details = array();
+        $details = [];
         $option = $this->Option();
         if ($option) {
             $regionID = EcommerceRegion::get_region_id();

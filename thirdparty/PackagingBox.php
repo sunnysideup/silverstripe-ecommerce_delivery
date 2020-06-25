@@ -167,13 +167,13 @@ class PackagingBox
     {
         // slightly modified since stolen from http://www.php.net/manual/de/function.sort.php#93473
         foreach ($array as $key => &$value) {
-            $sort = array();
+            $sort = [];
             foreach ($value as $index => $val) {
                 $sort[$index] = $val[$subkey];
             }
             asort($sort);
             $keys = array_keys($sort);
-            $new_value = array();
+            $new_value = [];
             foreach ($keys as $index) {
                 if ($keep_keys_in_sub) {
                     $new_value[$index] = $value[$index];
@@ -192,12 +192,12 @@ class PackagingBox
     public function _diffsort($array)
     {
         /* quick and dirty hack since _sksort() does strange things */
-        $tmp_array = array();
+        $tmp_array = [];
         foreach ($array as $item) {
             $tmp_array[$item["diff"]][] = $item;
         }
         krsort($tmp_array);
-        $array = array();
+        $array = [];
         foreach ($tmp_array as $a) {
             foreach ($a as $item) {
                 $array[] = $item;

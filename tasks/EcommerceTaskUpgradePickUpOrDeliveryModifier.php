@@ -6,11 +6,11 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 
     protected $description = "Fix the option field";
 
-    private static $options_old_to_new = array();
+    private static $options_old_to_new = [];
 
     public function run($request)
     {
-        $db = DB::getConn();
+        $db = DB::get_conn();
         if ($db instanceof PostgreSQLDatabase) {
             $exist = DB::query("SELECT column_name FROM information_schema.columns WHERE table_name ='PickUpOrDeliveryModifier' AND column_name = 'PickupOrDeliveryType'")->numRecords();
         } else {
