@@ -194,7 +194,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
     {
-        Requirements::themedCSS("PickUpOrDeliveryModifier", "ecommerce_delivery");
+        Requirements::themedCSS("sunnysideup/ecommerce_delivery: PickUpOrDeliveryModifier", "ecommerce_delivery");
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -204,7 +204,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
   * EXP: Check for best usage and inclusion of Jquery
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('sunnysideup/ecommerce_delivery: silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 
@@ -216,8 +216,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
   * EXP: Check for best usage and inclusion of Jquery
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
-        Requirements::javascript("ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js");
+        Requirements::javascript('sunnysideup/ecommerce_delivery: silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript("sunnysideup/ecommerce_delivery: ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js");
         $array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
         if ($array && is_array($array) && count($array)) {
             $js = "\n".'var PickUpOrDeliveryModifierOptions = []';
