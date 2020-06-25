@@ -30,7 +30,12 @@
         "sunnysideup/dataobjectsorter": "*",
         "silverstripe/recipe-cms": "^4.4"
     },
-    "extra": [],
+    "extra": {
+        "expose": [
+            "client/javascript",
+            "client/css"
+        ]
+    },
     "autoload": {
         "psr-4": {
             "Sunnysideup\\EcommerceDelivery\\": "src/"
