@@ -11,3 +11,4 @@ class PickUpOrDeliveryModifierOptionsRegion extends DataExtension
         "AvailableInRegions" => "PickUpOrDeliveryModifierOptions"
     );
 }
+

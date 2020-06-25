@@ -127,3 +127,4 @@ class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
         $this->Name = 'MIN '.$this->MinimumSubTotal.' MAX '.$this->MaximumSubTotal. ', COST: '.$this->FixedCost;
     }
 }
+

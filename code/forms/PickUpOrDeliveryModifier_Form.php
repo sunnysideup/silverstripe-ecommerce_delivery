@@ -24,3 +24,4 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm
         return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
     }
 }
+

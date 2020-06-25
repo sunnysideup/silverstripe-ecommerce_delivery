@@ -110,3 +110,4 @@ class PickUpOrDeliveryModifierOptions_WeightBracket extends DataObject
         return parent::canDelete($member);
     }
 }
+

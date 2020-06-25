@@ -40,3 +40,4 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
         return $this->RegionAndCountry;
     }
 }
+
