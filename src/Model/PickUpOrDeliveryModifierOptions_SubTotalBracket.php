@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Model;
+
+use DataObject;
+use Permission;
+use Config;
+use ReadonlyField;
+
+
 
 /**
  * below we record options for subTotal brackets with fixed cost

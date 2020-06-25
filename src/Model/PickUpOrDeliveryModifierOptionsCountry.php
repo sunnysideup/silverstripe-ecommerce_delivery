@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Model;
+
+use DataExtension;
+use FieldList;
+use GridField;
+use GridFieldConfig_RelationEditor;
+
+
 /**
  *@author nicolaas [at] sunnysideup.co.nz
  *

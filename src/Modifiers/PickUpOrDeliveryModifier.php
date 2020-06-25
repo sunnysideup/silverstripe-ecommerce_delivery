@@ -1,5 +1,26 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Modifiers;
+
+use OrderModifier;
+use ReadonlyField;
+use Controller;
+use Validator;
+use Requirements;
+use PickUpOrDeliveryModifierOptions;
+use FieldList;
+use OptionsetField;
+use FormAction;
+use PickUpOrDeliveryModifier_Form;
+use EcommerceDBConfig;
+use EcommerceCountry;
+use EcommerceRegion;
+use ArrayList;
+use convert;
+use Config;
+use DB;
+
+
 /**
  * @author Nicolaas [at] sunnysideup.co.nz
  * @package: ecommerce

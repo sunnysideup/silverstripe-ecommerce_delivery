@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Model;
+
+use DataExtension;
+
+
 /**
  *@author nicolaas [at] sunnysideup.co.nz
  *

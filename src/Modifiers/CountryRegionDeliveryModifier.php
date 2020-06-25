@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Modifiers;
+
+use DropdownField;
+use EcommerceCountry;
+
+
 /**
  * to do: delete this class!
  *

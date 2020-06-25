@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Model;
+
+use DataObject;
+use Permission;
+use Config;
+
+
 
 /**
  * below we record options for weight brackets with fixed cost
