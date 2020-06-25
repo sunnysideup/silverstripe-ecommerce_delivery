@@ -1,30 +1,27 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Modifiers;
+
+use SilverStripe\Forms\DropdownField;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+
 /**
  * to do: delete this class!
- *
- *
- *
- *
- *
- *
  */
 
 class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
 {
-
-
-// ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
+    // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fieldLabels = $this->Config()->get("field_labels");
+        $fieldLabels = $this->Config()->get('field_labels');
         $fields->replaceField(
-            "CountryCode",
-            new DropDownField(
-                "CountryCode",
-                $fieldLabels["CountryCode"],
+            'CountryCode',
+            new DropdownField(
+                'CountryCode',
+                $fieldLabels['CountryCode'],
                 EcommerceCountry::get_country_dropdown()
             )
         );
@@ -35,6 +32,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
     {
         return $this->getTableSubTitle();
     }
+
     public function getTableSubTitle()
     {
         return $this->RegionAndCountry;

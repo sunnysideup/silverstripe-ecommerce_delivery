@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Forms;
+
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
+use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 
 class PickUpOrDeliveryModifier_Form extends OrderModifierForm
 {
@@ -11,16 +17,16 @@ class PickUpOrDeliveryModifier_Form extends OrderModifierForm
             if ($newOptionObj) {
                 $order = ShoppingCart::current_order();
                 if ($order) {
-                    if ($modifiers = $order->Modifiers("PickUpOrDeliveryModifier")) {
+                    if ($modifiers = $order->Modifiers(PickUpOrDeliveryModifier::class)) {
                         foreach ($modifiers as $modifier) {
                             $modifier->setOption($newOption);
                             $modifier->runUpdate();
                         }
-                        return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option updated"), "good");
+                        return ShoppingCart::singleton()->setMessageAndReturn(_t('PickUpOrDeliveryModifier.UPDATED', 'Delivery option updated'), 'good');
                     }
                 }
             }
         }
-        return ShoppingCart::singleton()->setMessageAndReturn(_t("PickUpOrDeliveryModifier.UPDATED", "Delivery option could NOT be updated"), "bad");
+        return ShoppingCart::singleton()->setMessageAndReturn(_t('PickUpOrDeliveryModifier.UPDATED', 'Delivery option could NOT be updated'), 'bad');
     }
 }

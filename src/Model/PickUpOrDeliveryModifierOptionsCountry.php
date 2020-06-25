@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\EcommerceDelivery\Model;
+
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\ORM\DataExtension;
+
 /**
  *@author nicolaas [at] sunnysideup.co.nz
  *
@@ -7,12 +14,13 @@
 
 class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
 {
-    private static $belongs_many_many = array(
-        "AvailableInCountries" => "PickUpOrDeliveryModifierOptions",
-    );
-    private static $many_many = array(
-        "ExcludeFromCountries" => "PickUpOrDeliveryModifierOptions"
-    );
+    private static $belongs_many_many = [
+        'AvailableInCountries' => PickUpOrDeliveryModifierOptions::class,
+    ];
+
+    private static $many_many = [
+        'ExcludeFromCountries' => PickUpOrDeliveryModifierOptions::class,
+    ];
 
     /**
      * Update Fields
@@ -23,8 +31,8 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
         $fields->removeFieldFromTab('Root', 'AvailableInCountries');
         $fields->removeFieldFromTab('Root', 'ExcludeFromCountries');
         $fields->addFieldsToTab(
-            "Root.Delivery",
-            array(
+            'Root.Delivery',
+            [
                 new GridField(
                     'AvailableInCountries',
                     'Included',
@@ -37,7 +45,7 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
                     $this->owner->ExcludeFromCountries(),
                     GridFieldConfig_RelationEditor::create()
                 ),
-            )
+            ]
         );
         return $fields;
     }

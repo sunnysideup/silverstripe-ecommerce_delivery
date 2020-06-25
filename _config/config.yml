@@ -1,26 +1,21 @@
 ---
 Name: ecommerce_delivery
-Before: 'mysite/*'
-After: 'framework/*','cms/*','ecommerce/*'
+Before: 'app/*'
+After: ['#coreconfig', '#cmsextensions', '#ecommerce']
 ---
-
-StoreAdmin:
+Sunnysideup\Ecommerce\Cms\StoreAdmin:
   managed_models:
-    - PickUpOrDeliveryModifierOptions
-
-OrderModifierForm_Controller:
+    - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions
+Sunnysideup\Ecommerce\Control\OrderModifierFormController:
   allowed_actions:
-    - PickUpOrDeliveryModifier
-
-EcommerceCountry:
+    - Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier
+Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
   extensions:
-    - PickUpOrDeliveryModifierOptionsCountry
-
+    - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
 ---
 Only:
   classexists: 'DataObjectSorterDOD'
 ---
-
-PickUpOrDeliveryModifierOptions:
+Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions:
   extensions:
-    - DataObjectSorterDOD
+    - Sunnysideup\DataobjectSorter\DataObjectSorterDOD

@@ -1,6 +1,6 @@
 {
     "name": "sunnysideup/ecommerce_delivery",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "add delivery costs to your silverstripe e-commerce",
     "keywords": [
         "Silverstripe-CMS",
@@ -28,10 +28,17 @@
     "require": {
         "sunnysideup/ecommerce": "*",
         "sunnysideup/dataobjectsorter": "*",
-        "silverstripe/framework": "~3.6",
-        "silverstripe/cms": "~3.6"
+        "silverstripe/recipe-cms": "^4.4"
     },
     "extra": {
-        "installer-name": "ecommerce_delivery"
+        "expose": [
+            "client/javascript",
+            "client/css"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\EcommerceDelivery\\": "src/"
+        }
     }
 }
