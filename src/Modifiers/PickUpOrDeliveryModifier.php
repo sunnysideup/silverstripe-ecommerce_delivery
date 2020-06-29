@@ -192,7 +192,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
     /**
-     * @return Form
+     * @return \SilverStripe\Forms\Form
      */
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
     {
@@ -344,7 +344,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * Returns the available delivery options based on the current country and region
      * for the order.
      * Must always return something!
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     protected function LiveOptions()
     {

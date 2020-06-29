@@ -14,7 +14,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  */
 class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
 {
-    private static $table_name = 'PickUpOrDeliveryModifierOptions_SubTotalBracket';
+    private static $table_name = 'PickUpOrDeliveryModifierOptionsSubTotalBracket';
 
     private static $db = [
         'Name' => 'Varchar',

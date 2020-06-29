@@ -13,7 +13,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  */
 class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
 {
-    private static $table_name = 'PickUpOrDeliveryModifierOptions_WeightBracket';
+    private static $table_name = 'PickUpOrDeliveryModifierOptionsWeightBracket';
 
     private static $db = [
         'Name' => 'Varchar',
