@@ -532,6 +532,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
             $maxForZeroRate = floatval($obj->FreeShippingUpToThisOrderAmount);
 
+            $weight = $this->LiveTotalWeight();
             $weightBrackets = $obj->WeightBrackets();
             $subTotalBrackets = $obj->SubTotalBrackets();
 

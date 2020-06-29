@@ -210,7 +210,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     /**
      * standard SS method
-     * @param Member $member | NULL
+     * @param \SilverStripe\Security\Member $member | NULL
      * @return boolean
      */
     public function canCreate($member = null, $context = [])
@@ -223,7 +223,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     /**
      * standard SS method
-     * @param Member $member | NULL
+     * @param \SilverStripe\Security\Member $member | NULL
      * @return boolean
      */
     public function canView($member = null, $context = [])
@@ -236,7 +236,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     /**
      * standard SS method
-     * @param Member $member | NULL
+     * @param \SilverStripe\Security\Member $member | NULL
      * @return boolean
      */
     public function canEdit($member = null, $context = [])
@@ -249,7 +249,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     /**
      * standard SS method
-     * @param Member $member | NULL
+     * @param \SilverStripe\Security\Member $member | NULL
      * @return boolean
      */
     public function canDelete($member = null, $context = [])
