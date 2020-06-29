@@ -4,7 +4,7 @@
  */
 
 if(
-    (document.getElementById("PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier") !== null && typeof document.getElementById("PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier") !== "undefined")
+    (document.getElementById("PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier") !== null && typeof document.getElementById("PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier") !== "undefined")
 ) {
 
     (function($){
@@ -17,7 +17,7 @@ if(
 
     var PickUpOrDeliveryModifier = {
 
-        formID: "PickUpOrDeliveryModifier_Form_PickUpOrDeliveryModifier",
+        formID: "PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier",
 
         optionSetOptions: "PickupOrDeliveryType",
 
@@ -36,11 +36,11 @@ if(
         EcomCart: {},
 
         init: function() {
-            if(typeof EcomCart === "undefined" ) {
+            if(typeof window.EcomCart === "undefined" ) {
                 var EcomCart = require("./EcomCartWebPack");
                 this.EcomCart = EcomCart.EcomCart;
             } else {
-                PickUpOrDeliveryModifier.EcomCart = EcomCart;
+                PickUpOrDeliveryModifier.EcomCart = window.EcomCart;
             }
             if(typeof PickUpOrDeliveryModifierOptions !== "undefined") {
                 this.availableCountries = PickUpOrDeliveryModifierOptions;

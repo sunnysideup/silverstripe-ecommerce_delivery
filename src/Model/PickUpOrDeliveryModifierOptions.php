@@ -39,14 +39,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class PickUpOrDeliveryModifierOptions extends DataObject
 {
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'PickUpOrDeliveryModifierOptions';
 
     private static $db = [
@@ -71,8 +63,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     private static $many_many = [
         'AvailableInCountries' => EcommerceCountry::class,
         'AvailableInRegions' => EcommerceRegion::class,
-        'WeightBrackets' => PickUpOrDeliveryModifierOptions_WeightBracket::class,
-        'SubtotalBrackets' => PickUpOrDeliveryModifierOptions_SubTotalBracket::class,
+        'WeightBrackets' => PickUpOrDeliveryModifierOptionsWeightBracket::class,
+        'SubtotalBrackets' => PickUpOrDeliveryModifierOptionsSubTotalBracket::class,
         'ExcludedProducts' => Product::class,
     ];
 
@@ -361,9 +353,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 1
                 WHERE "ID" <> ' . $this->ID . ';');
-        }
-        //current default -> reset others
-        elseif ($this->IsDefault) {
+        } elseif ($this->IsDefault) {
+            //current default -> reset others
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 0

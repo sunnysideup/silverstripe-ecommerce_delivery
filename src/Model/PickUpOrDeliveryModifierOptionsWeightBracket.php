@@ -3,31 +3,22 @@
 namespace Sunnysideup\EcommerceDelivery\Model;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
- * below we record options for subTotal brackets with fixed cost
- * e.g. if Order.SubTotal > 10 and Order.SubTotal < 20 => Charge is $111.
+ * below we record options for weight brackets with fixed cost
+ * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
  */
-class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
+class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
 {
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
-    private static $table_name = 'PickUpOrDeliveryModifierOptions_SubTotalBracket';
+    private static $table_name = 'PickUpOrDeliveryModifierOptions_WeightBracket';
 
     private static $db = [
         'Name' => 'Varchar',
-        'MinimumSubTotal' => 'Currency',
-        'MaximumSubTotal' => 'Currency',
+        'MinimumWeight' => 'Int',
+        'MaximumWeight' => 'Int',
         'FixedCost' => 'Currency',
     ];
 
@@ -36,8 +27,8 @@ class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
     ];
 
     private static $indexes = [
-        'MinimumSubTotal' => true,
-        'MaximumSubTotal' => true,
+        'MinimumWeight' => true,
+        'MaximumWeight' => true,
     ];
 
     private static $searchable_fields = [
@@ -45,33 +36,33 @@ class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
     ];
 
     private static $field_labels = [
-        'Name' => 'Description (e.g. order below a hundy)',
-        'MinimumSubTotal' => 'The minimum Sub-Total for the Order',
-        'MaximumSubTotal' => 'The maximum Sub-Total for the Order',
+        'Name' => 'Description (e.g. small parcel)',
+        'MinimumWeight' => 'The minimum weight in grams',
+        'MaximumWeight' => 'The maximum weight in grams',
         'FixedCost' => 'Total price (fixed cost)',
     ];
 
     private static $summary_fields = [
         'Name',
-        'MinimumSubTotal',
-        'MaximumSubTotal',
+        'MinimumWeight',
+        'MaximumWeight',
         'FixedCost',
     ];
 
-    private static $singular_name = 'Sub-Total Bracket';
+    private static $singular_name = 'Weight Bracket';
 
-    private static $plural_name = 'SubTotal Brackets';
+    private static $plural_name = 'Weight Brackets';
 
-    private static $default_sort = 'MinimumSubTotal ASC, MaximumSubTotal ASC';
+    private static $default_sort = 'MinimumWeight ASC, MaximumWeight ASC';
 
     public function i18n_singular_name()
     {
-        return _t('PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKET', 'Sub-Total Bracket');
+        return _t('PickUpOrDeliveryModifierOptions.WEIGHTBRACKET', 'Weight Bracket');
     }
 
     public function i18n_plural_name()
     {
-        return _t('PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKETS', 'Sub-Total Brackets');
+        return _t('PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS', 'Weight Brackets');
     }
 
     /**
@@ -121,22 +112,5 @@ class PickUpOrDeliveryModifierOptions_SubTotalBracket extends DataObject
             return true;
         }
         return parent::canDelete($member);
-    }
-
-    /**
-     * CMS Fields
-     * @return FieldList
-     */
-    public function getCMSFields()
-    {
-        $fields = parent::getCMSFields();
-        $fields->replaceField('Name', ReadonlyField::create('Name', 'Description'));
-        return $fields;
-    }
-
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $this->Name = 'MIN ' . $this->MinimumSubTotal . ' MAX ' . $this->MaximumSubTotal . ', COST: ' . $this->FixedCost;
     }
 }

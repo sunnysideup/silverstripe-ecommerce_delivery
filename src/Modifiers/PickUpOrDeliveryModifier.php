@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\EcommerceDelivery\Modifiers;
 
-use SilverStripe\Core\Convert;
-
 use SilverStripe\Control\Controller;
+
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
@@ -18,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
-use Sunnysideup\EcommerceDelivery\Forms\PickUpOrDeliveryModifier_Form;
+use Sunnysideup\EcommerceDelivery\Forms\PickUpOrDeliveryModifierForm;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 
 /**
@@ -38,15 +38,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected $debugMessage = '';
 
     // ######################################## *** model defining static variables (e.g. $db, $has_one)
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'PickUpOrDeliveryModifier';
 
     private static $db = [
@@ -205,30 +196,17 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
     {
-        Requirements::themedCSS('sunnysideup/ecommerce_delivery: PickUpOrDeliveryModifier', 'ecommerce_delivery');
-
         /**
          * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: THIRDPARTY_DIR."/jquery/jquery.js" (case sensitive)
-         * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
-         * EXP: Check for best usage and inclusion of Jquery
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         * WHY doesnt this work?
          */
-        Requirements::javascript('sunnysideup/ecommerce_delivery: silverstripe/admin: thirdparty/jquery/jquery.js');
+        //Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
+
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: THIRDPARTY_DIR."/jquery-form/jquery.form.js" (case sensitive)
-         * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
-         * EXP: Check for best usage and inclusion of Jquery
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        Requirements::javascript('sunnysideup/ecommerce_delivery: silverstripe/admin: thirdparty/jquery/jquery.js');
-        Requirements::javascript('sunnysideup/ecommerce_delivery: ecommerce_delivery/javascript/PickUpOrDeliveryModifier.js');
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('sunnysideup/ecommerce_delivery: client/javascript/PickUpOrDeliveryModifier.js');
         $array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
         if ($array && is_array($array) && count($array)) {
             $js = "\n" . 'var PickUpOrDeliveryModifierOptions = []';
@@ -258,7 +236,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
-        return new PickUpOrDeliveryModifier_Form($optionalController, PickUpOrDeliveryModifier::class, $fields, $actions, $optionalValidator);
+        return new PickUpOrDeliveryModifierForm($optionalController, 'PickUpOrDeliveryModifier', $fields, $actions, $optionalValidator);
     }
 
     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
@@ -373,7 +351,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (! self::$available_options) {
             $countryID = EcommerceCountry::get_country_id();
             $regionID = EcommerceRegion::get_region_id();
-            $weight = $this->LiveTotalWeight();
             $options = PickUpOrDeliveryModifierOptions::get();
             if ($options->count()) {
                 foreach ($options as $option) {
@@ -555,7 +532,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
             $maxForZeroRate = floatval($obj->FreeShippingUpToThisOrderAmount);
 
-            $weigth = $weight = $this->LiveTotalWeight();
             $weightBrackets = $obj->WeightBrackets();
             $subTotalBrackets = $obj->SubTotalBrackets();
 
@@ -563,10 +539,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
                 self::$_actual_charges = 0;
                 $this->debugMessage .= '<hr />Minimum Order Amount For Zero Rate: ' . $obj->MinimumOrderAmountForZeroRate . ' is lower than amount  ordered: ' . self::$_actual_charges;
-            }
-
-            //zero because below maxForZeroRate
-            elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
+            } elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
+                //zero because below maxForZeroRate
                 self::$_actual_charges = 0;
                 $this->debugMessage .= '<hr />Maximum Order Amount For Zero Rate: ' . $obj->FreeShippingUpToThisOrderAmount . ' is higher than amount ordered: ' . self::$_actual_charges;
             } else {
@@ -616,10 +590,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
                         }
                     }
-                }
-
-                // weight based on multiplier ...
-                elseif ($weight && $obj->WeightMultiplier) {
+                } elseif ($weight && $obj->WeightMultiplier) {
+                    // weight based on multiplier ...
                     // add weight based shipping
                     if (! $obj->WeightUnit) {
                         $obj->WeightUnit = 1;
@@ -630,10 +602,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $weightCharge = $units * $obj->WeightMultiplier;
                     self::$_actual_charges += $weightCharge;
                     $this->debugMessage .= '<hr />weight charge: ' . $weightCharge;
-                }
-
-                //examine price brackets
-                elseif ($subTotalAmount && $subTotalBrackets->count()) {
+                } elseif ($subTotalAmount && $subTotalBrackets->count()) {
+                    //examine price brackets
                     $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
                     //subTotal brackets
                     $foundSubTotalBracket = null;

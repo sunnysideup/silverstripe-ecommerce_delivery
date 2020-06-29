@@ -1,15 +1,15 @@
 <?php
 
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
-use SilverStripe\Dev\BuildTask;
 
 class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 {
-    protected $title = "Upgrade PickUpOrDeliveryModifier";
+    protected $title = 'Upgrade PickUpOrDeliveryModifier';
 
-    protected $description = "Fix the option field";
+    protected $description = 'Fix the option field';
 
     private static $options_old_to_new = [];
 
@@ -23,26 +23,26 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
             $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();
         }
         if ($exist > 0) {
-            $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(array("IsDefault" => 1))->First();
-            $modifiers = PickUpOrDeliveryModifier::get()->filter(array("OptionID" => 0));
+            $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(['IsDefault' => 1])->First();
+            $modifiers = PickUpOrDeliveryModifier::get()->filter(['OptionID' => 0]);
             if ($modifiers->count()) {
                 foreach ($modifiers as $modifier) {
-                    if (!isset($modifier->OptionID) || !$modifier->OptionID) {
-                        if (!isset(self::$options_old_to_new[$modifier->Code])) {
-                            $option = PickUpOrDeliveryModifierOptions::get()->filter(array("Code" => $modifier->Code))->First();
-                            if (!$option) {
+                    if (! isset($modifier->OptionID) || ! $modifier->OptionID) {
+                        if (! isset(self::$options_old_to_new[$modifier->Code])) {
+                            $option = PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $modifier->Code])->First();
+                            if (! $option) {
                                 $option = $defaultOption;
                             }
                             self::$options_old_to_new[$modifier->Code] = $option->ID;
                         }
                         $myOption = self::$options_old_to_new[$modifier->Code];
                         // USING QUERY TO UPDATE
-                        DB::query("UPDATE \"PickUpOrDeliveryModifier\" SET \"OptionID\" = ".$myOption." WHERE \"PickUpOrDeliveryModifier\".\"ID\" = ".$modifier->ID);
-                        DB::alteration_message('Updated modifier #'.$modifier->ID.' from code to option ID '.$myOption, 'edited');
+                        DB::query('UPDATE "PickUpOrDeliveryModifier" SET "OptionID" = ' . $myOption . ' WHERE "PickUpOrDeliveryModifier"."ID" = ' . $modifier->ID);
+                        DB::alteration_message('Updated modifier #' . $modifier->ID . ' from code to option ID ' . $myOption, 'edited');
                     }
                 }
             }
         }
-        DB::alteration_message("<hr />COMPLETED<hr />", "created");
+        DB::alteration_message('<hr />COMPLETED<hr />', 'created');
     }
 }

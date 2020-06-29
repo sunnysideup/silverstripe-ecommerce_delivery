@@ -8,7 +8,7 @@ Sunnysideup\Ecommerce\Cms\StoreAdmin:
     - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions
 Sunnysideup\Ecommerce\Control\OrderModifierFormController:
   allowed_actions:
-    - Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier
+    - PickUpOrDeliveryModifier
 Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
   extensions:
     - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry

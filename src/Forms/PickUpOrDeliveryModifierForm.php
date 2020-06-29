@@ -7,7 +7,7 @@ use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 
-class PickUpOrDeliveryModifier_Form extends OrderModifierForm
+class PickUpOrDeliveryModifierForm extends OrderModifierForm
 {
     public function processOrderModifier($data, $form = null)
     {
