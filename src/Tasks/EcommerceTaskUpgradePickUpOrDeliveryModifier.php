@@ -17,13 +17,7 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 
     public function run($request)
     {
-        $db = DB::get_conn();
-        if ($db instanceof PostgreSQLDatabase) {
-            $exist = DB::query("SELECT column_name FROM information_schema.columns WHERE table_name ='PickUpOrDeliveryModifier' AND column_name = 'PickupOrDeliveryType'")->numRecords();
-        } else {
-            // default is MySQL - broken for others, each database conn type supported must be checked for!
-            $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();
-        }
+        $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();
         if ($exist > 0) {
             $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(['IsDefault' => 1])->First();
             $modifiers = PickUpOrDeliveryModifier::get()->filter(['OptionID' => 0]);
