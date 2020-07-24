@@ -19,6 +19,7 @@ use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\MultiSelectField;
 use SilverStripe\ORM\DataObject;
@@ -404,10 +405,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         $field = null;
         $dos = $dataObjectName::get();
         if ($dos->count()) {
-            if (class_exists(MultiSelectField::class)) {
+            if (class_exists(ListboxField::class)) {
                 $array = $dos->map('ID', 'Title')->toArray();
                 //$name, $title = "", $source = array(), $value = "", $form = null
-                $field = new MultiSelectField(
+                $field = new ListboxField(
                     $fieldName,
                     'This option is available in... ',
                     $array
