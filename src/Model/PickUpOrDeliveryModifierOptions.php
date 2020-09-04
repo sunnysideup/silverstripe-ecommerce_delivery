@@ -21,7 +21,6 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\MultiSelectField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
