@@ -669,7 +669,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $items = $this->Order()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
                     if ($items && $items->count()) {
-                        foreach ($items as $itemIndex => $item) {
+                        foreach ($items as $item) {
                             $buyable = $item->Buyable();
                             if ($buyable) {
                                 // Calculate the total weight of the order

@@ -89,9 +89,9 @@ class PackagingBox
         return true;
     }
 
-    public function _diffsort($array)
+    public function diffsort($array)
     {
-        /* quick and dirty hack since _sksort() does strange things */
+        /* quick and dirty hack since sksort() does strange things */
         $tmp_array = [];
         foreach ($array as $item) {
             $tmp_array[$item['diff']][] = $item;
@@ -112,7 +112,7 @@ class PackagingBox
         $outer_dimensions = $this->outer_boxes[$outer_box_id]['dimensions'];
         sort($outer_dimensions);
         $pairs = [];
-        foreach ($inner_dimensions as $inner_id => $inner_value) {
+        foreach ($inner_dimensions as $inner_value) {
             foreach ($outer_dimensions as $outer_id => $outer_value) {
                 if ($inner_value <= $outer_value) {
                     $unset = $outer_id;
@@ -127,7 +127,7 @@ class PackagingBox
             unset($outer_dimensions[$unset]);
         }
         do {
-            $pairs = $this-> _diffsort($pairs);
+            $pairs = $this-> diffsort($pairs);
             $this -> add_outer_box($pairs[0]['diff'], $pairs[1]['outer'], $pairs[2]['outer']);
             $pairs[0]['diff'] = 0;
             $pairs[0]['outer'] = $pairs[0]['inner'];
@@ -160,7 +160,7 @@ class PackagingBox
         foreach ($this -> outer_boxes as $k => $v) {
             $this -> outer_boxes[$k]['longest_side'] = $v['dimensions'][0];
         }
-        $this -> outer_boxes = $this -> _sksort($this -> outer_boxes, 'longest_side', false, true);
+        $this -> outer_boxes = $this -> sksort($this -> outer_boxes, 'longest_side', false, true);
         return true;
     }
 
@@ -188,10 +188,10 @@ class PackagingBox
         return $biggest_id;
     }
 
-    private function _sksort($array, $subkey, $sort_descending = false, $keep_keys_in_sub = false)
+    private function sksort($array, $subkey, $sort_descending = false, $keep_keys_in_sub = false)
     {
         // slightly modified since stolen from http://www.php.net/manual/de/function.sort.php#93473
-        foreach ($array as $key => &$value) {
+        foreach ($array as &$value) {
             $sort = [];
             foreach ($value as $index => $val) {
                 $sort[$index] = $val[$subkey];

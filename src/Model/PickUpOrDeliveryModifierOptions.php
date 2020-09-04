@@ -266,15 +266,15 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $availableInCountriesField = $this->createGridField(EcommerceCountry::class, 'AvailableInCountries', 'Available in');
+        $availableInCountriesField = $this->createGridField('Available in', EcommerceCountry::class, 'AvailableInCountries');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
         }
-        $excludeFromCountriesField = $this->createGridField(EcommerceCountry::class, 'ExcludeFromCountries', 'Excluded from');
+        $excludeFromCountriesField = $this->createGridField('Excluded from', EcommerceCountry::class, 'ExcludeFromCountries');
         if ($excludeFromCountriesField) {
             $fields->replaceField('ExcludeFromCountries', $excludeFromCountriesField);
         }
-        $regionField = $this->createGridField(EcommerceRegion::class, 'AvailableInRegions', 'Regions');
+        $regionField = $this->createGridField('Regions', EcommerceRegion::class, 'AvailableInRegions');
         if ($regionField) {
             $fields->replaceField('AvailableInRegions', $regionField);
         }
@@ -399,7 +399,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         return $in . $out;
     }
 
-    private function createGridField($dataObjectName = EcommerceCountry::class, $fieldName = 'AvailableInCountries', $title)
+    private function createGridField($title = '', $dataObjectName = EcommerceCountry::class, $fieldName = 'AvailableInCountries')
     {
         $field = null;
         $dos = $dataObjectName::get();
