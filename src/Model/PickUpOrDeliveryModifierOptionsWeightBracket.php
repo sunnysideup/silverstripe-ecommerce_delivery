@@ -68,7 +68,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
     /**
      * standard SS method
      * @param \SilverStripe\Security\Member $member | NULL
-     * @return boolean
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
@@ -81,7 +81,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
     /**
      * standard SS method
      * @param \SilverStripe\Security\Member $member | NULL
-     * @return boolean
+     * @return bool
      */
     public function canView($member = null, $context = [])
     {
@@ -91,7 +91,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
     /**
      * standard SS method
      * @param \SilverStripe\Security\Member $member | NULL
-     * @return boolean
+     * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
@@ -104,7 +104,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
     /**
      * standard SS method
      * @param \SilverStripe\Security\Member $member | NULL
-     * @return boolean
+     * @return bool
      */
     public function canDelete($member = null, $context = [])
     {

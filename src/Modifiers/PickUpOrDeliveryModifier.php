@@ -167,7 +167,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * standard Modifier Method
-     * @return boolean
+     * @return bool
      */
     public function ShowForm()
     {
@@ -184,7 +184,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * Should the form be included in the editable form
      * on the checkout page?
-     * @return boolean
+     * @return bool
      */
     public function ShowFormInEditableOrderTable()
     {
@@ -242,7 +242,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function ShowInTable()
     {
@@ -250,7 +250,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function CanBeRemoved()
     {
@@ -333,7 +333,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * works out if Weight is applicable at all
-     * @return boolean
+     * @return bool
      */
     protected function useWeight()
     {
