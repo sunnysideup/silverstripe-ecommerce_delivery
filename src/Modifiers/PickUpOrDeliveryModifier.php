@@ -202,7 +202,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
          * ### @@@@ START REPLACEMENT @@@@ ###
          * WHY doesnt this work?
          */
-        Requirements::themedCSS('PickUpOrDeliveryModifier');
+        Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
 
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
