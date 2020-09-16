@@ -318,7 +318,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             )
         );
         $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
-        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
+        if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
             if ($weightBrackets && $weightBrackets->count()) {
                 $fields->removeByName('WeightMultiplier');

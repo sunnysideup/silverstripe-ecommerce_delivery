@@ -339,7 +339,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function useWeight()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight;
+        return EcommerceConfig::inst()->ProductsHaveWeight;
     }
 
     /**
