@@ -335,7 +335,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         foreach ($this->Config()->get('field_labels_right') as $fieldName => $fieldDescription) {
             $field = $fields->dataFieldByName($fieldName);
             if ($field) {
-                $field->setRightTitle($fieldDescription);
+                $field->setDescription($fieldDescription);
             }
         }
         return $fields;
