@@ -37,7 +37,7 @@ if(
 
         init: function() {
             if(typeof window.EcomCart === "undefined" ) {
-                var EcomCart = require("./EcomCartWebPack");
+                // var EcomCart = require("./EcomCartWebPack");
                 this.EcomCart = EcomCart.EcomCart;
             } else {
                 PickUpOrDeliveryModifier.EcomCart = window.EcomCart;
