@@ -1,5 +1,5 @@
 /* delivery */
 form.pickUpOrDeliveryModifier {padding: 0 0;}
-	form.pickUpOrDeliveryModifier fieldset{width: 100%; overflow: auto;}
-		form.pickUpOrDeliveryModifier h2{margin: 0; padding: 0.8em 0 0 0;}
-		form.pickUpOrDeliveryModifier #PickupOrDeliveryType{margin: 1.1em 0 1em 0; padding: 0;}
+    form.pickUpOrDeliveryModifier fieldset{width: 100%; overflow: auto;}
+        form.pickUpOrDeliveryModifier h2{margin: 0; padding: 0.8em 0 0 0;}
+        form.pickUpOrDeliveryModifier #PickupOrDeliveryType{margin: 1.1em 0 1em 0; padding: 0;}
