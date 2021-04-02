@@ -267,7 +267,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $availableInCountriesField = $this->createGridField('Available in', EcommerceCountry::class, 'AvailableInCountries');
+        $availableInCountriesField = $this->createGridField('Available in');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
         }
@@ -342,51 +342,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         return $fields;
     }
 
-    /**
-     * make sure there is only exactly one default
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        // no other record but current one is not default
-        if (! $this->IsDefault && (PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => intval($this->ID)])->count() === 0)) {
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 1
-                WHERE "ID" <> ' . $this->ID . ';');
-        } elseif ($this->IsDefault) {
-            //current default -> reset others
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 0
-                WHERE "ID" <> ' . intval($this->ID) . ';');
-        }
-    }
-
-    /**
-     * make sure all are unique codes
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $this->Code = trim(preg_replace('/[^a-zA-Z0-9]+/', '', $this->Code));
-        $i = 0;
-        if (! $this->Code) {
-            $defaults = $this->Config()->get('Code');
-            $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
-        }
-        $baseCode = $this->Code;
-        while (PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $this->Code])->exclude(['ID' => $this->ID])->count() && $i < 100) {
-            $i++;
-            $this->Code = $baseCode . '_' . $i;
-        }
-        if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
-            if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
-                $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
-            }
-        }
-    }
-
     public function getListOfCountries()
     {
         $in = '';
@@ -398,6 +353,51 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $out = ' // OUT: ' . implode(', ', $this->ExcludeFromCountries()->column('Code'));
         }
         return $in . $out;
+    }
+
+    /**
+     * make sure there is only exactly one default
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        // no other record but current one is not default
+        if (! $this->IsDefault && (PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->count() === 0)) {
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 1
+                WHERE "ID" <> ' . $this->ID . ';');
+        } elseif ($this->IsDefault) {
+            //current default -> reset others
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 0
+                WHERE "ID" <> ' . (int) $this->ID . ';');
+        }
+    }
+
+    /**
+     * make sure all are unique codes
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', $this->Code));
+        $i = 0;
+        if (! $this->Code) {
+            $defaults = $this->Config()->get('Code');
+            $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
+        }
+        $baseCode = $this->Code;
+        while (PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $this->Code])->exclude(['ID' => $this->ID])->count() && $i < 100) {
+            ++$i;
+            $this->Code = $baseCode . '_' . $i;
+        }
+        if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
+            if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
+                $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
+            }
+        }
     }
 
     private function createGridField($title = '', $dataObjectName = EcommerceCountry::class, $fieldName = 'AvailableInCountries')

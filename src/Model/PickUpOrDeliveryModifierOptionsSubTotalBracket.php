@@ -126,7 +126,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
         return $fields;
     }
 
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         $this->Name = 'MIN ' . $this->MinimumSubTotal . ' MAX ' . $this->MaximumSubTotal . ', COST: ' . $this->FixedCost;

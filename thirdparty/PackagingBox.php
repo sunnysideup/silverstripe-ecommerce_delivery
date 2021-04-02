@@ -15,7 +15,6 @@ class PackagingBox
     {
         $this -> outer_boxes = [];
         $this -> inner_boxes = [];
-        return;
     }
 
     public function add_outer_box($l, $w, $h)
@@ -82,11 +81,8 @@ class PackagingBox
         foreach ($this -> outer_boxes as $outer) {
             $outer_volume += ($outer['dimensions'][0] * $outer['dimensions'][1] * $outer['dimensions'][2]);
         }
-        if ($inner_volume > $outer_volume) {
-            /* inner boxes have more volume than outer ones */
-            return false;
-        }
-        return true;
+        /* inner boxes have more volume than outer ones */
+        return $inner_volume <= $outer_volume;
     }
 
     public function diffsort($array)
@@ -137,15 +133,11 @@ class PackagingBox
 
     private function fits_inside($inner_box_id, $outer_box_id)
     {
-        if ($this->inner_boxes[$inner_box_id]['dimensions'][0] <= $this->outer_boxes[$outer_box_id]['dimensions'][0] &&
-            $this->inner_boxes[$inner_box_id]['dimensions'][1] <= $this->outer_boxes[$outer_box_id]['dimensions'][1] &&
-            $this->inner_boxes[$inner_box_id]['dimensions'][2] <= $this->outer_boxes[$outer_box_id]['dimensions'][2]
-        ) {
-            /* fits */
-            return true;
-        }
+        /* fits */
         /* fits not */
-        return false;
+        return $this->inner_boxes[$inner_box_id]['dimensions'][0] <= $this->outer_boxes[$outer_box_id]['dimensions'][0] &&
+            $this->inner_boxes[$inner_box_id]['dimensions'][1] <= $this->outer_boxes[$outer_box_id]['dimensions'][1] &&
+            $this->inner_boxes[$inner_box_id]['dimensions'][2] <= $this->outer_boxes[$outer_box_id]['dimensions'][2];
     }
 
     private function sort_dimensions($l, $w, $h)
@@ -162,17 +154,6 @@ class PackagingBox
         }
         $this -> outer_boxes = $this -> sksort($this -> outer_boxes, 'longest_side', false, true);
         return true;
-    }
-
-    private function next_outer_box()
-    {
-        $biggest_size = 0;
-        foreach ($this -> outer_boxes as $id => $box) {
-            if (! $box['packed'] && $box['dimensions'][0] > $biggest_size) {
-                $biggest_size = $box['dimensions'][0];
-            }
-        }
-        return $id;
     }
 
     private function next_inner_box()
@@ -206,11 +187,7 @@ class PackagingBox
                     $new_value[] = $value[$index];
                 }
             }
-            if ($sort_descending) {
-                $value = array_reverse($new_value, $keep_keys_in_sub);
-            } else {
-                $value = $new_value;
-            }
+            $value = $sort_descending ? array_reverse($new_value, $keep_keys_in_sub) : $new_value;
         }
         return $array;
     }
