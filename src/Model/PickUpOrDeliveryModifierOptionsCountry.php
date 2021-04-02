@@ -24,7 +24,6 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
 
     /**
      * Update Fields
-     * @return FieldList
      */
     public function updateCMSFields(FieldList $fields)
     {
@@ -47,6 +46,5 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
                 ),
             ]
         );
-        return $fields;
     }
 }
