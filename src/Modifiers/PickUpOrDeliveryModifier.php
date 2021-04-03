@@ -11,6 +11,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Requirements;
@@ -88,14 +89,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
     private static $selected_option;
 
     /**
-     * @var double
+     * @var float
      * the total amount charged in the end.
      * saved here for speed's sake
      */
     private static $_actual_charges = 0;
 
     /**
-     * @var boolean
+     * @var bool
      * the total amount charged in the end
      * saved here for speed's sake
      */
@@ -171,7 +172,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * standard Modifier Method
      * @return bool
      */
-    public function ShowForm()
+    public function ShowForm() : bool
     {
         if ($this->ShowInTable()) {
             if ($this->Order()->Items()) {
@@ -188,7 +189,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * on the checkout page?
      * @return bool
      */
-    public function ShowFormInEditableOrderTable()
+    public function ShowFormInEditableOrderTable() : bool
     {
         return $this->ShowForm() && $this->Config()->get('include_form_in_order_table');
     }
@@ -243,7 +244,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * @return bool
      */
-    public function ShowInTable()
+    public function ShowInTable() : bool
     {
         return true;
     }
@@ -457,7 +458,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * description of region and country being shipped to.
      * @return string
      */
-    protected function LiveRegionAndCountry()
+    protected function LiveRegionAndCountry() : string
     {
         $details = [];
         $option = $this->Option();
@@ -482,6 +483,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (count($details)) {
             return implode(', ', $details);
         }
+        return '';
     }
 
     /**

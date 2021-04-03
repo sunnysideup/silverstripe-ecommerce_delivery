@@ -3,6 +3,7 @@
 namespace Sunnysideup\EcommerceDelivery\Model;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -117,7 +118,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
 
     /**
      * CMS Fields
-     * @return \ SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

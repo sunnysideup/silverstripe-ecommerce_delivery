@@ -164,7 +164,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($obj) {
             //do nothing
         } else {
-            $obj = PickUpOrDeliveryModifierOptions::creater($filter);
+            $obj = PickUpOrDeliveryModifierOptions::create($filter);
             $obj->write();
         }
         return $obj;

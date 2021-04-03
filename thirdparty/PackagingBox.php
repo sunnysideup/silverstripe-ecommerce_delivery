@@ -108,6 +108,7 @@ class PackagingBox
         $outer_dimensions = $this->outer_boxes[$outer_box_id]['dimensions'];
         sort($outer_dimensions);
         $pairs = [];
+        $unset = 'nothing';
         foreach ($inner_dimensions as $inner_value) {
             foreach ($outer_dimensions as $outer_id => $outer_value) {
                 if ($inner_value <= $outer_value) {
