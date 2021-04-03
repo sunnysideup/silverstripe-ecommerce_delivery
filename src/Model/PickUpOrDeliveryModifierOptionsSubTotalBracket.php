@@ -68,7 +68,11 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canCreate($member = null, $context = [])
@@ -76,11 +80,16 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canCreate($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canView($member = null, $context = [])
@@ -89,7 +98,11 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
@@ -97,11 +110,15 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canEdit($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     *
      * @return bool
      */
     public function canDelete($member = null)
@@ -109,17 +126,20 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canDelete($member);
     }
 
     /**
-     * CMS Fields
+     * CMS Fields.
+     *
      * @return FieldList
      */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $fields->replaceField('Name', ReadonlyField::create('Name', 'Description'));
+
         return $fields;
     }
 

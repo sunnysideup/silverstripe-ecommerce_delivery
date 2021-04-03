@@ -22,11 +22,13 @@ class PickUpOrDeliveryModifierForm extends OrderModifierForm
                             $modifier->setOption($newOption);
                             $modifier->runUpdate();
                         }
+
                         return ShoppingCart::singleton()->setMessageAndReturn(_t('PickUpOrDeliveryModifier.UPDATED', 'Delivery option updated'), 'good');
                     }
                 }
             }
         }
+
         return ShoppingCart::singleton()->setMessageAndReturn(_t('PickUpOrDeliveryModifier.UPDATED', 'Delivery option could NOT be updated'), 'bad');
     }
 }

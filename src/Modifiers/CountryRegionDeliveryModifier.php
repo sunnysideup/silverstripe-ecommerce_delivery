@@ -8,7 +8,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 /**
  * @tododelete this class!
  */
-
 class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
 {
     // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
@@ -25,6 +24,7 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
                 EcommerceCountry::get_country_dropdown()
             )
         );
+
         return $fields;
     }
 

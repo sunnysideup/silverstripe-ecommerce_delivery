@@ -155,6 +155,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     /**
      * returns the default PickUpOrDeliveryModifierOptions object
      * if none exists, it creates one.
+     *
      * @return PickUpOrDeliveryModifierOptions
      */
     public static function default_object()
@@ -167,6 +168,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $obj = PickUpOrDeliveryModifierOptions::create($filter);
             $obj->write();
         }
+
         return $obj;
     }
 
@@ -175,7 +177,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      * like this
      * array(
      *	"NZ" => "NZ"
-     * );
+     * );.
+     *
      * @return array
      */
     public static function get_all_as_country_array()
@@ -193,6 +196,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 }
             }
         }
+
         return $array;
     }
 
@@ -210,7 +214,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canCreate($member = null, $context = [])
@@ -218,11 +226,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canCreate($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canView($member = null, $context = [])
@@ -230,11 +243,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canCreate($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
@@ -242,11 +260,15 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canEdit($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
+     *
+     * @param null|mixed $member
+     *
      * @return bool
      */
     public function canDelete($member = null)
@@ -254,11 +276,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         return parent::canDelete($member);
     }
 
     /**
-     * standard SS method
+     * standard SS method.
      */
     public function getCMSFields()
     {
@@ -335,6 +358,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $field->setDescription($fieldDescription);
             }
         }
+
         return $fields;
     }
 
@@ -348,17 +372,18 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($this->ExcludeFromCountries()->count()) {
             $out = ' // OUT: ' . implode(', ', $this->ExcludeFromCountries()->column('Code'));
         }
+
         return $in . $out;
     }
 
     /**
-     * make sure there is only exactly one default
+     * make sure there is only exactly one default.
      */
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        if (! $this->IsDefault && (PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->count() === 0)) {
+        if (! $this->IsDefault && (0 === PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->count())) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 1
@@ -373,7 +398,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     }
 
     /**
-     * make sure all are unique codes
+     * make sure all are unique codes.
      */
     protected function onBeforeWrite()
     {
@@ -414,7 +439,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 /**
                  * @todo: Auto completer may not be functioning correctly: ExactMatchFilter does not accept EcommerceCountryFilters_AllowSales as modifiers
                  */
-
                 $gridFieldConfig = GridFieldConfig::create();
                 $gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
                 $gridFieldConfig->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
@@ -429,12 +453,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $gridFieldConfig->addComponent(new GridFieldDetailForm());
 
                 $source = $this->{$fieldName}();
+
                 return new GridField($fieldName, _t('PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES', '' . $title), $source, $gridFieldConfig);
             }
         }
         if ($field) {
             return $field;
         }
+
         return new HiddenField($fieldName);
     }
 }
