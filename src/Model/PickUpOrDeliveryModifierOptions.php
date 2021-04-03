@@ -249,7 +249,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      * standard SS method
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
