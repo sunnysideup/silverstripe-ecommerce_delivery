@@ -11,8 +11,8 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Validator;
-use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -170,9 +170,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * standard Modifier Method
-     * @return bool
      */
-    public function ShowForm() : bool
+    public function ShowForm(): bool
     {
         if ($this->ShowInTable()) {
             if ($this->Order()->Items()) {
@@ -187,9 +186,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * Should the form be included in the editable form
      * on the checkout page?
-     * @return bool
      */
-    public function ShowFormInEditableOrderTable() : bool
+    public function ShowFormInEditableOrderTable(): bool
     {
         return $this->ShowForm() && $this->Config()->get('include_form_in_order_table');
     }
@@ -241,10 +239,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
-    /**
-     * @return bool
-     */
-    public function ShowInTable() : bool
+    public function ShowInTable(): bool
     {
         return true;
     }
@@ -456,9 +451,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * description of region and country being shipped to.
-     * @return string
      */
-    protected function LiveRegionAndCountry() : string
+    protected function LiveRegionAndCountry(): string
     {
         $details = [];
         $option = $this->Option();
