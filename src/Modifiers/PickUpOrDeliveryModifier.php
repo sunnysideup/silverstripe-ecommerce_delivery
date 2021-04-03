@@ -66,7 +66,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     // ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
     /**
-     *@var string - the field used in the Buyable to work out the weight.
+     * @var string - the field used in the Buyable to work out the weight.
      */
     private static $weight_field = 'Weight';
 
@@ -439,7 +439,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * description of region and country being shipped to.
-     * @return PickUpOrDeliveryModifierOptions | NULL
+     * @return PickUpOrDeliveryModifierOptions|null
      */
     protected function LiveSerializedCalculationObject()
     {
