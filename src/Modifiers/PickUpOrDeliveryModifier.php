@@ -517,7 +517,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             //are ALL products excluded?
             if ($obj->ExcludedProducts() && $obj->ExcludedProducts()->count()) {
                 $hasIncludedProduct = false;
-                $excludedProductIDArray = $obj->ExcludedProducts()->column('ID');
+                $excludedProductIDArray = $obj->ExcludedProducts()->columnUnique();
                 //are all the products excluded?
                 foreach ($items as $orderItem) {
                     $product = $orderItem->Product();
