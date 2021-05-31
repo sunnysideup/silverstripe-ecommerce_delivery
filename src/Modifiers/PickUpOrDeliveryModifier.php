@@ -5,6 +5,7 @@ namespace Sunnysideup\EcommerceDelivery\Modifiers;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
@@ -61,6 +62,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
     private static $plural_name = 'Pickup / Delivery Charges';
 
     private static $include_form_in_order_table = true;
+
+    private static $use_dropdown_field = false;
 
     // ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
@@ -232,7 +235,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
         $options = $this->liveOptions()->map('ID', 'Name'); //$this->getOptionListForDropDown();
         $optionID = $this->LiveOptionID();
-        $fields->push(OptionsetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
+
+        if($this->Config()->get('use_dropdown_field')){
+            $fields->push(DropdownField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
+        }
+        else {
+            $fields->push(OptionsetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
+        }
+
         $actions = new FieldList(
             new FormAction('processOrderModifier', 'Update Pickup / Delivery Option')
         );
