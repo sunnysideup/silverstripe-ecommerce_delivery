@@ -161,7 +161,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public static function default_object()
     {
         $filter = ['IsDefault' => true];
-        $obj = PickUpOrDeliveryModifierOptions::get($filter)->filter()->First();
+        $obj = PickUpOrDeliveryModifierOptions::get()->filter($filter)->First();
         if ($obj) {
             //do nothing
         } else {
