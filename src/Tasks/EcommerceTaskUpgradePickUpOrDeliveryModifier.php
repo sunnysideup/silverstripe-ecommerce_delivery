@@ -21,7 +21,7 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
         if ($exist > 0) {
             $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(['IsDefault' => 1])->First();
             $modifiers = PickUpOrDeliveryModifier::get()->filter(['OptionID' => 0]);
-            if ($modifiers->count()) {
+            if ($modifiers->exists()) {
                 foreach ($modifiers as $modifier) {
                     if (! (property_exists($modifier, 'OptionID') && null !== $modifier->OptionID) || ! $modifier->OptionID) {
                         if (! isset(self::$options_old_to_new[$modifier->Code])) {

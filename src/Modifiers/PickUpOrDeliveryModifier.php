@@ -291,7 +291,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         parent::requireDefaultRecords();
         // we must check for individual database types here because each deals with schema in a none standard way
         $modifiers = PickUpOrDeliveryModifier::get()->filter(['OptionID' => 0]);
-        if ($modifiers->count()) {
+        if ($modifiers->exists()) {
             DB::alteration_message('You need to upgrade PickUpOrDeliveryModifier <a href="/dev/tasks/EcommerceTaskUpgradePickUpOrDeliveryModifier">do it now!</a>', 'deleted');
         }
     }
@@ -308,7 +308,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $js = parent::updateForAjax($js);
         $jsonOptions = [];
         $liveOptions = $this->LiveOptions();
-        if ($liveOptions && $liveOptions->count()) {
+        if ($liveOptions->exists()) {
             $optionsArray = $liveOptions->map('ID', 'Name');
             if ($optionsArray && ! is_array($optionsArray)) {
                 $optionsArray = $optionsArray->toArray();
@@ -364,18 +364,24 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $countryID = EcommerceCountry::get_country_id();
             $regionID = EcommerceRegion::get_region_id();
             $options = PickUpOrDeliveryModifierOptions::get();
-            if ($options->count()) {
+            if ($options->exists()) {
                 foreach ($options as $option) {
                     //check countries
                     if ($countryID) {
                         $availableInCountriesList = $option->AvailableInCountries();
                         //exclude if not found in country list
-                        if ($availableInCountriesList->Count() > 0 && ! $availableInCountriesList->find('ID', $countryID)) {
+                        if (
+                            $availableInCountriesList->exists() &&
+                            ! $availableInCountriesList->filter('ID', $countryID)->exists()
+                        ) {
                             continue;
                         }
                         //exclude if in exclusion list
                         $excludedFromCountryList = $option->ExcludeFromCountries();
-                        if ($excludedFromCountryList->Count() > 0 && $excludedFromCountryList->find('ID', $countryID)) {
+                        if (
+                            $excludedFromCountryList->exists() &&
+                            $excludedFromCountryList->filter('ID', $countryID)->exists()
+                        ) {
                             continue;
                         }
                     }
@@ -383,7 +389,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     if ($regionID) {
                         $optionRegions = $option->AvailableInRegions();
                         //exclude if not found in region list
-                        if ($optionRegions->Count() > 0 && ! $optionRegions->find('ID', $regionID)) {
+                        if (
+                            $optionRegions->exists() &&
+                            ! $optionRegions->filter(['ID' => $regionID])->exists()
+                        ) {
                             continue;
                         }
                     }
@@ -415,12 +424,13 @@ class PickUpOrDeliveryModifier extends OrderModifier
     {
         if (! self::$selected_option) {
             $options = $this->liveOptions();
-            if (self::$selected_option = $options->find('ID', $this->OptionID)) {
+            self::$selected_option = $options->filter(['ID' => $this->OptionID])->first();
+            if (self::$selected_option) {
                 //do nothing;
             } else {
-                self::$selected_option = $options->find('IsDefault', 1);
+                self::$selected_option = $options->filter(['IsDefault' => 1])->first();
                 if (! self::$selected_option) {
-                    self::$selected_option = $options->First();
+                    self::$selected_option = $options->first();
                 }
             }
         }
@@ -522,9 +532,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
         //do we have enough information
         $obj = $this->liveOptionObject();
         $items = $this->Order()->Items();
-        if (is_object($obj) && $obj->exists() && $items && $items->count()) {
+        if (is_object($obj) && $obj->exists() && $items->exists()) {
             //are ALL products excluded?
-            if ($obj->ExcludedProducts() && $obj->ExcludedProducts()->count()) {
+            if ($obj->ExcludedProducts()->exists()) {
                 $hasIncludedProduct = false;
                 $excludedProductIDArray = $obj->ExcludedProducts()->columnUnique();
                 //are all the products excluded?
@@ -566,7 +576,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 $this->debugMessage .= '<hr />Maximum Order Amount For Zero Rate: ' . $obj->FreeShippingUpToThisOrderAmount . ' is higher than amount ordered: ' . self::$_actual_charges;
             } else {
                 //examine weight brackets
-                if ($weight && $weightBrackets->count()) {
+                if ($weight && $weightBrackets->exists()) {
                     $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
                     //weight brackets
                     $foundWeightBracket = null;
@@ -624,7 +634,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $weightCharge = $units * $obj->WeightMultiplier;
                     self::$_actual_charges += $weightCharge;
                     $this->debugMessage .= '<hr />weight charge: ' . $weightCharge;
-                } elseif ($subTotalAmount && $subTotalBrackets->count()) {
+                } elseif ($subTotalAmount && $subTotalBrackets->exists()) {
                     //examine price brackets
                     $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
                     //subTotal brackets
@@ -688,7 +698,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 if ($fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field')) {
                     $items = $this->Order()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
-                    if ($items && $items->count()) {
+                    if ($items && $items->exists()) {
                         foreach ($items as $item) {
                             $buyable = $item->Buyable();
                             if ($buyable) {

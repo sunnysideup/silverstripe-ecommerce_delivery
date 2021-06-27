@@ -185,10 +185,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         $array = [];
         $options = PickUpOrDeliveryModifierOptions::get();
-        if ($options->count()) {
+        if ($options->exists()) {
             foreach ($options as $option) {
                 if ($countries = $option->AvailableInCountries()) {
-                    if ($countries->count()) {
+                    if ($countries->exists()) {
                         foreach ($countries as $country) {
                             $array[$option->Code][] = $country->Code;
                         }
@@ -340,7 +340,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
-            if ($weightBrackets && $weightBrackets->count()) {
+            if ($weightBrackets->exists()) {
                 $fields->removeByName('WeightMultiplier');
                 $fields->removeByName('WeightUnit');
             } else {
@@ -366,10 +366,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         $in = '';
         $out = '';
-        if ($this->AvailableInCountries()->count()) {
+        if ($this->AvailableInCountries()->exists()) {
             $in = '' . implode(', ', $this->AvailableInCountries()->column('Code'));
         }
-        if ($this->ExcludeFromCountries()->count()) {
+        if ($this->ExcludeFromCountries()->exists()) {
             $out = ' // OUT: ' . implode(', ', $this->ExcludeFromCountries()->column('Code'));
         }
 
@@ -425,7 +425,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         $field = null;
         $dos = $dataObjectName::get();
-        if ($dos->count()) {
+        if ($dos->exists()) {
             if (class_exists(ListboxField::class)) {
                 $array = $dos->map('ID', 'Title')->toArray();
                 //$name, $title = "", $source = array(), $value = "", $form = null
