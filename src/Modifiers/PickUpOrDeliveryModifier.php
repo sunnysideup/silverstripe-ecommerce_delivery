@@ -236,10 +236,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $options = $this->liveOptions()->map('ID', 'Name'); //$this->getOptionListForDropDown();
         $optionID = $this->LiveOptionID();
 
-        if($this->Config()->get('use_dropdown_field')){
+        if ($this->Config()->get('use_dropdown_field')) {
             $fields->push(DropdownField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
-        }
-        else {
+        } else {
             $fields->push(OptionsetField::create('PickupOrDeliveryType', 'Preference', $options, $optionID));
         }
 
