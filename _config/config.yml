@@ -16,6 +16,11 @@ Sunnysideup\Ecommerce\Control\OrderModifierFormController:
 Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
   extensions:
     - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
+
+Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
+  admin_role_permission_codes:
+    - CMS_ACCESS_SalesAdminByDeliveryOption
+
 ---
 Only:
   classexists: 'DataObjectSorterDOD'
