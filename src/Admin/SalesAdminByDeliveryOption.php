@@ -7,6 +7,8 @@ use Sunnysideup\Ecommerce\Model\Order;
 
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 
+use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
+
 use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 
 use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
@@ -28,8 +30,9 @@ class SalesAdminByDeliveryOption extends SalesAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Sales by Delivery';
+    private static $menu_title = '... by Delivery';
 
+    private static $menu_priority = 3.111;
     /**
      * standard SS variable.
      *
@@ -84,12 +87,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
 
     protected function getBrackets() : array
     {
-        $map = PickUpOrDeliveryModifierOptions::get()->map('ID', 'Title');
-        if($map && $map->count()) {
-            return $map->toArray();
-        } else {
-            return [0 => 'All'];
-        }
+        $list = EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
     }
 
     protected function getOptionPerOrder($baseList) : array
