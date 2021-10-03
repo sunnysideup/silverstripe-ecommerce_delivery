@@ -87,7 +87,8 @@ class SalesAdminByDeliveryOption extends SalesAdmin
 
     protected function getBrackets() : array
     {
-        $list = EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
+        $list = PickUpOrDeliveryModifierOptions::get()->map()->toArray();
+        return $list;
     }
 
     protected function getOptionPerOrder($baseList) : array
