@@ -33,13 +33,13 @@ class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
                 new GridField(
                     'AvailableInCountries',
                     'Included',
-                    $this->owner->AvailableInCountries(),
+                    $this->getOwner()->AvailableInCountries(),
                     GridFieldConfig_RelationEditor::create()
                 ),
                 new GridField(
                     'ExcludeFromCountries',
                     'Excluded',
-                    $this->owner->ExcludeFromCountries(),
+                    $this->getOwner()->ExcludeFromCountries(),
                     GridFieldConfig_RelationEditor::create()
                 ),
             ]
