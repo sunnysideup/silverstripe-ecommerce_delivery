@@ -383,7 +383,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        if (! $this->IsDefault && (0 === PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->count())) {
+        $notExistsOther = PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exist() ? false : true;
+        if (! $this->IsDefault && $notExistsOther) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 1
@@ -410,9 +411,17 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
         }
         $baseCode = $this->Code;
-        while (PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $this->Code])->exclude(['ID' => $this->ID])->count() && $i < 100) {
+        $exists = PickUpOrDeliveryModifierOptions::get()
+            ->filter(['Code' => $this->Code])
+            ->exclude(['ID' => $this->ID])
+            ->exists();
+        while ($exists && $i < 100) {
             ++$i;
             $this->Code = $baseCode . '_' . $i;
+            $exists = PickUpOrDeliveryModifierOptions::get()
+                ->filter(['Code' => $this->Code])
+                ->exclude(['ID' => $this->ID])
+                ->exists();
         }
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
             if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {

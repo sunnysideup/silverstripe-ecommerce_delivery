@@ -67,7 +67,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
     protected function getBrackets() : array
     {
         $list = PickUpOrDeliveryModifierOptions::get()->map();
-        if($list->count()) {
+        if($list->exists()) {
             return (array) $list->toArray();
         }
         return [];
@@ -77,7 +77,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
     {
         if($baseList->exists()) {
             $list = PickUpOrDeliveryModifier::get()->
-                filter(['OrderID' => $baseList->columnUnique('ID')]);
+                filter(['OrderID' => $baseList->columnUnique()]);
             if($list->exists()) {
                 return $list->map('OrderID', 'OptionID')->toArray();
             }
