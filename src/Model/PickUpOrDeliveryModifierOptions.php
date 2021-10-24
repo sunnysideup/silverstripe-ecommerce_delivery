@@ -24,7 +24,6 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
-use Sunnysideup\DataobjectSorter\DataObjectSorterController;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
@@ -298,7 +297,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($regionField) {
             $fields->replaceField('AvailableInRegions', $regionField);
         }
-        if (class_exists(DataObjectSorterController::class) && $this->hasExtension(DataObjectSorterController::class)) {
+        if (class_exists(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class) && $this->hasExtension(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class)) {
             $fields->addFieldToTab('Root.Sort', new LiteralField('InvitationToSort', $this->dataObjectSorterPopupLink()));
         }
         $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Page', SiteTree::class));
@@ -383,7 +382,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        $notExistsOther = PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exist() ? false : true;
+        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exist();
         if (! $this->IsDefault && $notExistsOther) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
@@ -414,14 +413,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         $exists = PickUpOrDeliveryModifierOptions::get()
             ->filter(['Code' => $this->Code])
             ->exclude(['ID' => $this->ID])
-            ->exists();
+            ->exists()
+        ;
         while ($exists && $i < 100) {
             ++$i;
             $this->Code = $baseCode . '_' . $i;
             $exists = PickUpOrDeliveryModifierOptions::get()
                 ->filter(['Code' => $this->Code])
                 ->exclude(['ID' => $this->ID])
-                ->exists();
+                ->exists()
+            ;
         }
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
             if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
