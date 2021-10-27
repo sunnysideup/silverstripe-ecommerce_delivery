@@ -179,7 +179,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
     {
         if ($this->ShowInTable()) {
             if ($this->Order()->Items()) {
-                if ($options = $this->liveOptions()) {
+                $options = $this->liveOptions();
+                if ($options) {
                     return $options->limit(2)->count() > 1;
                 }
             }
@@ -695,7 +696,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (null === self::$_total_weight) {
             self::$_total_weight = 0;
             if ($this->useWeight()) {
-                if ($fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field')) {
+                $fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field');
+                if ($fieldName) {
                     $items = $this->Order()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
                     if ($items && $items->exists()) {

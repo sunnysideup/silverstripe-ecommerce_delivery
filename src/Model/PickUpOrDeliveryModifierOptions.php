@@ -186,7 +186,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         $options = PickUpOrDeliveryModifierOptions::get();
         if ($options->exists()) {
             foreach ($options as $option) {
-                if ($countries = $option->AvailableInCountries()) {
+                $countries = $option->AvailableInCountries();
+                if ($countries) {
                     if ($countries->exists()) {
                         foreach ($countries as $country) {
                             $array[$option->Code][] = $country->Code;

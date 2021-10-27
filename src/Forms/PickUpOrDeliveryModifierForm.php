@@ -17,7 +17,8 @@ class PickUpOrDeliveryModifierForm extends OrderModifierForm
             if ($newOptionObj) {
                 $order = ShoppingCart::current_order();
                 if ($order) {
-                    if ($modifiers = $order->Modifiers(PickUpOrDeliveryModifier::class)) {
+                    $modifiers = $order->Modifiers(PickUpOrDeliveryModifier::class);
+                    if ($modifiers) {
                         foreach ($modifiers as $modifier) {
                             $modifier->setOption($newOption);
                             $modifier->runUpdate();
