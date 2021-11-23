@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\EcommerceDelivery\Model;
-
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -334,7 +334,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 'ExcludedProducts',
                 'Excluded Products',
                 $this->ExcludedProducts(),
-                $config = GridFieldBasicPageRelationConfig::create()
+                GridFieldConfigForProducts::create()
             )
         );
         $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
