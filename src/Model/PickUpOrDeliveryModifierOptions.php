@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\EcommerceDelivery\Model;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
+
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -26,7 +26,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
