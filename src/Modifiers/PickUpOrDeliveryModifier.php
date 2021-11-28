@@ -178,7 +178,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     public function ShowForm(): bool
     {
         if ($this->ShowInTable()) {
-            if ($this->Order()->Items()) {
+            if ($this->getOrderCached()->Items()) {
                 $options = $this->liveOptions();
                 if ($options) {
                     return $options->limit(2)->count() > 1;
@@ -467,7 +467,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function LiveSubTotalAmount()
     {
-        $order = $this->Order();
+        $order = $this->getOrderCached();
 
         return $order->SubTotal();
     }
@@ -532,7 +532,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         self::$_actual_charges = 0;
         //do we have enough information
         $obj = $this->liveOptionObject();
-        $items = $this->Order()->Items();
+        $items = $this->getOrderCached()->Items();
         if (is_object($obj) && $obj->exists() && $items->exists()) {
             //are ALL products excluded?
             if ($obj->ExcludedProducts()->exists()) {
@@ -698,7 +698,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($this->useWeight()) {
                 $fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field');
                 if ($fieldName) {
-                    $items = $this->Order()->Items();
+                    $items = $this->getOrderCached()->Items();
                     //get index numbers for bonus products - this can only be done now once they have actually been added
                     if ($items && $items->exists()) {
                         foreach ($items as $item) {
