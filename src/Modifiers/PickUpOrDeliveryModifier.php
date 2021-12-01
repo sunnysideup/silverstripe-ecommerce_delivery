@@ -339,7 +339,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function LiveOptionObject()
     {
-        return PickUpOrDeliveryModifierOptions::get()->byID($this->LiveOptionID());
+        return PickUpOrDeliveryModifierOptions::get_by_id($this->LiveOptionID());
     }
 
     /**
@@ -495,14 +495,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if ($option) {
             $regionID = EcommerceRegion::get_region_id();
             if ($regionID) {
-                $region = EcommerceRegion::get()->byID($regionID);
+                $region = EcommerceRegion::get_by_id($regionID);
                 if ($region) {
                     $details[] = $region->Name;
                 }
             }
             $countryID = EcommerceCountry::get_country_id();
             if ($countryID) {
-                $country = EcommerceCountry::get()->byID($countryID);
+                $country = EcommerceCountry::get_by_id($countryID);
                 if ($country) {
                     $details[] = $country->Name;
                 }

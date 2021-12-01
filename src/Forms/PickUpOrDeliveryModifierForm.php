@@ -13,7 +13,7 @@ class PickUpOrDeliveryModifierForm extends OrderModifierForm
     {
         if (isset($data['PickupOrDeliveryType'])) {
             $newOption = (int) $data['PickupOrDeliveryType'];
-            $newOptionObj = PickUpOrDeliveryModifierOptions::get()->byID($newOption);
+            $newOptionObj = PickUpOrDeliveryModifierOptions::get_by_id($newOption);
             if ($newOptionObj) {
                 $order = ShoppingCart::current_order();
                 if ($order) {
