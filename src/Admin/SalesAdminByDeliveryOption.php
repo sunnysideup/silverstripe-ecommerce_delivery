@@ -59,9 +59,9 @@ class SalesAdminByDeliveryOption extends SalesAdmin
 
     protected function getBrackets(): array
     {
-        $list = PickUpOrDeliveryModifierOptions::get()->map();
+        $list = PickUpOrDeliveryModifierOptions::get();
         if ($list->exists()) {
-            return (array) $list->toArray();
+            return (array) $list->map()->toArray();
         }
 
         return [];
