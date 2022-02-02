@@ -175,7 +175,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      * returns an array of countries available for all options combined.
      * like this
      * array(
-     *	"NZ" => "NZ"
+     *    "NZ" => "NZ"
      * );.
      *
      * @return array
