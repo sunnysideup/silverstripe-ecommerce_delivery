@@ -15,6 +15,8 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 
     private static $options_old_to_new = [];
 
+    private static $segment = 'EcommerceTaskUpgradePickUpOrDeliveryModifier';
+
     public function run($request)
     {
         $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();

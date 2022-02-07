@@ -227,7 +227,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($js) {
                 //add final semi-comma
                 $js .= '';
-                Requirements::customScript($js, 'PickupOrDeliveryModifier');
+                Requirements::customScript($js, 'PickUpOrDeliveryModifier');
             }
         }
         $fields = new FieldList();
