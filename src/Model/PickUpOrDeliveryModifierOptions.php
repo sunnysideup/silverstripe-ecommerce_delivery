@@ -383,7 +383,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exist();
+        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
         if (! $this->IsDefault && $notExistsOther) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
