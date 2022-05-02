@@ -59,6 +59,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'ExplanationPage' => SiteTree::class,
     ];
 
+    private static $has_many = [
+        'AdditionalCostForSpecificProducts' => PickUpOrDeliveryModifierAdditional::class,
+    ];
+
     private static $many_many = [
         'AvailableInCountries' => EcommerceCountry::class,
         'AvailableInRegions' => EcommerceRegion::class,

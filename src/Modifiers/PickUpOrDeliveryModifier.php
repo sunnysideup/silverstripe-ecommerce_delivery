@@ -530,6 +530,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         //________________ end caching mechanism
 
         self::$_actual_charges = 0;
+        $fixedPriceExtra = 0;
         //do we have enough information
         $obj = $this->liveOptionObject();
         $items = $this->getOrderCached()->Items();
@@ -555,6 +556,20 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $this->debugMessage .= '<hr />all products are excluded from delivery charges';
 
                     return self::$_actual_charges;
+                }
+            }
+            if ($obj->AdditionalCostForSpecificProducts()->exists()) {
+                $productsIds = $this->getOrderCached()->Items()->columnUnique();
+                if(is_array($productsIds) && count($productsIds)) {
+                    foreach($obj->AdditionalCostForSpecificProducts() as $addExtras) {
+                        $testProducts = $addExtras->IncludedProducts()->columnUnique();
+                        if(is_array($testProducts) && count($testProducts)) {
+                            $intersect = array_intersect($productsIds, $testProducts);
+                            if(count($intersect)) {
+                                $fixedPriceExtra = count($intersect) * $addExtras->FixedCosts;
+                            }
+                        }
+                    }
                 }
             }
             $this->debugMessage .= '<hr />option selected: ' . $obj->Title . ', and items present';
@@ -677,6 +692,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if (self::$_actual_charges > $obj->MaximumDeliveryCharge && $obj->MaximumDeliveryCharge > 0) {
                 self::$_actual_charges = $obj->MaximumDeliveryCharge;
                 $this->debugMessage .= '<hr />too much: ' . self::$_actual_charges . ', maximum delivery charge is ' . $obj->MaximumDeliveryCharge;
+            }
+            if ($fixedPriceExtra) {
+                self::$_actual_charges += $fixedPriceExtra;
+                $this->debugMessage .= '<hr />adding fixed extra charges of: ' . $fixedPriceExtra;
             }
         } elseif (! $items) {
             $this->debugMessage .= '<hr />no items present';
