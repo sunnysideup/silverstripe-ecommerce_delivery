@@ -72,7 +72,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
 
     private static $summary_fields = [
         'Title',
-        'FixedCosts',
+        'FixedCost',
     ];
 
     private static $casting = [
