@@ -10,6 +10,7 @@ use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 class SalesAdminByDeliveryOption extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByDeliveryOption';
+
     /**
      * standard SS variable.
      *
@@ -25,6 +26,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
     private static $menu_title = '... by Delivery';
 
     private static $menu_priority = 3.111;
+
     /**
      * standard SS variable.
      *
@@ -51,6 +53,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
                     }
                 }
             }
+
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
 

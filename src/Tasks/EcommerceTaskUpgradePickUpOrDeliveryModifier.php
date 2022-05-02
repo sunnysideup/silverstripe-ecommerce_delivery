@@ -31,8 +31,10 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
                             if (! $option) {
                                 $option = $defaultOption;
                             }
+
                             self::$options_old_to_new[$modifier->Code] = $option->ID;
                         }
+
                         $myOption = self::$options_old_to_new[$modifier->Code];
                         // USING QUERY TO UPDATE
                         DB::query('UPDATE "PickUpOrDeliveryModifier" SET "OptionID" = ' . $myOption . ' WHERE "PickUpOrDeliveryModifier"."ID" = ' . $modifier->ID);
@@ -41,6 +43,7 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
                 }
             }
         }
+
         DB::alteration_message('<hr />COMPLETED<hr />', 'created');
     }
 }

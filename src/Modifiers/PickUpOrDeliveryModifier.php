@@ -160,6 +160,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     public function runUpdate($force = true)
     {
         if($this->Config()->get('debug')) $this->debugMessage = '';
+
         self::$calculations_done = false;
         self::$selected_option = null;
         self::$available_options = null;
@@ -172,6 +173,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if ($this->Config()->get('debug')) {
             $this->checkField('DebugString');
         }
+
         parent::runUpdate($force);
     }
 
@@ -229,12 +231,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     ++$count;
                 }
             }
+
             if ($js) {
                 //add final semi-comma
                 $js .= '';
                 Requirements::customScript($js, 'PickUpOrDeliveryModifier');
             }
         }
+
         $fields = new FieldList();
         $fields->push($this->headingField());
         $fields->push($this->descriptionField());
@@ -319,12 +323,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($optionsArray && ! is_array($optionsArray)) {
                 $optionsArray = $optionsArray->toArray();
             }
+
             if ($optionsArray && count($optionsArray)) {
                 foreach ($optionsArray as $id => $name) {
                     $jsonOptions[] = ['id' => $id, 'name' => $name];
                 }
             }
         }
+
         $js[] = [
             't' => 'dropdown',
             's' => 'PickupOrDeliveryType',
@@ -382,6 +388,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         ) {
                             continue;
                         }
+
                         //exclude if in exclusion list
                         $excludedFromCountryList = $option->ExcludeFromCountries();
                         if (
@@ -391,6 +398,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             continue;
                         }
                     }
+
                     //check regions
                     if ($regionID) {
                         $optionRegions = $option->AvailableInRegions();
@@ -402,12 +410,15 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             continue;
                         }
                     }
+
                     $result[] = $option;
                 }
             }
+
             if (! isset($result)) {
                 $result[] = PickUpOrDeliveryModifierOptions::default_object();
             }
+
             self::$available_options = new ArrayList($result);
         }
 
@@ -505,6 +516,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $details[] = $region->Name;
                 }
             }
+
             $countryID = EcommerceCountry::get_country_id();
             if ($countryID) {
                 $country = EcommerceCountry::get_by_id($countryID);
@@ -515,6 +527,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         } else {
             return _t('PickUpOrDeliveryModifier.NOTSELECTED', 'No delivery option has been selected');
         }
+
         if (count($details)) {
             return implode(', ', $details);
         }
@@ -531,6 +544,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (self::$calculations_done) {
             return self::$_actual_charges;
         }
+
         self::$calculations_done = true;
         //________________ end caching mechanism
 
@@ -557,22 +571,28 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         }
                     }
                 }
+
                 if (false === $hasIncludedProduct) {
                     if($this->Config()->get('debug')) $this->debugMessage .= '<hr />all products are excluded from delivery charges';
 
                     return self::$_actual_charges;
                 }
             }
+
             $productsIds = $this->getOrderCached()->Items()->columnUnique('BuyableID');
             if(is_array($productsIds) && count($productsIds)) {
                 if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found products: '.implode(',', $productsIds);
+
                 if ($obj->AdditionalCostForSpecificProducts()->exists()) {
                     if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found additional costs options';
+
                     foreach($obj->AdditionalCostForSpecificProducts() as $addExtras) {
                         if($this->Config()->get('debug')) $this->debugMessage .= '<hr />additional cost centre: '.$addExtras->Title;
+
                         $testProducts = $addExtras->IncludedProducts()->columnUnique();
                         if(is_array($testProducts) && count($testProducts)) {
                             if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found test products: '.implode(',', $testProducts);
+
                             $intersect = array_intersect($productsIds, $testProducts);
                             $countItems = count($intersect);
                             if($countItems) {
@@ -582,10 +602,13 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     }
                 }
             }
+
             if($this->Config()->get('debug')) $this->debugMessage .= '<hr />option selected: ' . $obj->Title . ', and items present';
+
             //lets check sub-total
             $subTotalAmount = $this->LiveSubTotalAmount();
             if($this->Config()->get('debug')) $this->debugMessage .= '<hr />sub total amount is: $' . $subTotalAmount;
+
             // no need to charge, order is big enough
             $minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
             $maxForZeroRate = floatval($obj->FreeShippingUpToThisOrderAmount);
@@ -604,6 +627,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 //examine weight brackets
                 if ($weight && $weightBrackets->exists()) {
                     if($this->Config()->get('debug')) $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
+
                     //weight brackets
                     $foundWeightBracket = null;
                     $weightBracketQuantity = 1;
@@ -614,14 +638,17 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         if (! $foundWeightBracket && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
                             $foundWeightBracket = $weightBracket;
                         }
+
                         //look for absolute min and max
                         if (null === $minimumMinimum || ($weightBracket->MinimumWeight > $minimumMinimum->MinimumWeight)) {
                             $minimumMinimum = $weightBracket;
                         }
+
                         if (null === $maximumMaximum || ($weightBracket->MaximumWeight > $maximumMaximum->MaximumWeight)) {
                             $maximumMaximum = $weightBracket;
                         }
                     }
+
                     if (! $foundWeightBracket) {
                         if ($weight < $minimumMinimum->MinimumWeight) {
                             $foundWeightBracket = $minimumMinimum;
@@ -639,10 +666,12 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             }
                         }
                     }
+
                     //we found some applicable weight brackets
                     if ($foundWeightBracket) {
                         self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
                         if($this->Config()->get('debug')) $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times {$weightBracketQuantity}";
+
                         if ($additionalWeightBracket) {
                             self::$_actual_charges += $additionalWeightBracket->FixedCost;
                             if($this->Config()->get('debug')) $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
@@ -654,7 +683,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     if (! $obj->WeightUnit) {
                         $obj->WeightUnit = 1;
                     }
+
                     if($this->Config()->get('debug')) $this->debugMessage .= '<hr />actual weight:' . $weight . ' multiplier = ' . $obj->WeightMultiplier . ' weight unit = ' . $obj->WeightUnit . ' ';
+
                     //legacy fix
                     $units = ceil($weight / $obj->WeightUnit);
                     $weightCharge = $units * $obj->WeightMultiplier;
@@ -663,6 +694,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 } elseif ($subTotalAmount && $subTotalBrackets->exists()) {
                     //examine price brackets
                     if($this->Config()->get('debug')) $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
+
                     //subTotal brackets
                     $foundSubTotalBracket = null;
                     foreach ($subTotalBrackets as $subTotalBracket) {
@@ -672,6 +704,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             break;
                         }
                     }
+
                     //we found some applicable subTotal brackets
                     if ($foundSubTotalBracket) {
                         self::$_actual_charges += $foundSubTotalBracket->FixedCost;
@@ -692,27 +725,32 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     if($this->Config()->get('debug')) $this->debugMessage .= '<hr />fixed charge: $' . $obj->FixedCost;
                 }
             }
+
             //is it enough?
             if (self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
                 $oldActualCharge = self::$_actual_charges;
                 self::$_actual_charges = $obj->MinimumDeliveryCharge;
                 if($this->Config()->get('debug')) $this->debugMessage .= '<hr />too little: actual charge: ' . $oldActualCharge . ', minimum delivery charge: ' . $obj->MinimumDeliveryCharge;
             }
+
             // is it too much
             if (self::$_actual_charges > $obj->MaximumDeliveryCharge && $obj->MaximumDeliveryCharge > 0) {
                 self::$_actual_charges = $obj->MaximumDeliveryCharge;
                 if($this->Config()->get('debug')) $this->debugMessage .= '<hr />too much: ' . self::$_actual_charges . ', maximum delivery charge is ' . $obj->MaximumDeliveryCharge;
             }
+
             if ($fixedPriceExtra) {
                 self::$_actual_charges += $fixedPriceExtra;
                 if($this->Config()->get('debug')) $this->debugMessage .= '<hr />adding fixed extra charges of: ' . $fixedPriceExtra;
             }
         } elseif (! $items) {
             if($this->Config()->get('debug')) $this->debugMessage .= '<hr />no items present';
-        } else {
-            if($this->Config()->get('debug')) $this->debugMessage .= '<hr />no delivery option available';
+        } elseif ($this->Config()->get('debug')) {
+            $this->debugMessage .= '<hr />no delivery option available';
         }
+
         if($this->Config()->get('debug')) $this->debugMessage .= '<hr />final score: $' . self::$_actual_charges;
+
         // echo $this->debugMessage;
         //special case, we are using weight and there is no weight!
         return self::$_actual_charges;

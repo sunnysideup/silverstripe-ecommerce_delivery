@@ -44,12 +44,14 @@ class PackagingBox
         if (! $this->fits_volume()) {
             return false;
         }
+
         // get next inner box
         while (true) {
             $inner_box_id = $this->next_inner_box();
             if (false === $inner_box_id) {
                 break;
             }
+
             $this->sort_outer_boxes(); // smallest first
             $found_fitting_box = false;
             foreach ($this->outer_boxes as $outer_box_id => $outer_box) {
@@ -63,10 +65,12 @@ class PackagingBox
                     break;
                 }
             }
+
             if (! $found_fitting_box) {
                 return false;
             }
         }
+
         // we ran out of inner boxes but have outer boxes left
         return true;
     }
@@ -78,9 +82,11 @@ class PackagingBox
         foreach ($this->inner_boxes as $inner) {
             $inner_volume += ($inner['dimensions'][0] * $inner['dimensions'][1] * $inner['dimensions'][2]);
         }
+
         foreach ($this->outer_boxes as $outer) {
             $outer_volume += ($outer['dimensions'][0] * $outer['dimensions'][1] * $outer['dimensions'][2]);
         }
+
         // inner boxes have more volume than outer ones
         return $inner_volume <= $outer_volume;
     }
@@ -92,6 +98,7 @@ class PackagingBox
         foreach ($array as $item) {
             $tmp_array[$item['diff']][] = $item;
         }
+
         krsort($tmp_array);
         $array = [];
         foreach ($tmp_array as $a) {
@@ -123,8 +130,10 @@ class PackagingBox
                     break;
                 }
             }
+
             unset($outer_dimensions[$unset]);
         }
+
         do {
             $pairs = $this->diffsort($pairs);
             $this->add_outer_box($pairs[0]['diff'], $pairs[1]['outer'], $pairs[2]['outer']);
@@ -157,6 +166,7 @@ class PackagingBox
         foreach ($this->outer_boxes as $k => $v) {
             $this->outer_boxes[$k]['longest_side'] = $v['dimensions'][0];
         }
+
         $this->outer_boxes = $this->sksort($this->outer_boxes, 'longest_side', false, true);
 
         return true;
@@ -184,6 +194,7 @@ class PackagingBox
             foreach ($value as $index => $val) {
                 $sort[$index] = $val[$subkey];
             }
+
             asort($sort);
             $keys = array_keys($sort);
             $new_value = [];
@@ -194,6 +205,7 @@ class PackagingBox
                     $new_value[] = $value[$index];
                 }
             }
+
             $value = $sort_descending ? array_reverse($new_value, $keep_keys_in_sub) : $new_value;
         }
 

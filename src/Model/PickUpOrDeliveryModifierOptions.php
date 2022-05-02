@@ -296,17 +296,21 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
         }
+
         $excludeFromCountriesField = $this->createGridField('Excluded from', EcommerceCountry::class, 'ExcludeFromCountries');
         if ($excludeFromCountriesField) {
             $fields->replaceField('ExcludeFromCountries', $excludeFromCountriesField);
         }
+
         $regionField = $this->createGridField('Regions', EcommerceRegion::class, 'AvailableInRegions');
         if ($regionField) {
             $fields->replaceField('AvailableInRegions', $regionField);
         }
+
         if (class_exists(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class) && $this->hasExtension(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class)) {
             $fields->addFieldToTab('Root.Sort', new LiteralField('InvitationToSort', $this->dataObjectSorterPopupLink()));
         }
+
         $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         //add headings
@@ -357,6 +361,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $fields->removeByName('WeightMultiplier');
             $fields->removeByName('WeightUnit');
         }
+
         $fields->addFieldToTab('Root.Main', new HeaderField('MoreInformation', 'Other Settings'), 'Sort');
         foreach ($this->Config()->get('field_labels_right') as $fieldName => $fieldDescription) {
             $field = $fields->dataFieldByName($fieldName);
@@ -375,6 +380,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($this->AvailableInCountries()->exists()) {
             $in = '' . implode(', ', $this->AvailableInCountries()->column('Code'));
         }
+
         if ($this->ExcludeFromCountries()->exists()) {
             $out = ' // OUT: ' . implode(', ', $this->ExcludeFromCountries()->column('Code'));
         }
@@ -416,6 +422,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $defaults = $this->Config()->get('Code');
             $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
         }
+
         $baseCode = $this->Code;
         $exists = PickUpOrDeliveryModifierOptions::get()
             ->filter(['Code' => $this->Code])
@@ -431,6 +438,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 ->exists()
             ;
         }
+
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
             if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
                 $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
@@ -474,6 +482,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 return new GridField($fieldName, _t('PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES', '' . $title), $source, $gridFieldConfig);
             }
         }
+
         if ($field) {
             return $field;
         }
