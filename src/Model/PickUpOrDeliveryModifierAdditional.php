@@ -86,6 +86,24 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
 
     private static $default_sort = '"Sort" ASC, "Title" ASC';
 
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->removeByName('Sort');
+        $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
+
+        $fields->replaceField(
+            'IncludedProducts',
+            $excludedProdsField = GridField::create(
+                'IncludedProducts',
+                'Included Products',
+                $this->IncludedProducts(),
+                GridFieldConfigForProducts::create()
+            )
+        );
+        return $fields;
+    }
+
     /**
      * standard SS method.
      *

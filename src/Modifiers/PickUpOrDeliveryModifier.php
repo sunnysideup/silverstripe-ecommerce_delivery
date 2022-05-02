@@ -558,15 +558,20 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     return self::$_actual_charges;
                 }
             }
-            if ($obj->AdditionalCostForSpecificProducts()->exists()) {
-                $productsIds = $this->getOrderCached()->Items()->columnUnique();
-                if(is_array($productsIds) && count($productsIds)) {
+            $productsIds = $this->getOrderCached()->Items()->columnUnique();
+            if(is_array($productsIds) && count($productsIds)) {
+                $this->debugMessage .= '<hr />found products: '.implode(',', $productsIds);
+                if ($obj->AdditionalCostForSpecificProducts()->exists()) {
+                    $this->debugMessage .= '<hr />found additional costs options';
                     foreach($obj->AdditionalCostForSpecificProducts() as $addExtras) {
+                        $this->debugMessage .= '<hr />additional cost centre: '.$addExtras->Title;
                         $testProducts = $addExtras->IncludedProducts()->columnUnique();
                         if(is_array($testProducts) && count($testProducts)) {
+                            $this->debugMessage .= '<hr />found test products: '.implode(',', $testProducts);
                             $intersect = array_intersect($productsIds, $testProducts);
-                            if(count($intersect)) {
-                                $fixedPriceExtra = count($intersect) * $addExtras->FixedCosts;
+                            $countItems = count($intersect);
+                            if($countItems) {
+                                $fixedPriceExtra += ($countItems * $addExtras->FixedCosts);
                             }
                         }
                     }

@@ -100,6 +100,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'FreeShippingUpToThisOrderAmount' => 'Free shipping up to',
         'Sort' => 'Sort Index',
         'ListOfCountries' => 'Applicable Countries',
+        'AdditionalCostForSpecificProducts' => 'Addons for specific products',
     ];
 
     private static $field_labels_right = [
@@ -112,6 +113,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'MinimumOrderAmountForZeroRate' => 'if this option is selected and the total order is over the amounted entered above then delivery is free.',
         'FreeShippingUpToThisOrderAmount' => 'if this option is selected and the total order is less than the amount entered above then delivery is free. This is for situations where a small order would have a large delivery cost.',
         'Sort' => 'lower numbers show first.',
+        'AdditionalCostForSpecificProducts' => 'Some products may have an extra cost',
     ];
 
     private static $defaults = [
@@ -305,7 +307,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if (class_exists(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class) && $this->hasExtension(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class)) {
             $fields->addFieldToTab('Root.Sort', new LiteralField('InvitationToSort', $this->dataObjectSorterPopupLink()));
         }
-        $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Page', SiteTree::class));
+        $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         //add headings
         $fields->addFieldToTab(
