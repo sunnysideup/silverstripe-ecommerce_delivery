@@ -32,14 +32,13 @@ use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
  */
 class PickUpOrDeliveryModifier extends OrderModifier
 {
-
-    private static $debug = false;
-
     /**
      * @var string
      *             Debugging tool
      */
     protected $debugMessage = '';
+
+    private static $debug = false;
 
     // ######################################## *** model defining static variables (e.g. $db, $has_one)
     private static $table_name = 'PickUpOrDeliveryModifier';
@@ -159,7 +158,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     public function runUpdate($force = true)
     {
-        if($this->Config()->get('debug')) $this->debugMessage = '';
+        if ($this->Config()->get('debug')) {
+            $this->debugMessage = '';
+        }
 
         self::$calculations_done = false;
         self::$selected_option = null;
@@ -573,29 +574,39 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
 
                 if (false === $hasIncludedProduct) {
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />all products are excluded from delivery charges';
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />all products are excluded from delivery charges';
+                    }
 
                     return self::$_actual_charges;
                 }
             }
 
             $productsIds = $this->getOrderCached()->Items()->columnUnique('BuyableID');
-            if(is_array($productsIds) && count($productsIds)) {
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found products: '.implode(',', $productsIds);
+            if (is_array($productsIds) && count($productsIds)) {
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />found products: ' . implode(',', $productsIds);
+                }
 
                 if ($obj->AdditionalCostForSpecificProducts()->exists()) {
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found additional costs options';
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />found additional costs options';
+                    }
 
-                    foreach($obj->AdditionalCostForSpecificProducts() as $addExtras) {
-                        if($this->Config()->get('debug')) $this->debugMessage .= '<hr />additional cost centre: '.$addExtras->Title;
+                    foreach ($obj->AdditionalCostForSpecificProducts() as $addExtras) {
+                        if ($this->Config()->get('debug')) {
+                            $this->debugMessage .= '<hr />additional cost centre: ' . $addExtras->Title;
+                        }
 
                         $testProducts = $addExtras->IncludedProducts()->columnUnique();
-                        if(is_array($testProducts) && count($testProducts)) {
-                            if($this->Config()->get('debug')) $this->debugMessage .= '<hr />found test products: '.implode(',', $testProducts);
+                        if (is_array($testProducts) && count($testProducts)) {
+                            if ($this->Config()->get('debug')) {
+                                $this->debugMessage .= '<hr />found test products: ' . implode(',', $testProducts);
+                            }
 
                             $intersect = array_intersect($productsIds, $testProducts);
                             $countItems = count($intersect);
-                            if($countItems) {
+                            if ($countItems) {
                                 $fixedPriceExtra += ($countItems * $addExtras->FixedCost);
                             }
                         }
@@ -603,11 +614,15 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
             }
 
-            if($this->Config()->get('debug')) $this->debugMessage .= '<hr />option selected: ' . $obj->Title . ', and items present';
+            if ($this->Config()->get('debug')) {
+                $this->debugMessage .= '<hr />option selected: ' . $obj->Title . ', and items present';
+            }
 
             //lets check sub-total
             $subTotalAmount = $this->LiveSubTotalAmount();
-            if($this->Config()->get('debug')) $this->debugMessage .= '<hr />sub total amount is: $' . $subTotalAmount;
+            if ($this->Config()->get('debug')) {
+                $this->debugMessage .= '<hr />sub total amount is: $' . $subTotalAmount;
+            }
 
             // no need to charge, order is big enough
             $minForZeroRate = floatval($obj->MinimumOrderAmountForZeroRate);
@@ -618,15 +633,21 @@ class PickUpOrDeliveryModifier extends OrderModifier
             // zero becauase over minForZeroRate
             if ($minForZeroRate > 0 && $minForZeroRate < $subTotalAmount) {
                 self::$_actual_charges = 0;
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />Minimum Order Amount For Zero Rate: ' . $obj->MinimumOrderAmountForZeroRate . ' is lower than amount  ordered: ' . self::$_actual_charges;
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />Minimum Order Amount For Zero Rate: ' . $obj->MinimumOrderAmountForZeroRate . ' is lower than amount  ordered: ' . self::$_actual_charges;
+                }
             } elseif ($maxForZeroRate > 0 && $maxForZeroRate > $subTotalAmount) {
                 //zero because below maxForZeroRate
                 self::$_actual_charges = 0;
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />Maximum Order Amount For Zero Rate: ' . $obj->FreeShippingUpToThisOrderAmount . ' is higher than amount ordered: ' . self::$_actual_charges;
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />Maximum Order Amount For Zero Rate: ' . $obj->FreeShippingUpToThisOrderAmount . ' is higher than amount ordered: ' . self::$_actual_charges;
+                }
             } else {
                 //examine weight brackets
                 if ($weight && $weightBrackets->exists()) {
-                    if($this->Config()->get('debug')) $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= "<hr />there is weight: {$weight}gr.";
+                    }
 
                     //weight brackets
                     $foundWeightBracket = null;
@@ -670,11 +691,15 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     //we found some applicable weight brackets
                     if ($foundWeightBracket) {
                         self::$_actual_charges += $foundWeightBracket->FixedCost * $weightBracketQuantity;
-                        if($this->Config()->get('debug')) $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times {$weightBracketQuantity}";
+                        if ($this->Config()->get('debug')) {
+                            $this->debugMessage .= "<hr />found Weight Bracket (from {$foundWeightBracket->MinimumWeight}gr. to {$foundWeightBracket->MaximumWeight}gr.): \${$foundWeightBracket->FixedCost} ({$foundWeightBracket->Name}) from  times {$weightBracketQuantity}";
+                        }
 
                         if ($additionalWeightBracket) {
                             self::$_actual_charges += $additionalWeightBracket->FixedCost;
-                            if($this->Config()->get('debug')) $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
+                            if ($this->Config()->get('debug')) {
+                                $this->debugMessage .= "<hr />+ additional Weight Bracket (from {$additionalWeightBracket->MinimumWeight}gr. to {$additionalWeightBracket->MaximumWeight}gr.): \${$additionalWeightBracket->FixedCost} ({$foundWeightBracket->Name})";
+                            }
                         }
                     }
                 } elseif ($weight && $obj->WeightMultiplier) {
@@ -684,16 +709,22 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         $obj->WeightUnit = 1;
                     }
 
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />actual weight:' . $weight . ' multiplier = ' . $obj->WeightMultiplier . ' weight unit = ' . $obj->WeightUnit . ' ';
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />actual weight:' . $weight . ' multiplier = ' . $obj->WeightMultiplier . ' weight unit = ' . $obj->WeightUnit . ' ';
+                    }
 
                     //legacy fix
                     $units = ceil($weight / $obj->WeightUnit);
                     $weightCharge = $units * $obj->WeightMultiplier;
                     self::$_actual_charges += $weightCharge;
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />weight charge: ' . $weightCharge;
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />weight charge: ' . $weightCharge;
+                    }
                 } elseif ($subTotalAmount && $subTotalBrackets->exists()) {
                     //examine price brackets
-                    if($this->Config()->get('debug')) $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= "<hr />there is subTotal: {$subTotalAmount} and subtotal brackets.";
+                    }
 
                     //subTotal brackets
                     $foundSubTotalBracket = null;
@@ -708,7 +739,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     //we found some applicable subTotal brackets
                     if ($foundSubTotalBracket) {
                         self::$_actual_charges += $foundSubTotalBracket->FixedCost;
-                        if($this->Config()->get('debug')) $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
+                        if ($this->Config()->get('debug')) {
+                            $this->debugMessage .= "<hr />found SubTotal Bracket (between {$foundSubTotalBracket->MinimumSubTotal} and {$foundSubTotalBracket->MaximumSubTotal}): \${$foundSubTotalBracket->FixedCost} ({$foundSubTotalBracket->Name}) ";
+                        }
                     }
                 }
 
@@ -716,13 +749,17 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 if ($obj->Percentage) {
                     $percentageCharge = $subTotalAmount * $obj->Percentage;
                     self::$_actual_charges += $percentageCharge;
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />percentage charge: $' . $percentageCharge;
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />percentage charge: $' . $percentageCharge;
+                    }
                 }
 
                 // add fixed price
                 if (0 !== $obj->FixedCost) {
                     self::$_actual_charges += $obj->FixedCost;
-                    if($this->Config()->get('debug')) $this->debugMessage .= '<hr />fixed charge: $' . $obj->FixedCost;
+                    if ($this->Config()->get('debug')) {
+                        $this->debugMessage .= '<hr />fixed charge: $' . $obj->FixedCost;
+                    }
                 }
             }
 
@@ -730,26 +767,36 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if (self::$_actual_charges < $obj->MinimumDeliveryCharge && $obj->MinimumDeliveryCharge > 0) {
                 $oldActualCharge = self::$_actual_charges;
                 self::$_actual_charges = $obj->MinimumDeliveryCharge;
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />too little: actual charge: ' . $oldActualCharge . ', minimum delivery charge: ' . $obj->MinimumDeliveryCharge;
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />too little: actual charge: ' . $oldActualCharge . ', minimum delivery charge: ' . $obj->MinimumDeliveryCharge;
+                }
             }
 
             // is it too much
             if (self::$_actual_charges > $obj->MaximumDeliveryCharge && $obj->MaximumDeliveryCharge > 0) {
                 self::$_actual_charges = $obj->MaximumDeliveryCharge;
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />too much: ' . self::$_actual_charges . ', maximum delivery charge is ' . $obj->MaximumDeliveryCharge;
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />too much: ' . self::$_actual_charges . ', maximum delivery charge is ' . $obj->MaximumDeliveryCharge;
+                }
             }
 
             if ($fixedPriceExtra) {
                 self::$_actual_charges += $fixedPriceExtra;
-                if($this->Config()->get('debug')) $this->debugMessage .= '<hr />adding fixed extra charges of: ' . $fixedPriceExtra;
+                if ($this->Config()->get('debug')) {
+                    $this->debugMessage .= '<hr />adding fixed extra charges of: ' . $fixedPriceExtra;
+                }
             }
         } elseif (! $items) {
-            if($this->Config()->get('debug')) $this->debugMessage .= '<hr />no items present';
+            if ($this->Config()->get('debug')) {
+                $this->debugMessage .= '<hr />no items present';
+            }
         } elseif ($this->Config()->get('debug')) {
             $this->debugMessage .= '<hr />no delivery option available';
         }
 
-        if($this->Config()->get('debug')) $this->debugMessage .= '<hr />final score: $' . self::$_actual_charges;
+        if ($this->Config()->get('debug')) {
+            $this->debugMessage .= '<hr />final score: $' . self::$_actual_charges;
+        }
 
         // echo $this->debugMessage;
         //special case, we are using weight and there is no weight!
