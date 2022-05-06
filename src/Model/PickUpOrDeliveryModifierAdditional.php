@@ -5,9 +5,10 @@ namespace Sunnysideup\EcommerceDelivery\Model;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
+
+use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -68,7 +69,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
     {
         $fields = parent::getCMSFields();
         $fields->removeByName('Sort');
-        $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
+        $fields->replaceField('ExplanationPageID', new TreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         $fields->replaceField(
             'IncludedProducts',

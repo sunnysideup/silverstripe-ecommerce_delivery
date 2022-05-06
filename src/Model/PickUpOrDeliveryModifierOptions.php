@@ -17,6 +17,8 @@ use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+
+use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ListboxField;
@@ -25,7 +27,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
+
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
@@ -311,7 +313,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $fields->addFieldToTab('Root.Sort', new LiteralField('InvitationToSort', $this->dataObjectSorterPopupLink()));
         }
 
-        $fields->replaceField('ExplanationPageID', new OptionalTreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
+        $fields->replaceField('ExplanationPageID', new TreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         //add headings
         $fields->addFieldToTab(
