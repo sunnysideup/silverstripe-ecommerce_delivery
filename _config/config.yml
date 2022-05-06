@@ -20,7 +20,9 @@ Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
 Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
   admin_role_permission_codes:
     - CMS_ACCESS_SalesAdminByDeliveryOption
-
+Sunnysideup\Ecommerce\Pages\Product:
+  extensions:
+    - Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
 ---
 Only:
   classexists: 'DataObjectSorterDOD'
