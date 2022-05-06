@@ -38,15 +38,15 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
     private static $searchable_fields = [
         'Title' => 'PartialMatchFilter',
     ];
-
-    private static $field_labels = [
-    ];
-
-    private static $field_labels_right = [
-    ];
-
-    private static $defaults = [
-    ];
+    //
+    // private static $field_labels = [
+    // ];
+    //
+    // private static $field_labels_right = [
+    // ];
+    //
+    // private static $defaults = [
+    // ];
 
     private static $summary_fields = [
         'Title',
