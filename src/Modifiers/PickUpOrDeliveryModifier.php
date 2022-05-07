@@ -583,6 +583,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
             }
 
             $productsIds = $this->getOrderCached()->Items()->columnUnique('BuyableID');
+            // $productsWithQuantity = $this->getOrderCached()->Items()->map('BuyableID', 'Quantity');
+            // $productsIds = array_keys($productsWithQuantity);
             if (is_array($productsIds) && count($productsIds)) {
                 if ($this->Config()->get('debug')) {
                     $this->debugMessage .= '<hr />found products: ' . implode(',', $productsIds);
