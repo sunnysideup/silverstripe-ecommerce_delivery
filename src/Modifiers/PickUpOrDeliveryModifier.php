@@ -781,9 +781,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
             }
 
             if ($fixedPriceExtra) {
-                self::$_actual_charges += $fixedPriceExtra;
+                self::$_actual_charges = $fixedPriceExtra;
                 if ($this->Config()->get('debug')) {
-                    $this->debugMessage .= '<hr />adding fixed extra charges of: ' . $fixedPriceExtra;
+                    $this->debugMessage .= '<hr />setting to fixed charges of: ' . $fixedPriceExtra;
                 }
             }
         } elseif (! $items) {
