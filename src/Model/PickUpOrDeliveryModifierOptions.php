@@ -371,6 +371,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $field->setDescription($fieldDescription);
             }
         }
+        $fields->removeByName('Sort');
 
         return $fields;
     }
