@@ -54,7 +54,10 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'MaximumDeliveryCharge' => 'Currency',
         'MinimumOrderAmountForZeroRate' => 'Currency',
         'FreeShippingUpToThisOrderAmount' => 'Currency',
+        'MinimumTotalToBeAvailable' => 'Currency',
+        'MaximumTotalToBeAvailable' => 'Currency',
         'Sort' => 'Int',
+
     ];
 
     private static $has_one = [

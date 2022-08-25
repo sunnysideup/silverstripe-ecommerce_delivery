@@ -369,11 +369,12 @@ class PickUpOrDeliveryModifier extends OrderModifier
      * for the order.
      * Must always return something!
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return \SilverStripe\ORM\ArrayList
      */
     protected function LiveOptions()
     {
         if (! self::$available_options) {
+            $results = [];
             $countryID = EcommerceCountry::get_country_id();
             $regionID = EcommerceRegion::get_region_id();
             $options = PickUpOrDeliveryModifierOptions::get();
@@ -412,15 +413,19 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         }
                     }
 
-                    $result[] = $option;
+                    $results[] = $option;
                 }
             }
 
-            if (! isset($result)) {
-                $result[] = PickUpOrDeliveryModifierOptions::default_object();
+            if (! isset($results)) {
+                $results[] = PickUpOrDeliveryModifierOptions::default_object();
+            }
+            $extended = $this->extend('LiveOptionExtension', $results);
+            if($extended !== null) {
+                $results = $extended;
             }
 
-            self::$available_options = new ArrayList($result);
+            self::$available_options = new ArrayList($results);
         }
 
         return self::$available_options;
