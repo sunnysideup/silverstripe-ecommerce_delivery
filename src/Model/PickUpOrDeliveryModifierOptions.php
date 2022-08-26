@@ -307,9 +307,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->removeByName([
-            'UnavailableDeliveryCachedList',
-        ]);
+        // $fields->removeByName([
+        //     'UnavailableDeliveryCachedList',
+        // ]);
         $availableInCountriesField = $this->createGridField('Available in');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
@@ -381,10 +381,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             'Root.UnavailableDeliveryProducts',
             [
                 DropdownField::create(
-                    'UnavailableDeliveryProductsCustomList',
+                    'UnavailableDeliveryProductsCustomListID',
                     'Add many at once',
                     CustomProductList::get()->map()
                 )
+                    ->setEmptyString('--- please select ---')
             ]
         );
 
@@ -449,7 +450,15 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 SET "IsDefault" = 0
                 WHERE "ID" <> ' . (int) $this->ID . ';');
         }
+        if($this->UnavailableDeliveryProductsCustomListID) {
+            $this->UnavailableDeliveryProducts()->addMany(
+                $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
+            );
+            $this->UnavailableDeliveryProductsCustomListID = 0;
+            $this->write();
+        }
     }
+
 
     /**
      * make sure all are unique codes.
@@ -457,13 +466,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if($this->UnavailableDeliveryProductsCustomListID) {
-            foreach($this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs() as $product) {
-                $this->UnavailableDeliveryProductsCustomList()->addMany(
-                    $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
-                );
-            }
-        }
         $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', $this->Code));
         $i = 0;
         if (! $this->Code) {
@@ -493,7 +495,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             }
         }
         $array = [];
-        foreach($this->UnavailableDelivery()->map('ClassName', 'ID') as $className => $id) {
+        $this->UnavailableDeliveryCachedList = '';
+        foreach($this->UnavailableDeliveryProducts()->map('ClassName', 'ID') as $className => $id) {
             $array[] = $className . '_' . $id;
         }
         $this->UnavailableDeliveryCachedList = implode(',', $array);
