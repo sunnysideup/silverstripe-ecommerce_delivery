@@ -12,8 +12,10 @@ use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Map;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
@@ -377,58 +379,79 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $results = [];
             $countryID = EcommerceCountry::get_country_id();
             $regionID = EcommerceRegion::get_region_id();
+            $subTotal = $this->LiveSubTotalAmount();
             $options = PickUpOrDeliveryModifierOptions::get();
+            $itemIds = $this->mapToClassNameIdCombo($this->getOrderCached()->Items()->map('BuyableClassName', 'BuyableID'));
             if ($options->exists()) {
-                foreach ($options as $option) {
-                    //check countries
-                    if ($countryID) {
-                        $availableInCountriesList = $option->AvailableInCountries();
-                        //exclude if not found in country list
-                        if (
-                            $availableInCountriesList->exists() &&
-                            ! $availableInCountriesList->filter('ID', $countryID)->exists()
-                        ) {
+                if(!empty($itemIds)) {
+                    foreach ($options as $option) {
+                        if($option->MinimumTotalToBeAvailable > 0 && $subTotal < $option->MinimumTotalToBeAvailable) {
                             continue;
+                        }
+                        if($option->MaximumTotalToBeAvailable  > 0 && $subTotal > $option->MaximumTotalToBeAvailable) {
+                            continue;
+                        }
+                        //check countries
+                        if ($countryID) {
+                            $availableInCountriesList = $option->AvailableInCountries();
+                            //exclude if not found in country list
+                            if (
+                                $availableInCountriesList->exists() &&
+                                ! $availableInCountriesList->filter('ID', $countryID)->exists()
+                            ) {
+                                continue;
+                            }
+
+                            //exclude if in exclusion list
+                            $excludedFromCountryList = $option->ExcludeFromCountries();
+                            if (
+                                $excludedFromCountryList->exists() &&
+                                $excludedFromCountryList->filter('ID', $countryID)->exists()
+                            ) {
+                                continue;
+                            }
                         }
 
-                        //exclude if in exclusion list
-                        $excludedFromCountryList = $option->ExcludeFromCountries();
-                        if (
-                            $excludedFromCountryList->exists() &&
-                            $excludedFromCountryList->filter('ID', $countryID)->exists()
-                        ) {
-                            continue;
+                        //check regions
+                        if ($regionID) {
+                            $optionRegions = $option->AvailableInRegions();
+                            //exclude if not found in region list
+                            if (
+                                $optionRegions->exists() &&
+                                ! $optionRegions->filter(['ID' => $regionID])->exists()
+                            ) {
+                                continue;
+                            }
                         }
+
+                        $unavailableTo = $option->UnavailableDeliveryProducts();
+                        if($unavailableTo->exists()) {
+                            $unavailableTo = $this->mapToClassNameIdCombo($unavailableTo->map('ClassName', 'ID'));
+                            if(array_intersect($itemIds, $unavailableTo)) {
+                                continue;
+                            }
+                        }
+                        $results[] = $option;
                     }
-
-                    //check regions
-                    if ($regionID) {
-                        $optionRegions = $option->AvailableInRegions();
-                        //exclude if not found in region list
-                        if (
-                            $optionRegions->exists() &&
-                            ! $optionRegions->filter(['ID' => $regionID])->exists()
-                        ) {
-                            continue;
-                        }
-                    }
-
-                    $results[] = $option;
                 }
             }
-
             if (! isset($results)) {
                 $results[] = PickUpOrDeliveryModifierOptions::default_object();
-            }
-            $extended = $this->extend('LiveOptionExtension', $results);
-            if($extended !== null) {
-                $results = $extended;
             }
 
             self::$available_options = new ArrayList($results);
         }
 
         return self::$available_options;
+    }
+
+    protected function mapToClassNameIdCombo(Map $map) : array
+    {
+        $result = [];
+        foreach($map as $className => $id) {
+            $result[] = $className.'_'.$id;
+        }
+        return $result;
     }
 
     protected function LiveType()
@@ -446,6 +469,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected function LiveOptionID()
     {
         if (! self::$selected_option) {
+            self::$selected_option = null;
             $options = $this->liveOptions();
             self::$selected_option = $options->filter(['ID' => $this->OptionID])->first();
             if (self::$selected_option) {
@@ -457,8 +481,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
             }
         }
-
-        return self::$selected_option->ID;
+        return self::$selected_option->ID ?? 0;
     }
 
     /**

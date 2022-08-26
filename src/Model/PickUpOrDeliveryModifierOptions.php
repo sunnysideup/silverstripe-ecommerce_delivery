@@ -78,6 +78,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     private static $belongs_many_many = [
         'ExcludeFromCountries' => EcommerceCountry::class,
+        'UnavailableDeliveryProducts' => Product::class,
     ];
 
     private static $indexes = [
@@ -106,6 +107,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'Sort' => 'Sort Index',
         'ListOfCountries' => 'Applicable Countries',
         'AdditionalCostForSpecificProducts' => 'Addons for specific products',
+        'UnavailableDeliveryProducts' => 'Unavailable for',
     ];
 
     private static $field_labels_right = [
@@ -119,6 +121,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'FreeShippingUpToThisOrderAmount' => 'if this option is selected and the total order is less than the amount entered above then delivery is free. This is for situations where a small order would have a large delivery cost.',
         'Sort' => 'lower numbers show first.',
         'AdditionalCostForSpecificProducts' => 'Some products may have an extra cost',
+        'MinimumTotalToBeAvailable' => 'Don\'t provide this option if the order amount is under the amount listed.',
+        'MaximumTotalToBeAvailable' => 'Don\'t provide this option if the order amount is over the amount listed. Ignored if amount is zero.',
+        'UnavailableDeliveryProducts' => 'Exclude products from this option altogether.',
     ];
 
     private static $defaults = [
@@ -353,6 +358,19 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             )
         );
         $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
+
+        $fields->replaceField(
+            'UnavailableDeliveryProducts',
+            $excludedProdsField = GridField::create(
+                'UnavailableDeliveryProducts',
+                'Unavailable Delivery Products',
+                $this->UnavailableDeliveryProducts(),
+                GridFieldConfigForProducts::create()
+            )
+        );
+        $excludedProdsField->setDescription("If these products are in cart, the delivery option will not be available.");
+
+
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
             if ($weightBrackets->exists()) {
