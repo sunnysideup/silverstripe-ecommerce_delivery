@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -32,6 +33,8 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+
+use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -57,11 +60,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'MinimumTotalToBeAvailable' => 'Currency',
         'MaximumTotalToBeAvailable' => 'Currency',
         'Sort' => 'Int',
+        'UnavailableDeliveryCachedList' => 'Text',
 
     ];
 
     private static $has_one = [
         'ExplanationPage' => SiteTree::class,
+        'UnavailableDeliveryProductsCustomList' => CustomProductList::class,
     ];
 
     private static $has_many = [
@@ -302,6 +307,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->removeByName([
+            'UnavailableDeliveryCachedList',
+        ]);
         $availableInCountriesField = $this->createGridField('Available in');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
@@ -368,8 +376,17 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 GridFieldConfigForProducts::create()
             )
         );
-        $excludedProdsField->setDescription("If these products are in cart, the delivery option will not be available.");
-
+        $excludedProdsField->setDescription("If any of these products are in cart, the delivery option will not be available.");
+        $fields->addFieldsToTab(
+            'Root.UnavailableDeliveryProducts',
+            [
+                DropdownField::create(
+                    'UnavailableDeliveryProductsCustomList',
+                    'Add many at once',
+                    CustomProductList::get()->map()
+                )
+            ]
+        );
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
@@ -440,6 +457,13 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if($this->UnavailableDeliveryProductsCustomListID) {
+            foreach($this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs() as $product) {
+                $this->UnavailableDeliveryProductsCustomList()->addMany(
+                    $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
+                );
+            }
+        }
         $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', $this->Code));
         $i = 0;
         if (! $this->Code) {
@@ -468,6 +492,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
             }
         }
+        $array = [];
+        foreach($this->UnavailableDelivery()->map('ClassName', 'ID') as $className => $id) {
+            $array[] = $className . '_' . $id;
+        }
+        $this->UnavailableDeliveryCachedList = implode(',', $array);
     }
 
     private function createGridField($title = '', $dataObjectName = EcommerceCountry::class, $fieldName = 'AvailableInCountries')

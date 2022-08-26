@@ -424,9 +424,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             }
                         }
 
-                        $unavailableTo = $option->UnavailableDeliveryProducts();
-                        if($unavailableTo->exists()) {
-                            $unavailableTo = $this->mapToClassNameIdCombo($unavailableTo->map('ClassName', 'ID'));
+                        $unavailableTo = explode(',', $option->UnavailableDeliveryCachedList);
+                        if(! empty($unavailableTo)) {
                             if(array_intersect($itemIds, $unavailableTo)) {
                                 continue;
                             }
