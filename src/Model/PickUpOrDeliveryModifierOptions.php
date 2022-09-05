@@ -365,7 +365,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 GridFieldConfigForProducts::create()
             )
         );
-        $excludedProdsField->setDescription("Products added here will not be charged delivery costs. If a customer's order contains more than one item (and not all items are listed here), then delivery costs will still be calculated.");
+        $excludedProdsField->setDescription('
+            <strong>Products added here will not be charged delivery costs.</strong>
+            If a customer\'s order contains more than one item and not all items are listed here,
+            then delivery costs will still be calculated.'
+        );
 
         $fields->replaceField(
             'UnavailableDeliveryProducts',
@@ -386,7 +390,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                     CustomProductList::get()->map()
                 )
                     ->setEmptyString('--- please select ---')
-            ]
+            ],
+            'UnavailableDeliveryProducts'
         );
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
