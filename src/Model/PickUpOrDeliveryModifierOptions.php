@@ -307,9 +307,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        // $fields->removeByName([
-        //     'UnavailableDeliveryCachedList',
-        // ]);
+        $fields->removeByName([
+            'UnavailableDeliveryCachedList',
+        ]);
         $availableInCountriesField = $this->createGridField('Available in');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
