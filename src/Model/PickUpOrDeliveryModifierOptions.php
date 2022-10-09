@@ -3,6 +3,7 @@
 namespace Sunnysideup\EcommerceDelivery\Model;
 
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -61,6 +62,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'MaximumTotalToBeAvailable' => 'Currency',
         'Sort' => 'Int',
         'UnavailableDeliveryCachedList' => 'Text',
+        'RemoveAllUnavailableDeliveryProducts' => 'Boolean',
 
     ];
 
@@ -389,7 +391,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                     'Add many at once',
                     CustomProductList::get()->map()
                 )
-                    ->setEmptyString('--- please select ---')
+                    ->setEmptyString('--- please select ---'),
+                CheckboxField::create(
+                    'RemoveAllUnavailableDeliveryProducts',
+                    'Remove all products listed below'
+                ),
             ],
             'UnavailableDeliveryProducts'
         );
@@ -433,35 +439,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         }
 
         return $in . $out;
-    }
-
-    /**
-     * make sure there is only exactly one default.
-     */
-    protected function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        // no other record but current one is not default
-        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
-        if (! $this->IsDefault && $notExistsOther) {
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 1
-                WHERE "ID" <> ' . $this->ID . ';');
-        } elseif ($this->IsDefault) {
-            //current default -> reset others
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 0
-                WHERE "ID" <> ' . (int) $this->ID . ';');
-        }
-        if($this->UnavailableDeliveryProductsCustomListID) {
-            $this->UnavailableDeliveryProducts()->addMany(
-                $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
-            );
-            $this->UnavailableDeliveryProductsCustomListID = 0;
-            $this->write();
-        }
     }
 
 
@@ -550,4 +527,37 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
         return new HiddenField($fieldName);
     }
+
+
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        // no other record but current one is not default
+        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
+        if (! $this->IsDefault && $notExistsOther) {
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 1
+                WHERE "ID" <> ' . $this->ID . ';');
+        } elseif ($this->IsDefault) {
+            //current default -> reset others
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 0
+                WHERE "ID" <> ' . (int) $this->ID . ';');
+        }
+        if($this->UnavailableDeliveryProductsCustomListID) {
+            $this->UnavailableDeliveryProducts()->addMany(
+                $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
+            );
+            $this->UnavailableDeliveryProductsCustomListID = 0;
+            $this->write();
+        }
+        if($this->RemoveAllUnavailableDeliveryProducts) {
+            $this->UnavailableDeliveryProducts()->removeAll();
+            $this->RemoveAllUnavailableDeliveryProducts = false;
+            $this->write();
+        }
+    }
+
 }
