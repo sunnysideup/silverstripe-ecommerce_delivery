@@ -394,7 +394,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                     ->setEmptyString('--- please select ---'),
                 CheckboxField::create(
                     'RemoveAllUnavailableDeliveryProducts',
-                    'Remove all products listed below'
+                    'Remove all products listed below (CAREFUL!)'
                 ),
             ],
             'UnavailableDeliveryProducts'
