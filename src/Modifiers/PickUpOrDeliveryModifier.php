@@ -219,10 +219,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
          */
         Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
 
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
         Requirements::javascript('sunnysideup/ecommerce_delivery: client/javascript/PickUpOrDeliveryModifier.js');
         $array = PickUpOrDeliveryModifierOptions::get_all_as_country_array();
         if ($array && is_array($array) && count($array)) {
