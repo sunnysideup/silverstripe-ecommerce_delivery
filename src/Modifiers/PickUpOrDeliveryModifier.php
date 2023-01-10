@@ -424,7 +424,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             }
                         }
 
-                        $unavailableTo = explode(',', $option->UnavailableDeliveryCachedList);
+                        $unavailableTo = array_filter(explode(',', $option->UnavailableDeliveryCachedList));
                         if(! empty($unavailableTo)) {
                             if(array_intersect($itemIds, $unavailableTo)) {
                                 continue;
@@ -434,7 +434,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     }
                 }
             }
-            if (! isset($results)) {
+            if (empty($results)) {
                 $results[] = PickUpOrDeliveryModifierOptions::default_object();
             }
 
