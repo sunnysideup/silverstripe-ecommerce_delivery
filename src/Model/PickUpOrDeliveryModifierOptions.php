@@ -448,7 +448,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', $this->Code));
+        $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', (string) $this->Code));
         $i = 0;
         if (! $this->Code) {
             $defaults = $this->Config()->get('Code');
