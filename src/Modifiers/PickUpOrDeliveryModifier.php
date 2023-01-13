@@ -130,7 +130,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $fields->addFieldToTab('Root.Debug', new ReadonlyField('SubTotalAmountShown', 'sub-total amount used for calculation', $this->SubTotalAmount));
         $fields->removeByName('SerializedCalculationObject');
         //careful, this causes errors!
-        // $fields->addFieldToTab('Root.Debug', new ReadonlyField('SerializedCalculationObjectShown', 'debug data', unserialize($this->SerializedCalculationObject)));
+        // $fields->addFieldToTab('Root.Debug', new ReadonlyField('SerializedCalculationObjectShown', 'debug data', strtotime((string) $this->SerializedCalculationObject)));
         $fields->removeByName('DebugString');
         //careful, this causes errors!
         // $fields->addFieldToTab('Root.Debug', new ReadonlyField('DebugStringShown', 'steps taken', $this->DebugString));
