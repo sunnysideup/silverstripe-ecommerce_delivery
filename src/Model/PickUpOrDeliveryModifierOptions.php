@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
-use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
@@ -19,24 +19,21 @@ use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-
-use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-
-use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
 
 /**
  * @author nicolaas [at] sunnysideup.co.nz
@@ -63,7 +60,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'Sort' => 'Int',
         'UnavailableDeliveryCachedList' => 'Text',
         'RemoveAllUnavailableDeliveryProducts' => 'Boolean',
-
     ];
 
     private static $has_one = [
@@ -367,7 +363,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 GridFieldConfigForProducts::create()
             )
         );
-        $excludedProdsField->setDescription('
+        $excludedProdsField->setDescription(
+            '
             <strong>Products added here will not be charged delivery costs.</strong>
             If a customer\'s order contains more than one item and not all items are listed here,
             then delivery costs will still be calculated.'
@@ -382,7 +379,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 GridFieldConfigForProducts::create()
             )
         );
-        $excludedProdsField->setDescription("If any of these products are in cart, the delivery option will not be available.");
+        $excludedProdsField->setDescription('If any of these products are in cart, the delivery option will not be available.');
         $fields->addFieldsToTab(
             'Root.UnavailableDeliveryProducts',
             [
@@ -441,7 +438,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         return $in . $out;
     }
 
-
     /**
      * make sure all are unique codes.
      */
@@ -478,10 +474,41 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         }
         $array = [];
         $this->UnavailableDeliveryCachedList = '';
-        foreach($this->UnavailableDeliveryProducts()->map('ClassName', 'ID') as $className => $id) {
+        foreach ($this->UnavailableDeliveryProducts()->map('ClassName', 'ID') as $className => $id) {
             $array[] = $className . '_' . $id;
         }
         $this->UnavailableDeliveryCachedList = implode(',', $array);
+    }
+
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        // no other record but current one is not default
+        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
+        if (! $this->IsDefault && $notExistsOther) {
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 1
+                WHERE "ID" <> ' . $this->ID . ';');
+        } elseif ($this->IsDefault) {
+            //current default -> reset others
+            DB::query('
+                UPDATE "PickUpOrDeliveryModifierOptions"
+                SET "IsDefault" = 0
+                WHERE "ID" <> ' . (int) $this->ID . ';');
+        }
+        if ($this->UnavailableDeliveryProductsCustomListID) {
+            $this->UnavailableDeliveryProducts()->addMany(
+                $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
+            );
+            $this->UnavailableDeliveryProductsCustomListID = 0;
+            $this->write();
+        }
+        if ($this->RemoveAllUnavailableDeliveryProducts) {
+            $this->UnavailableDeliveryProducts()->removeAll();
+            $this->RemoveAllUnavailableDeliveryProducts = false;
+            $this->write();
+        }
     }
 
     private function createGridField($title = '', $dataObjectName = EcommerceCountry::class, $fieldName = 'AvailableInCountries')
@@ -527,37 +554,4 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
         return new HiddenField($fieldName);
     }
-
-
-    protected function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        // no other record but current one is not default
-        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
-        if (! $this->IsDefault && $notExistsOther) {
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 1
-                WHERE "ID" <> ' . $this->ID . ';');
-        } elseif ($this->IsDefault) {
-            //current default -> reset others
-            DB::query('
-                UPDATE "PickUpOrDeliveryModifierOptions"
-                SET "IsDefault" = 0
-                WHERE "ID" <> ' . (int) $this->ID . ';');
-        }
-        if($this->UnavailableDeliveryProductsCustomListID) {
-            $this->UnavailableDeliveryProducts()->addMany(
-                $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
-            );
-            $this->UnavailableDeliveryProductsCustomListID = 0;
-            $this->write();
-        }
-        if($this->RemoveAllUnavailableDeliveryProducts) {
-            $this->UnavailableDeliveryProducts()->removeAll();
-            $this->RemoveAllUnavailableDeliveryProducts = false;
-            $this->write();
-        }
-    }
-
 }

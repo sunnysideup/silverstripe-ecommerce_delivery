@@ -2,13 +2,11 @@
 
 namespace Sunnysideup\EcommerceDelivery\Extensions;
 
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
-use Sunnysideup\EcommerceDiscountCoupon\Modifiers\DiscountCouponModifier;
-
-use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional;
+use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 
 class ProductDeliveryExtension extends DataExtension
 {
@@ -20,7 +18,6 @@ class ProductDeliveryExtension extends DataExtension
         'AdditionalDeliveryCosts' => PickUpOrDeliveryModifierAdditional::class,
         'ExcludedFromDeliveryCosts' => PickUpOrDeliveryModifierOptions::class,
     ];
-
 
     public function updateCMSFields(FieldList $fields)
     {
@@ -46,6 +43,7 @@ class ProductDeliveryExtension extends DataExtension
                 ),
             ]
         );
+
         return $fields;
     }
 }

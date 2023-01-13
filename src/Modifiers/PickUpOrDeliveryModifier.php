@@ -12,7 +12,6 @@ use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Map;
@@ -383,12 +382,12 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $options = PickUpOrDeliveryModifierOptions::get();
             $itemIds = $this->mapToClassNameIdCombo($this->getOrderCached()->Items()->map('BuyableClassName', 'BuyableID'));
             if ($options->exists()) {
-                if(!empty($itemIds)) {
+                if (! empty($itemIds)) {
                     foreach ($options as $option) {
-                        if($option->MinimumTotalToBeAvailable > 0 && $subTotal < $option->MinimumTotalToBeAvailable) {
+                        if ($option->MinimumTotalToBeAvailable > 0 && $subTotal < $option->MinimumTotalToBeAvailable) {
                             continue;
                         }
-                        if($option->MaximumTotalToBeAvailable  > 0 && $subTotal > $option->MaximumTotalToBeAvailable) {
+                        if ($option->MaximumTotalToBeAvailable > 0 && $subTotal > $option->MaximumTotalToBeAvailable) {
                             continue;
                         }
                         //check countries
@@ -425,8 +424,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         }
 
                         $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
-                        if(! empty($unavailableTo)) {
-                            if(array_intersect($itemIds, $unavailableTo)) {
+                        if (! empty($unavailableTo)) {
+                            if (array_intersect($itemIds, $unavailableTo)) {
                                 continue;
                             }
                         }
@@ -444,12 +443,13 @@ class PickUpOrDeliveryModifier extends OrderModifier
         return self::$available_options;
     }
 
-    protected function mapToClassNameIdCombo(Map $map) : array
+    protected function mapToClassNameIdCombo(Map $map): array
     {
         $result = [];
-        foreach($map as $className => $id) {
-            $result[] = $className.'_'.$id;
+        foreach ($map as $className => $id) {
+            $result[] = $className . '_' . $id;
         }
+
         return $result;
     }
 
@@ -480,6 +480,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
             }
         }
+
         return self::$selected_option->ID ?? 0;
     }
 
