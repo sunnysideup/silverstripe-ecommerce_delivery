@@ -157,7 +157,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      *
      * @param bool $force - run it, even if it has run already
      */
-    public function runUpdate($force = true)
+    public function runUpdate($force = false)
     {
         if ($this->Config()->get('debug')) {
             $this->debugMessage = '';
