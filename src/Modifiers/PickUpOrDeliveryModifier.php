@@ -513,8 +513,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected function LiveSubTotalAmount()
     {
         $order = $this->getOrderCached();
-
-        return $order->SubTotal();
+        if($order) {
+            return $order->SubTotal();
+        }
+        return 0;
     }
 
     /**

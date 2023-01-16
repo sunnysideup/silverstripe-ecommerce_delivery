@@ -21,7 +21,7 @@ class PickUpOrDeliveryModifierForm extends OrderModifierForm
                     if ($modifiers) {
                         foreach ($modifiers as $modifier) {
                             $modifier->setOption($newOption);
-                            $modifier->runUpdate();
+                            $modifier->runUpdate($recalculate = true);
                         }
 
                         return ShoppingCart::singleton()->setMessageAndReturn(_t('PickUpOrDeliveryModifier.UPDATED', 'Delivery option updated'), 'good');
