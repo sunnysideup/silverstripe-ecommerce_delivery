@@ -187,7 +187,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
     public function ShowForm(): bool
     {
         if ($this->ShowInTable()) {
-            if ($this->getOrderCached()->Items()) {
+            $order = $this->getOrderCached();
+            if ($order && $order->Items()) {
                 $options = $this->liveOptions();
                 if ($options) {
                     return $options->limit(2)->count() > 1;
@@ -380,7 +381,11 @@ class PickUpOrDeliveryModifier extends OrderModifier
             $regionID = EcommerceRegion::get_region_id();
             $subTotal = $this->LiveSubTotalAmount();
             $options = PickUpOrDeliveryModifierOptions::get();
-            $itemIds = $this->mapToClassNameIdCombo($this->getOrderCached()->Items()->map('BuyableClassName', 'BuyableID'));
+            $itemIds = [];
+            $order = $this->getOrderCached();
+            if($order && $order->TotalItems()) {
+                $itemIds = $this->mapToClassNameIdCombo($order->Items()->map('BuyableClassName', 'BuyableID'));
+            }
             if ($options->exists()) {
                 if (! empty($itemIds)) {
                     foreach ($options as $option) {
