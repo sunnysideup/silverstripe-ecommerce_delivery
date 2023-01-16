@@ -155,9 +155,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * updates database fields.
      *
-     * @param bool $force - run it, even if it has run already
+     * @param bool $recalculate - run it, even if it has run already
      */
-    public function runUpdate($force = false)
+    public function runUpdate($recalculate = false)
     {
         if ($this->Config()->get('debug')) {
             $this->debugMessage = '';
@@ -166,17 +166,17 @@ class PickUpOrDeliveryModifier extends OrderModifier
         self::$calculations_done = false;
         self::$selected_option = null;
         self::$available_options = null;
-        $this->checkField('OptionID');
-        $this->checkField('SerializedCalculationObject');
-        $this->checkField('TotalWeight');
-        $this->checkField('SubTotalAmount');
-        $this->checkField('RegionAndCountry');
-        $this->checkField('CalculatedTotal');
+        $this->checkField('OptionID', $recalculate);
+        $this->checkField('SerializedCalculationObject', $recalculate);
+        $this->checkField('TotalWeight', $recalculate);
+        $this->checkField('SubTotalAmount', $recalculate);
+        $this->checkField('RegionAndCountry', $recalculate);
+        $this->checkField('CalculatedTotal', $recalculate);
         if ($this->Config()->get('debug')) {
-            $this->checkField('DebugString');
+            $this->checkField('DebugString', $recalculate);
         }
 
-        parent::runUpdate($force);
+        parent::runUpdate($recalculate);
     }
 
     // ######################################## *** form functions (e. g. Showform and getform)
