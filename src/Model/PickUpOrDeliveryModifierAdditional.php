@@ -49,20 +49,31 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
     // ];
 
     private static $summary_fields = [
-        'Title',
-        'FixedCost',
+        'Title' => 'Name',
+        'FixedCost' => 'Cost',
+        'AddedWithOption.Title' => 'Delivery option',
+        'IncludedProducts.Count' => 'Number of products',
     ];
 
     private static $casting = [
-        'IsDefaultNice' => 'Varchar',
-        'ListOfCountries' => 'Varchar',
+        'TitleNice' => 'Varchar',
     ];
 
     private static $singular_name = 'Additional Delivery Cost';
 
     private static $plural_name = 'Additional Delivery Costs';
 
-    private static $default_sort = '"Sort" ASC, "Title" ASC';
+    private static $default_sort = ['Sort' => 'ASC'];
+
+    public function TitleNice()
+    {
+        return $this->getTitleNice();
+    }
+
+    public function getTitleNice()
+    {
+        return $this->Title . ' - $' . $this->FixedCost;
+    }
 
     public function getCMSFields()
     {

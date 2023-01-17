@@ -34,6 +34,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
+use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
 
 /**
  * @author nicolaas [at] sunnysideup.co.nz
@@ -417,6 +418,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             if ($field) {
                 $field->setDescription($fieldDescription);
             }
+        }
+        $additionalCostField = $fields->dataFieldByName('AdditionalCostForSpecificProducts');
+        if($additionalCostField) {
+            $config = $additionalCostField->getConfig();
+            $config->addComponent(new GridFieldSortableRows('Sort'));
+            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
         }
         $fields->removeByName('Sort');
 

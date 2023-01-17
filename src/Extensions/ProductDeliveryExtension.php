@@ -22,7 +22,7 @@ class ProductDeliveryExtension extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         $owner = $this->owner;
-        $map = PickUpOrDeliveryModifierAdditional::get()->map();
+        $map = PickUpOrDeliveryModifierAdditional::get()->map('ID', 'TitleNice');
         $fields->addFieldsToTab(
             'Root.Delivery',
             [
