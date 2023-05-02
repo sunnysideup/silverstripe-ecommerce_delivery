@@ -7,6 +7,10 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 
+/**
+ * Class \Sunnysideup\EcommerceDelivery\Admin\SalesAdminByDeliveryOption
+ *
+ */
 class SalesAdminByDeliveryOption extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByDeliveryOption';

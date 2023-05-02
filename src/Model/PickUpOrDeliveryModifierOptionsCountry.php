@@ -8,7 +8,11 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\ORM\DataExtension;
 
 /**
- *@author nicolaas [at] sunnysideup.co.nz
+ * Class \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
+ *
+ * @property \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry $owner
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
  */
 class PickUpOrDeliveryModifierOptionsCountry extends DataExtension
 {

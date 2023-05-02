@@ -6,7 +6,8 @@ use SilverStripe\Forms\DropdownField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
 /**
- * @tododelete this class!
+ * Class \Sunnysideup\EcommerceDelivery\Modifiers\CountryRegionDeliveryModifier
+ *
  */
 class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
 {

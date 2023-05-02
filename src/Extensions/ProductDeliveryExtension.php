@@ -8,6 +8,14 @@ use SilverStripe\ORM\DataExtension;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 
+/**
+ * Class \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\Product|\Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension $owner
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ */
 class ProductDeliveryExtension extends DataExtension
 {
     private static $many_many = [

@@ -5,7 +5,10 @@ namespace Sunnysideup\EcommerceDelivery\Model;
 use SilverStripe\ORM\DataExtension;
 
 /**
- *@author nicolaas [at] sunnysideup.co.nz
+ * Class \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsRegion
+ *
+ * @property \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsRegion $owner
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInRegions()
  */
 class PickUpOrDeliveryModifierOptionsRegion extends DataExtension
 {

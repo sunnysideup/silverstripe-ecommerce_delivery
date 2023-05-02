@@ -13,8 +13,16 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * @author nicolaas [at] sunnysideup.co.nz
- * Precondition : There can only be 1 default option
+ * Class \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional
+ *
+ * @property string $Title
+ * @property float $FixedCost
+ * @property int $Sort
+ * @property int $ExplanationPageID
+ * @property int $AddedWithOptionID
+ * @method \SilverStripe\CMS\Model\SiteTree ExplanationPage()
+ * @method \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions AddedWithOption()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] IncludedProducts()
  */
 class PickUpOrDeliveryModifierAdditional extends DataObject
 {

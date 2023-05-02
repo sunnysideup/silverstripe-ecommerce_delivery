@@ -37,8 +37,42 @@ use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
 use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
 
 /**
- * @author nicolaas [at] sunnysideup.co.nz
- * Precondition : There can only be 1 default option
+ * Class \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions
+ *
+ * @property string $PickupStoreEmail
+ * @property bool $IsPickUp
+ * @property bool $IsAirport
+ * @property string $AirportDetails
+ * @property string $EmailHeader
+ * @property string $EmailDescription
+ * @property bool $IsDefault
+ * @property string $Code
+ * @property string $Name
+ * @property float $Percentage
+ * @property float $FixedCost
+ * @property float $WeightMultiplier
+ * @property float $WeightUnit
+ * @property float $MinimumDeliveryCharge
+ * @property float $MaximumDeliveryCharge
+ * @property float $MinimumOrderAmountForZeroRate
+ * @property float $FreeShippingUpToThisOrderAmount
+ * @property float $MinimumTotalToBeAvailable
+ * @property float $MaximumTotalToBeAvailable
+ * @property int $Sort
+ * @property string $UnavailableDeliveryCachedList
+ * @property bool $RemoveAllUnavailableDeliveryProducts
+ * @property int $ExplanationPageID
+ * @property int $UnavailableDeliveryProductsCustomListID
+ * @method \SilverStripe\CMS\Model\SiteTree ExplanationPage()
+ * @method \Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList UnavailableDeliveryProductsCustomList()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalCostForSpecificProducts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceCountry[] AvailableInCountries()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceRegion[] AvailableInRegions()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsWeightBracket[] WeightBrackets()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsSubTotalBracket[] SubtotalBrackets()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] ExcludedProducts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceCountry[] ExcludeFromCountries()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] UnavailableDeliveryProducts()
  */
 class PickUpOrDeliveryModifierOptions extends DataObject
 {

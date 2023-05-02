@@ -12,6 +12,12 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 /**
  * below we record options for subTotal brackets with fixed cost
  * e.g. if Order.SubTotal > 10 and Order.SubTotal < 20 => Charge is $111.
+ *
+ * @property string $Name
+ * @property float $MinimumSubTotal
+ * @property float $MaximumSubTotal
+ * @property float $FixedCost
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
  */
 class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
 {

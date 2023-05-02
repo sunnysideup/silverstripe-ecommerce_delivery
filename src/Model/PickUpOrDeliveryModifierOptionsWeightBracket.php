@@ -10,6 +10,12 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 /**
  * below we record options for weight brackets with fixed cost
  * e.g. if Order.Weight > 10 and Order.Weight < 20 => Charge is $111.
+ *
+ * @property string $Name
+ * @property int $MinimumWeight
+ * @property int $MaximumWeight
+ * @property float $FixedCost
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
  */
 class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
 {
