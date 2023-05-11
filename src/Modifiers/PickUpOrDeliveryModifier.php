@@ -170,7 +170,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         self::$selected_option = null;
         self::$available_options = null;
         $this->checkField('OptionID', $recalculate);
-        $this->checkField('SerializedCalculationObject', $recalculate);
+        // $this->checkField('SerializedCalculationObject', $recalculate);
         $this->checkField('TotalWeight', $recalculate);
         $this->checkField('SubTotalAmount', $recalculate);
         $this->checkField('RegionAndCountry', $recalculate);
