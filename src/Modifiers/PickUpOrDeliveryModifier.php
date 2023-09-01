@@ -53,6 +53,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         'SerializedCalculationObject' => 'Text',
         'DebugString' => 'HTMLText',
         'SubTotalAmount' => 'Currency',
+        'HasPhysicalDispatch' => 'Boolean(1)',
     ];
 
     private static $defaults = [
@@ -172,6 +173,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $this->checkField('OptionID', $recalculate);
         // $this->checkField('SerializedCalculationObject', $recalculate);
         $this->checkField('TotalWeight', $recalculate);
+        $this->checkField('HasPhysicalDispatch', $recalculate);
         $this->checkField('SubTotalAmount', $recalculate);
         $this->checkField('RegionAndCountry', $recalculate);
         $this->checkField('CalculatedTotal', $recalculate);
@@ -380,17 +382,24 @@ class PickUpOrDeliveryModifier extends OrderModifier
     {
         if (! self::$available_options) {
             $results = [];
-            $countryID = EcommerceCountry::get_country_id();
-            $regionID = EcommerceRegion::get_region_id();
-            $subTotal = $this->LiveSubTotalAmount();
-            $options = PickUpOrDeliveryModifierOptions::get();
-            $itemIds = [];
             $order = $this->getOrderCached();
             if($order && $order->getTotalItems()) {
-                $itemIds = $this->mapToClassNameIdCombo($order->Items()->map('BuyableClassName', 'BuyableID'));
+                $options = PickUpOrDeliveryModifierOptions::get();
                 if ($options->exists()) {
+                    $itemIds = $this->mapToClassNameIdCombo($order->Items()->map('BuyableClassName', 'BuyableID'));
                     if (! empty($itemIds)) {
+                        $countryID = EcommerceCountry::get_country_id();
+                        $regionID = EcommerceRegion::get_region_id();
+                        $subTotal = $this->LiveSubTotalAmount();
+                        $hasPhysicalDispatch = $this->LiveHasPhysicalDispatch();
+                        $itemIds = [];
                         foreach ($options as $option) {
+                            if($option->MustHavePhysicalDispatch && ! $hasPhysicalDispatch) {
+                                continue;
+                            }
+                            if($option->CanNotHavePhysicalDispatch && $hasPhysicalDispatch) {
+                                continue;
+                            }
                             if ($option->MinimumTotalToBeAvailable > 0 && $subTotal < $option->MinimumTotalToBeAvailable) {
                                 continue;
                             }
@@ -528,6 +537,20 @@ class PickUpOrDeliveryModifier extends OrderModifier
     }
 
     /**
+     * cached in Order, no need to cache here.
+     *
+     * @return bool
+     */
+    protected function LiveHasPhysicalDispatch(): bool
+    {
+        $order = $this->getOrderCached();
+        if($order && $order->getTotalItems()) {
+            return $order->HasPhysicalDispatch();
+        }
+        return false;
+    }
+
+    /**
      * description of region and country being shipped to.
      *
      * @return null|PickUpOrDeliveryModifierOptions
@@ -586,7 +609,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
         self::$calculations_done = true;
         //________________ end caching mechanism
-
+        if(! $this->HasPhysicalDispatch) {
+            return 0;
+        }
         self::$_actual_charges = 0;
         $fixedPriceExtra = 0;
         //do we have enough information

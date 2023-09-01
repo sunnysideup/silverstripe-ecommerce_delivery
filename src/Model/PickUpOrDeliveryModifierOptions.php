@@ -84,6 +84,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'Name' => 'Varchar(175)',
         'Percentage' => 'Double',
         'FixedCost' => 'Currency',
+        'MustHavePhysicalDispatch' => 'Boolean',
+        'CanNotHavePhysicalDispatch' => 'Boolean',
         'WeightMultiplier' => 'Double',
         'WeightUnit' => 'Double',
         'MinimumDeliveryCharge' => 'Currency',
