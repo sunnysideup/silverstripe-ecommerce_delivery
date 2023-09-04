@@ -29,13 +29,18 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
         return $fields;
     }
 
-    public function TableSubTitle()
+    public function TableSubTitle(): string
     {
         return $this->getTableSubTitle();
     }
 
-    public function getTableSubTitle()
+    public function getTableSubTitle(): string
     {
-        return $this->RegionAndCountry;
+        if($this->priceHasBeenFixed()) {
+            if($this->TableSubTitleFixed) {
+                return (string) $this->TableSubTitleFixed;
+            }
+        }
+        return (string) $this->RegionAndCountry;
     }
 }
