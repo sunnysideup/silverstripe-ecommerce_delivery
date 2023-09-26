@@ -10,9 +10,11 @@ After:
 Sunnysideup\Ecommerce\Cms\StoreAdmin:
   managed_models:
     - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions
+
 Sunnysideup\Ecommerce\Control\OrderModifierFormController:
   allowed_actions:
     - PickUpOrDeliveryModifier
+
 Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
   extensions:
     - Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
@@ -20,13 +22,25 @@ Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
 Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
   admin_role_permission_codes:
     - CMS_ACCESS_SalesAdminByDeliveryOption
+
 Sunnysideup\Ecommerce\Pages\Product:
   extensions:
     - Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
----
-Only:
-  classexists: 'DataObjectSorterDOD'
----
+
 Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions:
   extensions:
     - Sunnysideup\DataobjectSorter\DataObjectSorterDOD
+
+---
+Name: ecommerce_delivery_menu
+After:
+  - '#coreconfig'
+  - '#cmsextensions'
+  - '#ecommerce'
+  - '#app'
+---
+SilverStripe\Admin\LeftAndMain:
+  menu_groups:
+    Shop:
+      children:
+        - Sunnysideup-EcommerceDelivery-Admin-SalesAdminByDeliveryOption
