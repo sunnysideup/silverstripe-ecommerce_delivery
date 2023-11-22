@@ -5,145 +5,144 @@
 
 if (
   document.getElementById(
-    "PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier"
+    'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier'
   ) !== null &&
   typeof document.getElementById(
-    "PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier"
-  ) !== "undefined"
+    'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier'
+  ) !== 'undefined'
 ) {
-  (function ($) {
+  ;(function ($) {
     $(document).ready(function () {
-      PickUpOrDeliveryModifier.init();
-    });
-  })(jQuery);
+      PickUpOrDeliveryModifier.init()
+    })
+  })(jQuery)
 
   var PickUpOrDeliveryModifier = {
-    formID: "PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier",
+    formID: 'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier',
 
-    optionSetOptions: "PickupOrDeliveryType",
+    optionSetOptions: 'PickupOrDeliveryType',
 
-    loadingClass: "loading",
+    loadingClass: 'loading',
 
-    actionsClass: "btn-toolbar",
+    actionsClass: 'btn-toolbar',
 
-    countryDropdownSelector: "select.ajaxCountryField",
+    countryDropdownSelector: 'select.ajaxCountryField',
 
-    notSelectedText: "-- not selected --",
+    notSelectedText: '-- not selected --',
 
-    cartMessageClass: ".cartMessage",
+    cartMessageClass: '.cartMessage',
 
     availableCountries: new Array(),
 
     EcomCart: {},
 
     init: function () {
-      if (typeof window.EcomCart === "undefined") {
+      if (typeof window.EcomCart === 'undefined') {
         // var EcomCart = require("./EcomCartWebPack");
-        this.EcomCart = EcomCart.EcomCart;
+        this.EcomCart = EcomCart.EcomCart
       } else {
-        PickUpOrDeliveryModifier.EcomCart = window.EcomCart;
+        PickUpOrDeliveryModifier.EcomCart = window.EcomCart
       }
-      if (typeof PickUpOrDeliveryModifierOptions !== "undefined") {
-        this.availableCountries = PickUpOrDeliveryModifierOptions;
+      if (typeof PickUpOrDeliveryModifierOptions !== 'undefined') {
+        this.availableCountries = PickUpOrDeliveryModifierOptions
       }
       var selectorForField =
-        "#" +
+        '#' +
         PickUpOrDeliveryModifier.formID +
         " input[name='" +
         PickUpOrDeliveryModifier.optionSetOptions +
-        "']";
+        "']"
       var dropdownForField =
-        "#" +
+        '#' +
         PickUpOrDeliveryModifier.formID +
         " select[name='" +
         PickUpOrDeliveryModifier.optionSetOptions +
-        "']";
-      if (jQuery(selectorForField + ", " + dropdownForField).length < 1) {
-        jQuery("#" + PickUpOrDeliveryModifier.formID).hide();
+        "']"
+      if (jQuery(selectorForField + ', ' + dropdownForField).length < 1) {
+        jQuery('#' + PickUpOrDeliveryModifier.formID).hide()
       } else {
-        jQuery("#" + PickUpOrDeliveryModifier.formID).show();
+        jQuery('#' + PickUpOrDeliveryModifier.formID).show()
         var options = {
           beforeSubmit: PickUpOrDeliveryModifier.showRequest, // pre-submit callback
           success: PickUpOrDeliveryModifier.showResponse, // post-submit callback
-          dataType: "json",
-        };
-        jQuery("#" + PickUpOrDeliveryModifier.formID).ajaxForm(options);
+          dataType: 'json'
+        }
+        jQuery('#' + PickUpOrDeliveryModifier.formID).ajaxForm(options)
         jQuery(
-          "#" +
+          '#' +
             PickUpOrDeliveryModifier.formID +
-            " ." +
+            ' .' +
             PickUpOrDeliveryModifier.actionsClass
-        ).hide();
-        PickUpOrDeliveryModifier.updateCountryList();
+        ).hide()
+        PickUpOrDeliveryModifier.updateCountryList()
 
-        jQuery(selectorForField + ", " + dropdownForField).change(function () {
-          PickUpOrDeliveryModifier.updateCountryList();
-          jQuery("#" + PickUpOrDeliveryModifier.formID).submit();
-        });
+        jQuery(selectorForField + ', ' + dropdownForField).change(function () {
+          PickUpOrDeliveryModifier.updateCountryList()
+          jQuery('#' + PickUpOrDeliveryModifier.formID).submit()
+        })
         //jQuery(selectorForField).change();
       }
     },
 
     // pre-submit callback
     showRequest: function (formData, jqForm, options) {
-      jQuery("#" + PickUpOrDeliveryModifier.formID).addClass(
+      jQuery('#' + PickUpOrDeliveryModifier.formID).addClass(
         PickUpOrDeliveryModifier.loadingClass
-      );
-      return true;
+      )
+      return true
     },
 
     // post-submit callback
     showResponse: function (responseText, statusText) {
       //redo quantity boxes
       //jQuery("#" + PickUpOrDeliveryModifier.updatedDivID).css("height", "auto");
-      jQuery("#" + PickUpOrDeliveryModifier.formID).removeClass(
+      jQuery('#' + PickUpOrDeliveryModifier.formID).removeClass(
         PickUpOrDeliveryModifier.loadingClass
-      );
-      console.log(responseText);
-      PickUpOrDeliveryModifier.EcomCart.setChanges(responseText);
+      )
+      PickUpOrDeliveryModifier.EcomCart.setChanges(responseText)
     },
 
     addAvailableCountriesItem: function (index, countriesArray) {
-      PickUpOrDeliveryModifier.availableCountries[index] = countriesArray;
-      return this;
+      PickUpOrDeliveryModifier.availableCountries[index] = countriesArray
+      return this
     },
 
     /**
      * alias for addAvailableCountriesItem
      */
     addItem: function (index, countriesArray) {
-      this.addAvailableCountriesItem(index, countriesArray);
-      return this;
+      this.addAvailableCountriesItem(index, countriesArray)
+      return this
     },
 
     updateCountryList: function () {
       var currentIndex = jQuery(
-        "#" +
+        '#' +
           PickUpOrDeliveryModifier.formID +
           " input[name='" +
           PickUpOrDeliveryModifier.optionSetOptions +
           "']"
-      ).val();
+      ).val()
       var currentCountryValue = jQuery(
         PickUpOrDeliveryModifier.countryDropdownSelector
-      ).val();
+      ).val()
       var acceptableOptions =
-        PickUpOrDeliveryModifier.availableCountries[currentIndex];
-      var hasValidValue = false;
+        PickUpOrDeliveryModifier.availableCountries[currentIndex]
+      var hasValidValue = false
       if (
         acceptableOptions == undefined ||
-        typeof acceptableOptions == "undefined"
+        typeof acceptableOptions == 'undefined'
       ) {
-        acceptableOptions = new Array();
+        acceptableOptions = new Array()
       }
       if (acceptableOptions.length < 1) {
         jQuery(
-          PickUpOrDeliveryModifier.countryDropdownSelector + " option"
-        ).show();
+          PickUpOrDeliveryModifier.countryDropdownSelector + ' option'
+        ).show()
       } else {
         jQuery(
-          PickUpOrDeliveryModifier.countryDropdownSelector + " option"
-        ).hide();
+          PickUpOrDeliveryModifier.countryDropdownSelector + ' option'
+        ).hide()
       }
       for (var i = 0; i < acceptableOptions.length; i++) {
         jQuery(
@@ -151,25 +150,25 @@ if (
             " option[value='" +
             acceptableOptions[i] +
             "']"
-        ).show();
+        ).show()
         if (currentCountryValue == acceptableOptions[i]) {
-          hasValidValue = true;
+          hasValidValue = true
         }
       }
       if (acceptableOptions.length == 1) {
         jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val(
           acceptableOptions[0]
-        );
-        hasValidValue = true;
+        )
+        hasValidValue = true
       }
       if (hasValidValue) {
         jQuery(
           PickUpOrDeliveryModifier.countryDropdownSelector +
-            " option.nothingSelected"
-        ).hide();
+            ' option.nothingSelected'
+        ).hide()
       } else if (acceptableOptions.length > 0) {
-        PickUpOrDeliveryModifier.nothingSelected();
-        jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change();
+        PickUpOrDeliveryModifier.nothingSelected()
+        jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).change()
       }
     },
 
@@ -177,21 +176,21 @@ if (
       if (
         jQuery(
           PickUpOrDeliveryModifier.countryDropdownSelector +
-            " option.nothingSelected"
+            ' option.nothingSelected'
         ).length < 1
       ) {
         jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).prepend(
           '<option class="nothingSelected" value="-">' +
             PickUpOrDeliveryModifier.notSelectedText +
-            "</option>"
-        );
+            '</option>'
+        )
       } else {
         jQuery(
           PickUpOrDeliveryModifier.countryDropdownSelector +
-            " option.nothingSelected"
-        ).show();
+            ' option.nothingSelected'
+        ).show()
       }
-      jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val("-");
-    },
-  };
+      jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val('-')
+    }
+  }
 }
