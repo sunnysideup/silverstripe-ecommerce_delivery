@@ -342,9 +342,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->removeByName([
-            'UnavailableDeliveryCachedList',
-        ]);
+
         $availableInCountriesField = $this->createGridField('Available in');
         if ($availableInCountriesField) {
             $fields->replaceField('AvailableInCountries', $availableInCountriesField);
@@ -433,6 +431,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             ],
             'UnavailableDeliveryProducts'
         );
+        $fields->addFieldsToTab(
+            'Root.UnavailableDeliveryProducts',
+            [
+                $fields->dataFieldByName('UnavailableDeliveryCachedList')->performDisabledTransformation()->setDescription('This is a list of all the product IDs that are currently unavailable for this delivery option.  It is updated automatically.'),
+            ]
+        );
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $weightBrackets = $this->WeightBrackets();
@@ -489,7 +493,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         parent::onBeforeWrite();
         $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', (string) $this->Code));
         $i = 0;
-        if (! $this->Code) {
+        if (!$this->Code) {
             $defaults = $this->Config()->get('Code');
             $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
         }
@@ -515,20 +519,20 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
             }
         }
-        $array = [];
-        $this->UnavailableDeliveryCachedList = '';
-        foreach ($this->UnavailableDeliveryProducts()->map('ClassName', 'ID') as $className => $id) {
-            $array[] = $className . '_' . $id;
+        $items = $this->UnavailableDeliveryProducts()->columnUnique('ID');
+        if(!empty($items)) {
+            $this->UnavailableDeliveryCachedList = implode(',', $items);
+        } else {
+            $this->UnavailableDeliveryCachedList = '0';
         }
-        $this->UnavailableDeliveryCachedList = implode(',', $array);
     }
 
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
-        if (! $this->IsDefault && $notExistsOther) {
+        $notExistsOther = !(bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
+        if (!$this->IsDefault && $notExistsOther) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 1
