@@ -625,10 +625,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     //are all the products excluded?
                     $productsIds = $order->ProductIds();
                     if(!array_intersect($productsIds, $excludedProductIDArray)) {
-                        $hasIncludedProduct = true;
+                        $allProductsAreIncluded = true;
                     }
 
-                    if (false === $hasIncludedProduct) {
+                    if (false === $allProductsAreIncluded) {
                         if ($this->Config()->get('debug')) {
                             $this->debugMessage .= '<hr />all products are excluded from delivery charges';
                         }
