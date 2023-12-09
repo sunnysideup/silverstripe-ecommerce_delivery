@@ -440,7 +440,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
                             if (!empty($unavailableTo)) {
                                 if (array_intersect($itemIds, $unavailableTo)) {
-                                        continue;
+                                    continue;
                                 }
                             }
                             $results[] = $option;
@@ -620,11 +620,11 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if (is_object($obj) && $obj->exists() && $items->exists()) {
                 //are ALL products excluded?
                 if ($obj->ExcludedProducts()->exists()) {
-                    $hasIncludedProduct = false;
+                    $allProductsAreIncluded = false;
                     $excludedProductIDArray = $obj->ExcludedProducts()->columnUnique();
                     //are all the products excluded?
                     $productsIds = $order->ProductIds();
-                    if(array_intersect($productsIds, $excludedProductIDArray)) {
+                    if(!array_intersect($productsIds, $excludedProductIDArray)) {
                         $hasIncludedProduct = true;
                     }
 
