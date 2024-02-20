@@ -218,10 +218,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
     {
-        /*
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY doesnt this work?
-         */
+
         Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
 
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
