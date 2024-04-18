@@ -216,7 +216,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     /**
      * @return \SilverStripe\Forms\Form
      */
-    public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
+    public function getModifierForm(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
 
         Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
