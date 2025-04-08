@@ -11,11 +11,9 @@ if (
     'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier'
   ) !== 'undefined'
 ) {
-  ;(function ($) {
-    $(document).ready(function () {
-      PickUpOrDeliveryModifier.init()
-    })
-  })(jQuery)
+  jQuery(() => {
+    PickUpOrDeliveryModifier.init()
+  })
 
   var PickUpOrDeliveryModifier = {
     formID: 'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier',
@@ -38,7 +36,7 @@ if (
 
     init: function () {
       if (typeof window.EcomCart === 'undefined') {
-        // var EcomCart = require("./EcomCartWebPack");
+        // var EcomCart = require("./EcomCart");
         this.EcomCart = EcomCart.EcomCart
       } else {
         PickUpOrDeliveryModifier.EcomCart = window.EcomCart

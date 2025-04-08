@@ -323,6 +323,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $js = parent::updateForAjax($js);
         $jsonOptions = [];
         $liveOptions = $this->LiveOptions();
+        $html = '';
         if ($liveOptions->exists()) {
             $optionsArray = $liveOptions->map('ID', 'Name');
             if ($optionsArray && !is_array($optionsArray)) {
@@ -331,16 +332,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
             if ($optionsArray && count($optionsArray)) {
                 foreach ($optionsArray as $id => $name) {
-                    $jsonOptions[] = ['id' => $id, 'name' => $name];
+                    $isSelected = $id == $this->LiveOptionID() ? ' selected="selected"' : '';
+                    $html .= '<option value="' . $id . $isSelected . '">' . Convert::raw2xml($name) . '</option>';
                 }
             }
         }
 
-        $js[] = [
-            't' => 'dropdown',
-            's' => 'PickupOrDeliveryType',
-            'p' => $this->LiveOptionID(),
-            'v' => $jsonOptions,
+        $js['select[name="PickupOrDeliveryType"]'] = [
+            'html' => $jsonOptions,
         ];
 
         return $js;
@@ -380,7 +379,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (!self::$available_options) {
             $results = [];
             $order = $this->getOrderCached();
-            if($order && $order->getTotalItems()) {
+            if ($order && $order->getTotalItems()) {
                 $options = PickUpOrDeliveryModifierOptions::get();
                 if ($options->exists()) {
                     $itemIds = $order->ProductIds();
@@ -390,10 +389,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         $subTotal = $this->LiveSubTotalAmount();
                         $hasPhysicalDispatch = $this->LiveHasPhysicalDispatch();
                         foreach ($options as $option) {
-                            if($option->MustHavePhysicalDispatch && !$hasPhysicalDispatch) {
+                            if ($option->MustHavePhysicalDispatch && !$hasPhysicalDispatch) {
                                 continue;
                             }
-                            if($option->CanNotHavePhysicalDispatch && $hasPhysicalDispatch) {
+                            if ($option->CanNotHavePhysicalDispatch && $hasPhysicalDispatch) {
                                 continue;
                             }
                             if ($option->MinimumTotalToBeAvailable > 0 && $subTotal < $option->MinimumTotalToBeAvailable) {
@@ -525,7 +524,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected function LiveSubTotalAmount()
     {
         $order = $this->getOrderCached();
-        if($order && $order->getTotalItems()) {
+        if ($order && $order->getTotalItems()) {
             return $order->SubTotal();
         }
         return 0;
@@ -539,7 +538,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
     protected function LiveHasPhysicalDispatch(): bool
     {
         $order = $this->getOrderCached();
-        if($order && $order->getTotalItems()) {
+        if ($order && $order->getTotalItems()) {
             return $order->HasPhysicalDispatch();
         }
         return false;
@@ -604,14 +603,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
         self::$calculations_done = true;
         //________________ end caching mechanism
-        if(!$this->HasPhysicalDispatch) {
+        if (!$this->HasPhysicalDispatch) {
             return 0;
         }
         self::$_actual_charges = 0;
         $fixedPriceExtra = 0;
         //do we have enough information
         $order = $this->getOrderCached();
-        if($order && $order->getTotalItems()) {
+        if ($order && $order->getTotalItems()) {
             $obj = $this->liveOptionObject();
             $items = $order->Items();
             if (is_object($obj) && $obj->exists() && $items->exists()) {
@@ -621,8 +620,8 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     $excludedProductIDArray = $obj->ExcludedProducts()->columnUnique();
                     //are all the products excluded?
                     $productsIds = $order->ProductIds();
-                    foreach($productsIds as $productID) {
-                        if(!in_array($productID, $excludedProductIDArray)) {
+                    foreach ($productsIds as $productID) {
+                        if (!in_array($productID, $excludedProductIDArray)) {
                             $allProductsAreExcluded = false;
                             break;
                         }
@@ -868,7 +867,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (null === self::$_total_weight) {
             self::$_total_weight = 0;
             $order = $this->getOrderCached();
-            if($order && $order->getTotalItems()) {
+            if ($order && $order->getTotalItems()) {
                 if ($this->useWeight()) {
                     $fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field');
                     if ($fieldName) {
