@@ -22,11 +22,7 @@ if (
 
     availableCountries: new Array(),
 
-    EcomCart: {},
-
     init: function () {
-      // var EcomCart = require("./EcomCart");
-      PickUpOrDeliveryModifier.EcomCart = EcomCart
       if (typeof PickUpOrDeliveryModifierOptions !== 'undefined') {
         this.availableCountries = PickUpOrDeliveryModifierOptions
       }
@@ -83,7 +79,7 @@ if (
       jQuery('#' + PickUpOrDeliveryModifier.formID).removeClass(
         PickUpOrDeliveryModifier.loadingClass
       )
-      PickUpOrDeliveryModifier.EcomCart.setChanges(responseText)
+      EcomCart.setChanges(responseText)
     },
 
     addAvailableCountriesItem: function (index, countriesArray) {

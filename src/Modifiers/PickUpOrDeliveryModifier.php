@@ -321,7 +321,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
     public function updateForAjax(array $js)
     {
         $js = parent::updateForAjax($js);
-        $jsonOptions = [];
         $liveOptions = $this->LiveOptions();
         $html = '';
         if ($liveOptions->exists()) {
@@ -333,13 +332,13 @@ class PickUpOrDeliveryModifier extends OrderModifier
             if ($optionsArray && count($optionsArray)) {
                 foreach ($optionsArray as $id => $name) {
                     $isSelected = $id == $this->LiveOptionID() ? ' selected="selected"' : '';
-                    $html .= '<option value="' . $id . $isSelected . '">' . Convert::raw2xml($name) . '</option>';
+                    $html .= '<option value="' . $id . '" ' . $isSelected . '">' . Convert::raw2xml($name) . '</option>';
                 }
             }
         }
 
         $js['select[name="PickupOrDeliveryType"]'] = [
-            'html' => $jsonOptions,
+            'html' => $html,
         ];
 
         return $js;
