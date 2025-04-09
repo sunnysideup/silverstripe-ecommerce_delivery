@@ -1,21 +1,11 @@
-/**
- * make sure it can import EcomCart
- * see init
- */
+import EcomCart from './../../../ecommerce/client/javascript/EcomCart'
 
 if (
   document.getElementById(
     'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier'
-  ) !== null &&
-  typeof document.getElementById(
-    'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier'
-  ) !== 'undefined'
+  )
 ) {
-  jQuery(() => {
-    PickUpOrDeliveryModifier.init()
-  })
-
-  var PickUpOrDeliveryModifier = {
+  const PickUpOrDeliveryModifier = {
     formID: 'PickUpOrDeliveryModifierForm_PickUpOrDeliveryModifier',
 
     optionSetOptions: 'PickupOrDeliveryType',
@@ -35,12 +25,8 @@ if (
     EcomCart: {},
 
     init: function () {
-      if (typeof window.EcomCart === 'undefined') {
-        // var EcomCart = require("./EcomCart");
-        this.EcomCart = EcomCart.EcomCart
-      } else {
-        PickUpOrDeliveryModifier.EcomCart = window.EcomCart
-      }
+      // var EcomCart = require("./EcomCart");
+      PickUpOrDeliveryModifier.EcomCart = EcomCart
       if (typeof PickUpOrDeliveryModifierOptions !== 'undefined') {
         this.availableCountries = PickUpOrDeliveryModifierOptions
       }
@@ -191,4 +177,8 @@ if (
       jQuery(PickUpOrDeliveryModifier.countryDropdownSelector).val('-')
     }
   }
+
+  jQuery(() => {
+    PickUpOrDeliveryModifier.init()
+  })
 }
