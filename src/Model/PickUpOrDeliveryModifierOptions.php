@@ -245,6 +245,9 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $countries = $option->AvailableInCountries();
                 if ($countries) {
                     if ($countries->exists()) {
+                        /**
+                         * @var EcommerceCountry $country
+                         */
                         foreach ($countries as $country) {
                             $array[$option->Code][] = $country->Code;
                         }
@@ -460,7 +463,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             }
         }
         $additionalCostField = $fields->dataFieldByName('AdditionalCostForSpecificProducts');
-        if($additionalCostField) {
+        if ($additionalCostField) {
             $config = $additionalCostField->getConfig();
             $config->addComponent(new GridFieldSortableRows('Sort'));
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
@@ -502,16 +505,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         $exists = PickUpOrDeliveryModifierOptions::get()
             ->filter(['Code' => $this->Code])
             ->exclude(['ID' => $this->ID])
-            ->exists()
-        ;
+            ->exists();
         while ($exists && $i < 100) {
             ++$i;
             $this->Code = $baseCode . '_' . $i;
             $exists = PickUpOrDeliveryModifierOptions::get()
                 ->filter(['Code' => $this->Code])
                 ->exclude(['ID' => $this->ID])
-                ->exists()
-            ;
+                ->exists();
         }
 
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
@@ -520,7 +521,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             }
         }
         $items = $this->UnavailableDeliveryProducts()->columnUnique('ID');
-        if(!empty($items)) {
+        if (!empty($items)) {
             $this->UnavailableDeliveryCachedList = implode(',', $items);
         } else {
             $this->UnavailableDeliveryCachedList = '0';
