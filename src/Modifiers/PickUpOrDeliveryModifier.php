@@ -400,7 +400,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             if ($option->MaximumTotalToBeAvailable > 0 && $subTotal > $option->MaximumTotalToBeAvailable) {
                                 continue;
                             }
-                            if ($option->IsAvailable($order) !== null) {
+                            if ($option->IsAvailable($order) === false) {
                                 continue;
                             }
 
