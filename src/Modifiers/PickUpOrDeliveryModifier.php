@@ -400,12 +400,10 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             if ($option->MaximumTotalToBeAvailable > 0 && $subTotal > $option->MaximumTotalToBeAvailable) {
                                 continue;
                             }
-                            if ($option->extend('updateLiveOptionsCheck',  $order) === false) {
+                            if ($option->IsAvailable($order) !== null) {
                                 continue;
                             }
-                            if ($this->extend('updateLiveOptionsCheck',  $option, $order) === false) {
-                                continue;
-                            }
+
                             //check countries
                             if ($countryID) {
                                 $availableInCountriesList = $option->AvailableInCountries();

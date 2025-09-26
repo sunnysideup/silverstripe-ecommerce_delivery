@@ -32,6 +32,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList;
 use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
@@ -455,7 +456,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $fields->removeByName('WeightUnit');
         }
 
-        $fields->addFieldToTab('Root.Main', new HeaderField('MoreInformation', 'Other Settings'), 'Sort');
         foreach ($this->Config()->get('field_labels_right') as $fieldName => $fieldDescription) {
             $field = $fields->dataFieldByName($fieldName);
             if ($field) {
@@ -601,5 +601,16 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         }
 
         return new HiddenField($fieldName);
+    }
+
+    public function IsAvailable(Order $order): ?bool
+    {
+        $extend = $this->extend('updateLiveOptionsCheck',  $order);
+        foreach ($extend as $result) {
+            if ($result !== null) {
+                return $result;
+            }
+        }
+        return null;
     }
 }
