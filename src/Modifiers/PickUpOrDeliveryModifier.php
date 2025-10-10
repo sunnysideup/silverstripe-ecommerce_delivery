@@ -194,7 +194,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if ($this->ShowInTable()) {
             $order = $this->getOrderCached();
             if ($order && $order->getTotalItems()) {
-                $options = $this->liveOptions();
+                $options = $this->LiveOptions();
                 if ($options) {
                     return $options->limit(2)->count() > 1;
                 }
@@ -218,7 +218,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     public function getModifierForm(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
-
         Requirements::themedCSS('client/css/PickUpOrDeliveryModifier');
 
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
@@ -403,7 +402,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             if ($option->IsAvailable($order) === false) {
                                 continue;
                             }
-
                             //check countries
                             if ($countryID) {
                                 $availableInCountriesList = $option->AvailableInCountries();
