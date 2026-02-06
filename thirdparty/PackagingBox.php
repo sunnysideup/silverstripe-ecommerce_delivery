@@ -1,4 +1,5 @@
 <?php
+
 /**
  *@source: https://github.com/yetzt/boxing/blob/master/boxing.class.php
  */

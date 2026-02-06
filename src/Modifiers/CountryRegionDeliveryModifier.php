@@ -7,7 +7,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
 /**
  * Class \Sunnysideup\EcommerceDelivery\Modifiers\CountryRegionDeliveryModifier
- *
  */
 class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
 {
@@ -28,7 +27,6 @@ class CountryRegionDeliveryModifier extends PickUpOrDeliveryModifier
 
         return $fields;
     }
-
 
     public function getTableSubTitle(): string
     {

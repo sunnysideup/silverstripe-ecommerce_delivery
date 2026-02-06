@@ -324,7 +324,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         $html = '';
         if ($liveOptions->exists()) {
             $optionsArray = $liveOptions->map('ID', 'Name');
-            if ($optionsArray && !is_array($optionsArray)) {
+            if ($optionsArray && ! is_array($optionsArray)) {
                 $optionsArray = $optionsArray->toArray();
             }
 
@@ -374,7 +374,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function LiveOptions()
     {
-        if (!self::$available_options) {
+        if (! self::$available_options) {
             $results = [];
             $order = $this->getOrderCached();
             if ($order && $order->getTotalItems()) {
@@ -387,7 +387,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         $subTotal = $this->LiveSubTotalAmount();
                         $hasPhysicalDispatch = $this->LiveHasPhysicalDispatch();
                         foreach ($options as $option) {
-                            if ($option->MustHavePhysicalDispatch && !$hasPhysicalDispatch) {
+                            if ($option->MustHavePhysicalDispatch && ! $hasPhysicalDispatch) {
                                 continue;
                             }
                             if ($option->CanNotHavePhysicalDispatch && $hasPhysicalDispatch) {
@@ -408,7 +408,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                                 //exclude if not found in country list
                                 if (
                                     $availableInCountriesList->exists() &&
-                                    !$availableInCountriesList->filter('ID', $countryID)->exists()
+                                    ! $availableInCountriesList->filter('ID', $countryID)->exists()
                                 ) {
                                     continue;
                                 }
@@ -429,13 +429,13 @@ class PickUpOrDeliveryModifier extends OrderModifier
                                 //exclude if not found in region list
                                 if (
                                     $optionRegions->exists() &&
-                                    !$optionRegions->filter(['ID' => $regionID])->exists()
+                                    ! $optionRegions->filter(['ID' => $regionID])->exists()
                                 ) {
                                     continue;
                                 }
                             }
                             $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
-                            if (!($unavailableTo === []) && array_intersect($itemIds, $unavailableTo)) {
+                            if (! ($unavailableTo === []) && array_intersect($itemIds, $unavailableTo)) {
                                 continue;
                             }
                             $results[] = $option;
@@ -477,7 +477,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
      */
     protected function LiveOptionID()
     {
-        if (!self::$selected_option) {
+        if (! self::$selected_option) {
             self::$selected_option = null;
             $options = $this->liveOptions();
             self::$selected_option = $options->filter(['ID' => $this->OptionID])->first();
@@ -485,7 +485,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 //do nothing;
             } else {
                 self::$selected_option = $options->filter(['IsDefault' => 1])->first();
-                if (!self::$selected_option) {
+                if (! self::$selected_option) {
                     self::$selected_option = $options->first();
                 }
             }
@@ -601,7 +601,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
         self::$calculations_done = true;
         //________________ end caching mechanism
-        if (!$this->HasPhysicalDispatch) {
+        if (! $this->HasPhysicalDispatch) {
             return 0;
         }
         self::$_actual_charges = 0;
@@ -619,7 +619,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     //are all the products excluded?
                     $productsIds = $order->ProductIds();
                     foreach ($productsIds as $productID) {
-                        if (!in_array($productID, $excludedProductIDArray)) {
+                        if (! in_array($productID, $excludedProductIDArray)) {
                             $allProductsAreExcluded = false;
                             break;
                         }
@@ -710,7 +710,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         $minimumMinimum = null;
                         $maximumMaximum = null;
                         foreach ($weightBrackets as $weightBracket) {
-                            if (!$foundWeightBracket && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
+                            if (! $foundWeightBracket && ($weightBracket->MinimumWeight <= $weight) && ($weight <= $weightBracket->MaximumWeight)) {
                                 $foundWeightBracket = $weightBracket;
                             }
 
@@ -724,7 +724,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                             }
                         }
 
-                        if (!$foundWeightBracket) {
+                        if (! $foundWeightBracket) {
                             if ($weight < $minimumMinimum->MinimumWeight) {
                                 $foundWeightBracket = $minimumMinimum;
                             } elseif ($weight > $maximumMaximum->MaximumWeight) {
@@ -759,7 +759,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     } elseif ($weight && $obj->WeightMultiplier) {
                         // weight based on multiplier ...
                         // add weight based shipping
-                        if (!$obj->WeightUnit) {
+                        if (! $obj->WeightUnit) {
                             $obj->WeightUnit = 1;
                         }
 
@@ -783,7 +783,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         //subTotal brackets
                         $foundSubTotalBracket = null;
                         foreach ($subTotalBrackets as $subTotalBracket) {
-                            if (!$foundSubTotalBracket && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
+                            if (! $foundSubTotalBracket && ($subTotalBracket->MinimumSubTotal <= $subTotalAmount) && ($subTotalAmount <= $subTotalBracket->MaximumSubTotal)) {
                                 $foundSubTotalBracket = $subTotalBracket;
 
                                 break;
@@ -840,7 +840,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         $this->debugMessage .= '<hr />setting to fixed charges of: ' . $fixedPriceExtra;
                     }
                 }
-            } elseif (!$items) {
+            } elseif (! $items) {
                 if ($this->Config()->get('debug')) {
                     $this->debugMessage .= '<hr />no items present';
                 }
@@ -874,7 +874,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         foreach ($items as $item) {
                             $buyable = $item->getBuyableCached();
                             // Calculate the total weight of the order
-                            if ($buyable && (!empty($buyable->{$fieldName}) && $item->Quantity)) {
+                            if ($buyable && (! empty($buyable->{$fieldName}) && $item->Quantity)) {
                                 self::$_total_weight += $buyable->{$fieldName} * $item->Quantity;
                             }
                         }

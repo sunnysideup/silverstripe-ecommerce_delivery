@@ -524,8 +524,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     {
         parent::onAfterWrite();
         // no other record but current one is not default
-        $notExistsOther = !(bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
-        if (!$this->IsDefault && $notExistsOther) {
+        $notExistsOther = ! (bool) PickUpOrDeliveryModifierOptions::get()->exclude(['ID' => (int) $this->ID])->exists();
+        if (! $this->IsDefault && $notExistsOther) {
             DB::query('
                 UPDATE "PickUpOrDeliveryModifierOptions"
                 SET "IsDefault" = 1
@@ -597,7 +597,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     public function IsAvailable(Order $order): ?bool
     {
-        $extend = $this->extend('updateLiveOptionsCheck',  $order);
+        $extend = $this->extend('updateLiveOptionsCheck', $order);
         foreach ($extend as $result) {
             if ($result !== null) {
                 return $result;

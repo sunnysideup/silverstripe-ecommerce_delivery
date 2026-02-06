@@ -9,7 +9,6 @@ use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 
 /**
  * Class \Sunnysideup\EcommerceDelivery\Admin\SalesAdminByDeliveryOption
- *
  */
 class SalesAdminByDeliveryOption extends SalesAdmin
 {
