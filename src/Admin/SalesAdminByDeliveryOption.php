@@ -43,7 +43,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        $fields = $form->Fields();
+        $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $brackets = $this->getBrackets();
             $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);

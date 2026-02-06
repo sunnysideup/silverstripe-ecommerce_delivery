@@ -236,7 +236,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 }
             }
 
-            if ($js) {
+            if ($js !== '0') {
                 //add final semi-comma
                 $js .= '';
                 Requirements::customScript($js, 'PickUpOrDeliveryModifier');
@@ -381,7 +381,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                 $options = PickUpOrDeliveryModifierOptions::get();
                 if ($options->exists()) {
                     $itemIds = $order->ProductIds();
-                    if (!empty($itemIds)) {
+                    if ($itemIds !== []) {
                         $countryID = EcommerceCountry::get_country_id();
                         $regionID = EcommerceRegion::get_region_id();
                         $subTotal = $this->LiveSubTotalAmount();
@@ -435,16 +435,14 @@ class PickUpOrDeliveryModifier extends OrderModifier
                                 }
                             }
                             $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
-                            if (!empty($unavailableTo)) {
-                                if (array_intersect($itemIds, $unavailableTo)) {
-                                    continue;
-                                }
+                            if (!($unavailableTo === []) && array_intersect($itemIds, $unavailableTo)) {
+                                continue;
                             }
                             $results[] = $option;
                         }
                     }
                 }
-                if (empty($results)) {
+                if ($results === []) {
                     $results[] = PickUpOrDeliveryModifierOptions::default_object();
                 }
             }
@@ -533,8 +531,6 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
     /**
      * cached in Order, no need to cache here.
-     *
-     * @return bool
      */
     protected function LiveHasPhysicalDispatch(): bool
     {
@@ -556,6 +552,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if ($obj) {
             return serialize($obj);
         }
+        return null;
     }
 
     /**
@@ -628,7 +625,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                         }
                     }
 
-                    if (true === $allProductsAreExcluded) {
+                    if ($allProductsAreExcluded) {
                         if ($this->Config()->get('debug')) {
                             $this->debugMessage .= '<hr />all products are excluded from delivery charges';
                         }
@@ -663,7 +660,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
 
                                 $intersect = array_intersect($productsIds, $testProducts);
                                 $countItems = count($intersect);
-                                if ($countItems) {
+                                if ($countItems !== 0) {
                                     $fixedPriceExtra += ($countItems * $addExtras->FixedCost);
                                 }
                             }
@@ -868,21 +865,17 @@ class PickUpOrDeliveryModifier extends OrderModifier
         if (null === self::$_total_weight) {
             self::$_total_weight = 0;
             $order = $this->getOrderCached();
-            if ($order && $order->getTotalItems()) {
-                if ($this->useWeight()) {
-                    $fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field');
-                    if ($fieldName) {
-                        $items = $order->Items();
-                        //get index numbers for bonus products - this can only be done now once they have actually been added
-                        if ($items && $items->exists()) {
-                            foreach ($items as $item) {
-                                $buyable = $item->getBuyableCached();
-                                if ($buyable) {
-                                    // Calculate the total weight of the order
-                                    if (!empty($buyable->{$fieldName}) && $item->Quantity) {
-                                        self::$_total_weight += $buyable->{$fieldName} * $item->Quantity;
-                                    }
-                                }
+            if ($order && $order->getTotalItems() && $this->useWeight()) {
+                $fieldName = Config::inst()->get(PickUpOrDeliveryModifier::class, 'weight_field');
+                if ($fieldName) {
+                    $items = $order->Items();
+                    //get index numbers for bonus products - this can only be done now once they have actually been added
+                    if ($items && $items->exists()) {
+                        foreach ($items as $item) {
+                            $buyable = $item->getBuyableCached();
+                            // Calculate the total weight of the order
+                            if ($buyable && (!empty($buyable->{$fieldName}) && $item->Quantity)) {
+                                self::$_total_weight += $buyable->{$fieldName} * $item->Quantity;
                             }
                         }
                     }

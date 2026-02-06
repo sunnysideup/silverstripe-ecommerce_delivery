@@ -244,14 +244,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($options->exists()) {
             foreach ($options as $option) {
                 $countries = $option->AvailableInCountries();
-                if ($countries) {
-                    if ($countries->exists()) {
-                        /**
-                         * @var EcommerceCountry $country
-                         */
-                        foreach ($countries as $country) {
-                            $array[$option->Code][] = $country->Code;
-                        }
+                if ($countries && $countries->exists()) {
+                    /**
+                     * @var EcommerceCountry $country
+                     */
+                    foreach ($countries as $country) {
+                        $array[$option->Code][] = $country->Code;
                     }
                 }
             }
@@ -496,7 +494,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         parent::onBeforeWrite();
         $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', (string) $this->Code));
         $i = 0;
-        if (!$this->Code) {
+        if ($this->Code === '' || $this->Code === '0') {
             $defaults = $this->Config()->get('Code');
             $this->Code = empty($defaults['Code']) ? 'CODE' : $defaults['Code'];
         }
@@ -515,17 +513,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 ->exists();
         }
 
-        if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge) {
-            if ($this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
-                $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
-            }
+        if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge && $this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
+            $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
         }
         $items = $this->UnavailableDeliveryProducts()->columnUnique('ID');
-        if (!empty($items)) {
-            $this->UnavailableDeliveryCachedList = implode(',', $items);
-        } else {
-            $this->UnavailableDeliveryCachedList = '0';
-        }
+        $this->UnavailableDeliveryCachedList = empty($items) ? '0' : implode(',', $items);
     }
 
     protected function onAfterWrite()
@@ -596,7 +588,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             }
         }
 
-        if ($field) {
+        if ($field instanceof \SilverStripe\Forms\ListboxField) {
             return $field;
         }
 
