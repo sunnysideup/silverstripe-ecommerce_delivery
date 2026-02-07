@@ -235,12 +235,9 @@ class PickUpOrDeliveryModifier extends OrderModifier
                     ++$count;
                 }
             }
-
-            if ($js !== '0') {
-                //add final semi-comma
-                $js .= '';
-                Requirements::customScript($js, 'PickUpOrDeliveryModifier');
-            }
+            //add final semi-comma
+            $js .= '';
+            Requirements::customScript($js, 'PickUpOrDeliveryModifier');
         }
 
         $fields = new FieldList();
@@ -435,7 +432,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                                 }
                             }
                             $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
-                            if (! ($unavailableTo === []) && array_intersect($itemIds, $unavailableTo)) {
+                            if ($unavailableTo !== [] && array_intersect($itemIds, $unavailableTo)) {
                                 continue;
                             }
                             $results[] = $option;
