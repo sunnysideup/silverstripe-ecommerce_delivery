@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\EcommerceDelivery\Tasks;
 
+use Symfony\Component\Console\Input\InputInterface;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
@@ -9,25 +12,25 @@ use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
 
 class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
 {
-    protected $title = 'Upgrade PickUpOrDeliveryModifier';
+    protected string $title = 'Upgrade PickUpOrDeliveryModifier';
 
-    protected $description = 'Fix the option field';
+    protected static string $description = 'Fix the option field';
 
     private static $options_old_to_new = [];
 
-    private static $segment = 'EcommerceTaskUpgradePickUpOrDeliveryModifier';
+    protected static string $commandName = 'EcommerceTaskUpgradePickUpOrDeliveryModifier';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $exist = DB::query("SHOW COLUMNS FROM \"PickUpOrDeliveryModifier\" LIKE 'PickupOrDeliveryType'")->numRecords();
+        $exist = DB::query('SHOW COLUMNS FROM "PickUpOrDeliveryModifier" LIKE \'PickupOrDeliveryType\'')->numRecords();
         if ($exist > 0) {
-            $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(['IsDefault' => 1])->First();
+            $defaultOption = PickUpOrDeliveryModifierOptions::get()->filter(['IsDefault' => 1])->first();
             $modifiers = PickUpOrDeliveryModifier::get()->filter(['OptionID' => 0]);
             if ($modifiers->exists()) {
                 foreach ($modifiers as $modifier) {
                     if (! (property_exists($modifier, 'OptionID') && null !== $modifier->OptionID) || ! $modifier->OptionID) {
                         if (! array_key_exists($modifier->Code, self::$options_old_to_new)) {
-                            $option = PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $modifier->Code])->First();
+                            $option = PickUpOrDeliveryModifierOptions::get()->filter(['Code' => $modifier->Code])->first();
                             if (! $option) {
                                 $option = $defaultOption;
                             }
@@ -38,12 +41,13 @@ class EcommerceTaskUpgradePickUpOrDeliveryModifier extends BuildTask
                         $myOption = self::$options_old_to_new[$modifier->Code];
                         // USING QUERY TO UPDATE
                         DB::query('UPDATE "PickUpOrDeliveryModifier" SET "OptionID" = ' . $myOption . ' WHERE "PickUpOrDeliveryModifier"."ID" = ' . $modifier->ID);
-                        DB::alteration_message('Updated modifier #' . $modifier->ID . ' from code to option ID ' . $myOption, 'edited');
+                        $output->writeln('Updated modifier #' . $modifier->ID . ' from code to option ID ' . $myOption);
                     }
                 }
             }
         }
 
-        DB::alteration_message('<hr />COMPLETED<hr />', 'created');
+        $output->writeln('<hr />COMPLETED<hr />');
+        return Command::SUCCESS;
     }
 }

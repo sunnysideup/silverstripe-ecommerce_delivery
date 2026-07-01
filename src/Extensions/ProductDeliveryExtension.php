@@ -1,22 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\EcommerceDelivery\Extensions;
 
+use SilverStripe\Core\Extension;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\ORM\DataExtension;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 
 /**
  * Class \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
  *
- * @property \Sunnysideup\Ecommerce\Pages\Product|\Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension $owner
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ * @property Product|ProductDeliveryExtension $owner
+ * @method ManyManyList|PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method ManyManyList|PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method ManyManyList|PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
  */
-class ProductDeliveryExtension extends DataExtension
+class ProductDeliveryExtension extends Extension
 {
     private static $many_many = [
         'UnavailableDeliveryOptions' => PickUpOrDeliveryModifierOptions::class,

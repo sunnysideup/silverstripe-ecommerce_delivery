@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
+use Override;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -20,9 +22,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @property int $Sort
  * @property int $ExplanationPageID
  * @property int $AddedWithOptionID
- * @method \SilverStripe\CMS\Model\SiteTree ExplanationPage()
- * @method \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions AddedWithOption()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] IncludedProducts()
+ * @method SiteTree ExplanationPage()
+ * @method PickUpOrDeliveryModifierOptions AddedWithOption()
+ * @method ManyManyList|Product[] IncludedProducts()
  */
 class PickUpOrDeliveryModifierAdditional extends DataObject
 {
@@ -46,6 +48,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
     private static $searchable_fields = [
         'Title' => 'PartialMatchFilter',
     ];
+
     //
     // private static $field_labels = [
     // ];
@@ -83,11 +86,12 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
         return $this->Title . ' - $' . $this->FixedCost;
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $fields->removeByName('Sort');
-        $fields->replaceField('ExplanationPageID', new TreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
+        $fields->replaceField('ExplanationPageID', TreeDropdownField::create($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         $fields->replaceField(
             'IncludedProducts',
@@ -110,6 +114,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -127,6 +132,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -144,6 +150,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -160,6 +167,7 @@ class PickUpOrDeliveryModifierAdditional extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {

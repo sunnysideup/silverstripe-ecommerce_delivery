@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\EcommerceDelivery\Admin;
 
+use Override;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
@@ -39,6 +40,7 @@ class SalesAdminByDeliveryOption extends SalesAdmin
         Order::class,
     ];
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);

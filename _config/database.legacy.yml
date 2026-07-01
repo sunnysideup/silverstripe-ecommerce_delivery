@@ -1,4 +1,5 @@
-SilverStripe\ORM\DatabaseAdmin:
+
+SilverStripe\Dev\DbBuild:
   classname_value_remapping:
     CountryRegionDeliveryModifier: Sunnysideup\EcommerceDelivery\Modifiers\CountryRegionDeliveryModifier
     PickUpOrDeliveryModifier: Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier

@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
+use Override;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ReadonlyField;
@@ -17,7 +19,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @property float $MinimumSubTotal
  * @property float $MaximumSubTotal
  * @property float $FixedCost
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
+ * @method ManyManyList|PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
  */
 class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
 {
@@ -63,12 +65,14 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
 
     private static $default_sort = 'MinimumSubTotal ASC, MaximumSubTotal ASC';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKET', 'Sub-Total Bracket');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.SUBTOTAL_BRACKETS', 'Sub-Total Brackets');
     }
@@ -81,6 +85,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -98,6 +103,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         return true;
@@ -111,6 +117,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -127,6 +134,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -141,6 +149,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
      *
      * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -149,6 +158,7 @@ class PickUpOrDeliveryModifierOptionsSubTotalBracket extends DataObject
         return $fields;
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();

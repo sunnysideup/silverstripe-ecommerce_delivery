@@ -2,6 +2,10 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
+use Override;
+use Sunnysideup\DataObjectSorter\DataObjectSorterController;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
@@ -64,16 +68,16 @@ use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
  * @property bool $RemoveAllUnavailableDeliveryProducts
  * @property int $ExplanationPageID
  * @property int $UnavailableDeliveryProductsCustomListID
- * @method \SilverStripe\CMS\Model\SiteTree ExplanationPage()
+ * @method SiteTree ExplanationPage()
  * @method \Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList UnavailableDeliveryProductsCustomList()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalCostForSpecificProducts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceCountry[] AvailableInCountries()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceRegion[] AvailableInRegions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsWeightBracket[] WeightBrackets()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsSubTotalBracket[] SubtotalBrackets()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] ExcludedProducts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Model\Address\EcommerceCountry[] ExcludeFromCountries()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] UnavailableDeliveryProducts()
+ * @method DataList|PickUpOrDeliveryModifierAdditional[] AdditionalCostForSpecificProducts()
+ * @method ManyManyList|EcommerceCountry[] AvailableInCountries()
+ * @method ManyManyList|EcommerceRegion[] AvailableInRegions()
+ * @method ManyManyList|PickUpOrDeliveryModifierOptionsWeightBracket[] WeightBrackets()
+ * @method ManyManyList|PickUpOrDeliveryModifierOptionsSubTotalBracket[] SubtotalBrackets()
+ * @method ManyManyList|Product[] ExcludedProducts()
+ * @method ManyManyList|EcommerceCountry[] ExcludeFromCountries()
+ * @method ManyManyList|Product[] UnavailableDeliveryProducts()
  */
 class PickUpOrDeliveryModifierOptions extends DataObject
 {
@@ -162,8 +166,8 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'FreeShippingUpToThisOrderAmount' => 'if this option is selected and the total order is less than the amount entered above then delivery is free. This is for situations where a small order would have a large delivery cost.',
         'Sort' => 'lower numbers show first.',
         'AdditionalCostForSpecificProducts' => 'Some products may have an extra cost',
-        'MinimumTotalToBeAvailable' => 'Don\'t provide this option if the order amount is under the amount listed.',
-        'MaximumTotalToBeAvailable' => 'Don\'t provide this option if the order amount is over the amount listed. Ignored if amount is zero.',
+        'MinimumTotalToBeAvailable' => "Don't provide this option if the order amount is under the amount listed.",
+        'MaximumTotalToBeAvailable' => "Don't provide this option if the order amount is over the amount listed. Ignored if amount is zero.",
         'UnavailableDeliveryProducts' => 'Exclude products from this option altogether.',
     ];
 
@@ -198,12 +202,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject
 
     private static $default_sort = '"IsDefault" DESC, "Sort" ASC, "Name" ASC';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.DELIVERYOPTION', 'Delivery / Pick-up Option');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.DELIVERYOPTION', 'Delivery / Pick-up Options');
     }
@@ -279,6 +285,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -296,6 +303,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -313,6 +321,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -329,6 +338,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -341,6 +351,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     /**
      * standard SS method.
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -360,35 +371,26 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $fields->replaceField('AvailableInRegions', $regionField);
         }
 
-        if (class_exists(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class) && $this->hasExtension(\Sunnysideup\DataObjectSorter\DataObjectSorterController::class)) {
-            $fields->addFieldToTab('Root.Sort', new LiteralField('InvitationToSort', $this->dataObjectSorterPopupLink()));
+        if (class_exists(DataObjectSorterController::class) && $this->hasExtension(DataObjectSorterController::class)) {
+            $fields->addFieldToTab('Root.Sort', LiteralField::create('InvitationToSort', $this->dataObjectSorterPopupLink()));
         }
 
-        $fields->replaceField('ExplanationPageID', new TreeDropdownField($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
+        $fields->replaceField('ExplanationPageID', TreeDropdownField::create($name = 'ExplanationPageID', $title = 'Explanation Page', SiteTree::class));
 
         //add headings
         $fields->addFieldToTab(
             'Root.Main',
-            new HeaderField(
-                'Charges',
-                _t('PickUpOrDeliveryModifierOptions.CHARGES', 'Charges (enter zero (0) to ignore)')
-            ),
+            HeaderField::create('Charges', _t('PickUpOrDeliveryModifierOptions.CHARGES', 'Charges (enter zero (0) to ignore)')),
             'Percentage'
         );
         $fields->addFieldToTab(
             'Root.Main',
-            new HeaderField(
-                'MinimumAndMaximum',
-                _t('PickUpOrDeliveryModifierOptions.MIN_AND_MAX', 'Minimum and Maximum (enter zero (0) to ignore)')
-            ),
+            HeaderField::create('MinimumAndMaximum', _t('PickUpOrDeliveryModifierOptions.MIN_AND_MAX', 'Minimum and Maximum (enter zero (0) to ignore)')),
             'MinimumDeliveryCharge'
         );
         $fields->addFieldToTab(
             'Root.Main',
-            new HeaderField(
-                'ExplanationHeader',
-                _t('PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER', 'More information about delivery option')
-            ),
+            HeaderField::create('ExplanationHeader', _t('PickUpOrDeliveryModifierOptions.EXPLANATION_HEADER', 'More information about delivery option')),
             'ExplanationPageID'
         );
         $fields->replaceField(
@@ -446,7 +448,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $fields->removeByName('WeightMultiplier');
                 $fields->removeByName('WeightUnit');
             } else {
-                $fields->addFieldToTab('Root.Main', new HeaderField('WeightOptions', 'Weight Options (also see Weight Brackets tab)'), 'WeightMultiplier');
+                $fields->addFieldToTab('Root.Main', HeaderField::create('WeightOptions', 'Weight Options (also see Weight Brackets tab)'), 'WeightMultiplier');
             }
         } else {
             $fields->removeByName('WeightBrackets');
@@ -460,12 +462,14 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 $field->setDescription($fieldDescription);
             }
         }
+
         $additionalCostField = $fields->dataFieldByName('AdditionalCostForSpecificProducts');
         if ($additionalCostField) {
             $config = $additionalCostField->getConfig();
             $config->addComponent(new GridFieldSortableRows('Sort'));
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
         }
+
         $fields->removeByName('Sort');
 
         return $fields;
@@ -489,10 +493,11 @@ class PickUpOrDeliveryModifierOptions extends DataObject
     /**
      * make sure all are unique codes.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->Code = trim(preg_replace('#[^a-zA-Z0-9]+#', '', (string) $this->Code));
+        $this->Code = trim((string) preg_replace('#[^a-zA-Z0-9]+#', '', (string) $this->Code));
         $i = 0;
         if ($this->Code === '' || $this->Code === '0') {
             $defaults = $this->Config()->get('Code');
@@ -516,10 +521,12 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge && $this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
             $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
         }
+
         $items = $this->UnavailableDeliveryProducts()->columnUnique('ID');
         $this->UnavailableDeliveryCachedList = empty($items) ? '0' : implode(',', $items);
     }
 
+    #[Override]
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
@@ -537,6 +544,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 SET "IsDefault" = 0
                 WHERE "ID" <> ' . (int) $this->ID . ';');
         }
+
         if ($this->UnavailableDeliveryProductsCustomListID) {
             $this->UnavailableDeliveryProducts()->addMany(
                 $this->UnavailableDeliveryProductsCustomList()->getProductsFromInternalItemIDs()->ColumnUnique()
@@ -544,6 +552,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             $this->UnavailableDeliveryProductsCustomListID = 0;
             $this->write();
         }
+
         if ($this->RemoveAllUnavailableDeliveryProducts) {
             $this->UnavailableDeliveryProducts()->removeAll();
             $this->RemoveAllUnavailableDeliveryProducts = false;
@@ -559,40 +568,36 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             if (class_exists(ListboxField::class)) {
                 $array = $dos->map('ID', 'Title')->toArray();
                 //$name, $title = "", $source = array(), $value = "", $form = null
-                $field = new ListboxField(
-                    $fieldName,
-                    'This option is available in... ',
-                    $array
-                );
+                $field = ListboxField::create($fieldName, 'This option is available in... ', $array);
             } else {
                 // $controller,  $name,  $sourceClass, [ $fieldList = null], [ $detailFormFields = null], [ $sourceFilter = ""], [ $sourceSort = ""], [ $sourceJoin = ""]
                 /**
                  * @todo: Auto completer may not be functioning correctly: ExactMatchFilter does not accept EcommerceCountryFilters_AllowSales as modifiers
                  */
                 $gridFieldConfig = GridFieldConfig::create();
-                $gridFieldConfig->addComponent(new GridFieldButtonRow('before'));
-                $gridFieldConfig->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
-                $gridFieldConfig->addComponent(new GridFieldToolbarHeader());
-                $gridFieldConfig->addComponent($sort = new GridFieldSortableHeader());
-                $gridFieldConfig->addComponent($filter = new GridFieldFilterHeader());
-                $gridFieldConfig->addComponent(new GridFieldDataColumns());
-                $gridFieldConfig->addComponent(new GridFieldEditButton());
-                $gridFieldConfig->addComponent(new GridFieldDeleteAction(true));
-                $gridFieldConfig->addComponent(new GridFieldPageCount('toolbar-header-right'));
-                $gridFieldConfig->addComponent($pagination = new GridFieldPaginator());
-                $gridFieldConfig->addComponent(new GridFieldDetailForm());
+                $gridFieldConfig->addComponent(GridFieldButtonRow::create('before'));
+                $gridFieldConfig->addComponent(GridFieldAddExistingAutocompleter::create('buttons-before-left'));
+                $gridFieldConfig->addComponent(GridFieldToolbarHeader::create());
+                $gridFieldConfig->addComponent($sort = GridFieldSortableHeader::create());
+                $gridFieldConfig->addComponent($filter = GridFieldFilterHeader::create());
+                $gridFieldConfig->addComponent(GridFieldDataColumns::create());
+                $gridFieldConfig->addComponent(GridFieldEditButton::create());
+                $gridFieldConfig->addComponent(GridFieldDeleteAction::create(true));
+                $gridFieldConfig->addComponent(GridFieldPageCount::create('toolbar-header-right'));
+                $gridFieldConfig->addComponent($pagination = GridFieldPaginator::create());
+                $gridFieldConfig->addComponent(GridFieldDetailForm::create());
 
                 $source = $this->{$fieldName}();
 
-                return new GridField($fieldName, _t('PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES', '' . $title), $source, $gridFieldConfig);
+                return GridField::create($fieldName, _t('PickUpOrDeliverModifierOptions.AVAILABLEINCOUNTRIES', '' . $title), $source, $gridFieldConfig);
             }
         }
 
-        if ($field instanceof \SilverStripe\Forms\ListboxField) {
+        if ($field instanceof ListboxField) {
             return $field;
         }
 
-        return new HiddenField($fieldName);
+        return HiddenField::create($fieldName);
     }
 
     public function IsAvailable(Order $order): ?bool
@@ -603,6 +608,7 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 return $result;
             }
         }
+
         return null;
     }
 }

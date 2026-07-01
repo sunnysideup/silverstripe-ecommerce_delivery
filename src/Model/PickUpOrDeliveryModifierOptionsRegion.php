@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\EcommerceDelivery\Model;
 
-use SilverStripe\ORM\DataExtension;
-
+use SilverStripe\Core\Extension;
+use SilverStripe\ORM\ManyManyList;
 /**
  * Class \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsRegion
  *
- * @property \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsRegion $owner
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInRegions()
+ * @property PickUpOrDeliveryModifierOptionsRegion $owner
+ * @method ManyManyList|PickUpOrDeliveryModifierOptions[] AvailableInRegions()
  */
-class PickUpOrDeliveryModifierOptionsRegion extends DataExtension
+class PickUpOrDeliveryModifierOptionsRegion extends Extension
 {
     private static $belongs_many_many = [
         'AvailableInRegions' => PickUpOrDeliveryModifierOptions::class,

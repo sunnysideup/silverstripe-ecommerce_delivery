@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\EcommerceDelivery\Model;
 
+use Override;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -15,7 +17,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @property int $MinimumWeight
  * @property int $MaximumWeight
  * @property float $FixedCost
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
+ * @method ManyManyList|PickUpOrDeliveryModifierOptions[] PickUpOrDeliveryModifierOptions()
  */
 class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
 {
@@ -61,12 +63,14 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
 
     private static $default_sort = 'MinimumWeight ASC, MaximumWeight ASC';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.WEIGHTBRACKET', 'Weight Bracket');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('PickUpOrDeliveryModifierOptions.WEIGHTBRACKETS', 'Weight Brackets');
     }
@@ -79,6 +83,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -96,6 +101,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         return true;
@@ -109,6 +115,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -125,6 +132,7 @@ class PickUpOrDeliveryModifierOptionsWeightBracket extends DataObject
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
