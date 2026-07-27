@@ -30,6 +30,11 @@ Sunnysideup\Ecommerce\Pages\Product:
 Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions:
   extensions:
     - Sunnysideup\DataobjectSorter\DataObjectSorterDOD
+
+Sunnysideup\EcommerceCustomProductLists\Model\CustomProductList:
+  has_many:
+    UnavailableDeliveryProducts: Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions
+
 # ---
 # Name: ecommerce_delivery_menu
 # After:
