@@ -60,7 +60,6 @@ use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
  * @property float $MinimumTotalToBeAvailable
  * @property float $MaximumTotalToBeAvailable
  * @property int $Sort
- * @property string $UnavailableDeliveryCachedList
  * @property bool $RemoveAllUnavailableDeliveryProducts
  * @property int $ExplanationPageID
  * @property int $UnavailableDeliveryProductsCustomListID
@@ -96,7 +95,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         'MinimumTotalToBeAvailable' => 'Currency',
         'MaximumTotalToBeAvailable' => 'Currency',
         'Sort' => 'Int',
-        'UnavailableDeliveryCachedList' => 'Text',
         'RemoveAllUnavailableDeliveryProducts' => 'Boolean',
     ];
 
@@ -395,23 +393,22 @@ class PickUpOrDeliveryModifierOptions extends DataObject
             'ExcludedProducts',
             $excludedProdsField = GridField::create(
                 'ExcludedProducts',
-                'Excluded Products',
+                'Excluded Products - can use this option - but are not charged',
                 $this->ExcludedProducts(),
                 GridFieldConfigForProducts::create()
             )
-        );
-        $excludedProdsField->setDescription(
-            '
-            <strong>Products added here will not be charged delivery costs.</strong>
-            If a customer\'s order contains more than one item and not all items are listed here,
-            then delivery costs will still be calculated.'
+                ->setDescription('Select products that should be excluded from delivery charges e.g. a deposit.
+                    <br /><strong>Products added here will not be charged delivery costs.</strong>
+                    If a customer\'s order contains more than one item and not all items are listed here,
+                    then delivery costs will still be calculated.
+                ')
         );
 
         $fields->replaceField(
             'UnavailableDeliveryProducts',
             $excludedProdsField = GridField::create(
                 'UnavailableDeliveryProducts',
-                'Unavailable Delivery Products',
+                'This delivery option not available with these products',
                 $this->UnavailableDeliveryProducts(),
                 GridFieldConfigForProducts::create()
             )
@@ -432,12 +429,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
                 ),
             ],
             'UnavailableDeliveryProducts'
-        );
-        $fields->addFieldsToTab(
-            'Root.UnavailableDeliveryProducts',
-            [
-                $fields->dataFieldByName('UnavailableDeliveryCachedList')->performDisabledTransformation()->setDescription('This is a list of all the product IDs that are currently unavailable for this delivery option.  It is updated automatically.'),
-            ]
         );
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
@@ -516,8 +507,6 @@ class PickUpOrDeliveryModifierOptions extends DataObject
         if ($this->MinimumDeliveryCharge && $this->MaximumDeliveryCharge && $this->MinimumDeliveryCharge > $this->MaximumDeliveryCharge) {
             $this->MinimumDeliveryCharge = $this->MaximumDeliveryCharge;
         }
-        $items = $this->UnavailableDeliveryProducts()->columnUnique('ID');
-        $this->UnavailableDeliveryCachedList = empty($items) ? '0' : implode(',', $items);
     }
 
     protected function onAfterWrite()
