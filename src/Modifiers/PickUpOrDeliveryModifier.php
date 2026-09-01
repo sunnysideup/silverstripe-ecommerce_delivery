@@ -431,7 +431,7 @@ class PickUpOrDeliveryModifier extends OrderModifier
                                     continue;
                                 }
                             }
-                            $unavailableTo = array_filter(explode(',', (string) $option->UnavailableDeliveryCachedList));
+                            $unavailableTo = $option->UnavailableDelivery()->columnUnique('ID');
                             if ($unavailableTo !== [] && array_intersect($itemIds, $unavailableTo)) {
                                 continue;
                             }
