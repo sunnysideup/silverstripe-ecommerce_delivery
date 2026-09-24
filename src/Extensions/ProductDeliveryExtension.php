@@ -29,24 +29,25 @@ class ProductDeliveryExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $map = PickUpOrDeliveryModifierAdditional::get()->map('ID', 'TitleNice')->toArray();
+        $mapOptions = PickUpOrDeliveryModifierOptions::get()->map('ID', 'Title')->toArray();
+        $mapAdditional = PickUpOrDeliveryModifierAdditional::get()->map('ID', 'Title')->toArray();
         $fields->addFieldsToTab(
             'Root.Delivery',
             [
                 CheckboxSetField::create(
                     'UnavailableDeliveryOptions',
                     'Unavailable Delivery Options',
-                    $map
+                    $mapOptions
                 ),
                 CheckboxSetField::create(
                     'AdditionalDeliveryCosts',
                     'Additional',
-                    $map
+                    $mapAdditional
                 ),
                 CheckboxSetField::create(
                     'ExcludedFromDeliveryCosts',
-                    'Excluded from',
-                    $map
+                    'Excluded from Delivery Costs for these options',
+                    $mapOptions
                 ),
             ]
         );
